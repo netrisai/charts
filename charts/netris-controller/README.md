@@ -13,7 +13,7 @@ Installs the the automatic NetOps platform [Netris Controller](https://www.netri
 Add the Netris Helm repository:
 
 ```
-helm repo netrisai https://netrisai.github.io/charts
+helm repo add netrisai https://netrisai.github.io/charts
 helm repo update
 ```
 
