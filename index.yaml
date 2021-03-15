@@ -1,46 +1,5 @@
 apiVersion: v1
 entries:
-  netris-controller:
-  - apiVersion: v2
-    appVersion: v2.9.0-1
-    created: "2021-03-15T13:01:56.08335904Z"
-    dependencies:
-    - name: mariadb
-      repository: https://charts.bitnami.com/bitnami
-      version: 9.3.4
-    - name: mongodb
-      repository: https://charts.bitnami.com/bitnami
-      version: 10.9.1
-    - name: redis
-      repository: https://charts.bitnami.com/bitnami
-      version: 12.8.3
-    - name: smtp
-      repository: https://charts.ntppool.org
-      version: 1.0.1
-    - condition: haproxy.enabled
-      name: haproxy
-      repository: https://haproxytech.github.io/helm-charts
-      version: 1.1.3
-    - name: graphite
-      repository: https://kiwigrid.github.io
-      version: 0.7.2
-    description: A Helm chart for netris-controller
-    digest: 88435b2a35d85fe71f8ac0af4bc924fbc1bb8b2e8b73206bf91c2c528b62665a
-    home: https://netris.ai
-    icon: https://www.netris.ai/wp-content/uploads/2020/05/logo-600.png
-    keywords:
-    - netris
-    - netops
-    maintainers:
-    - email: devops@netris.ai
-      name: netrisai
-    name: netris-controller
-    sources:
-    - https://github.com/netrisai/charts
-    type: application
-    urls:
-    - https://github.com/netrisai/charts/releases/download/netris-controller-0.1.0/netris-controller-0.1.0.tgz
-    version: 0.1.0
   netris-operator:
   - apiVersion: v2
     appVersion: v0.3.5
