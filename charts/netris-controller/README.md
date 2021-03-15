@@ -1,6 +1,6 @@
 # Netris Controller Helm Chart
 
-Installs the the automatic NetOps platform [Netris Controller](https://www.netris.ai/overview/)
+* Installs the the automatic NetOps platform [Netris Controller](https://www.netris.ai/overview/)
 
 ## Prerequisites
 
