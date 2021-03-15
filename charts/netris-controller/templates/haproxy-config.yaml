@@ -1,0 +1,38 @@
+{{- if .Values.haproxy.enabled }}
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: {{ printf "%s-%s" (include "netris-controller.fullname" .) "haproxy" }}
+  labels:
+  {{- include "netris-controller.labels" . | nindent 4 }}
+data:
+  haproxy.cfg: |
+    global
+      log stdout format raw local0
+      maxconn 1024
+    defaults
+      log global
+      timeout client 60s
+      timeout connect 60s
+      timeout server 60s
+    frontend grpc
+      bind :50051
+      default_backend grpc
+    backend grpc
+      server grpc-svc {{ printf "%s-%s" (include "netris-controller.fullname" .) "grpc" }}:{{ .Values.grpc.service.port }}
+    frontend telescope
+      bind :3033
+      default_backend telescope
+    backend telescope
+      server telescope-svc {{ printf "%s-%s" (include "netris-controller.fullname" .) "telescope" }}:{{ .Values.telescope.service.port }}
+    frontend telescope-ssl
+      bind :3034
+      default_backend telescope-ssl
+    backend telescope-ssl
+      server telescope-ssl-svc {{ printf "%s-%s" (include "netris-controller.fullname" .) "telescope" }}:{{ .Values.telescope.service.securePort }}
+    frontend graphite
+      bind :2003
+      default_backend graphite
+    backend graphite
+      server graphite-svc {{ printf "%s-%s" (include "netris-controller.fullname" .) "graphite" }}:2003
+{{- end }}

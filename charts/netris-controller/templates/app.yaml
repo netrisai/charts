@@ -1,0 +1,244 @@
+---
+{{- $microservicename := "app" }}
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: {{ printf "%s-%s" (include "netris-controller.fullname" .) $microservicename }}
+  labels:
+    {{- include "netris-controller.labels" . | nindent 4 }}
+    {{- printf "%s-%s" (include "netris-controller.selectorLabels" .) $microservicename | nindent 4 }}
+spec:
+  {{- if not (index .Values $microservicename).autoscaling.enabled }}
+  replicas: {{ (index .Values $microservicename).replicaCount }}
+  {{- end }}
+  selector:
+    matchLabels:
+      {{- printf "%s-%s" (include "netris-controller.selectorLabels" .) $microservicename | nindent 6 }}
+  template:
+    metadata:
+      {{- with .Values.podAnnotations }}
+      annotations:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+      labels:
+        {{- printf "%s-%s" (include "netris-controller.selectorLabels" .) $microservicename | nindent 8 }}
+    spec:
+      {{- with (index .Values $microservicename).imagePullSecrets }}
+      imagePullSecrets:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+      serviceAccountName: {{ include "netris-controller.serviceAccountName" . }}
+      securityContext:
+        {{- toYaml .Values.podSecurityContext | nindent 8 }}
+      initContainers:
+      - name: init-wait-mariadb
+        image: alpine:3.11
+        command:
+          - sh
+          - -c
+          - for i in $(seq 1 200); do nc -z -w3 {{ printf "%s-%s" (include "netris-controller.fullname" .) "mariadb" }} {{ .Values.mariadb.primary.service.port }} && exit 0 || sleep 3; done; exit 1
+      containers:
+        - name: {{ printf "%s-%s" .Chart.Name $microservicename }}
+          securityContext:
+            {{- toYaml .Values.securityContext | nindent 12 }}
+          image: "{{ (index .Values $microservicename).image.repository }}:{{ (index .Values $microservicename).image.tag | default .Chart.AppVersion }}"
+          imagePullPolicy: {{ (index .Values $microservicename).image.pullPolicy }}
+          env:
+            - name: CONDUCTOR_LISTEN_PORT
+              value: {{ (index .Values $microservicename).service.port | quote }}
+            - name: CONDUCTOR_DB_NAME
+              value: {{ .Values.mariadb.auth.database | quote }}
+            - name: CONDUCTOR_DB_USER
+              value: {{ .Values.mariadb.auth.username | quote }}
+            - name: CONDUCTOR_DB_HOST
+              value: {{ printf "%s-%s" (include "netris-controller.fullname" .) "mariadb" }}
+            - name: CONDUCTOR_DB_PASS
+              valueFrom:
+                secretKeyRef:
+                  name: {{ printf "%s-%s" (include "netris-controller.fullname" .) "mariadb" }}
+                  key: mariadb-password
+            - name: CONDUCTOR_MONGO_DB
+              value: {{ .Values.mongodb.auth.database | quote }}
+            - name: CONDUCTOR_MONGO_USER
+              value: {{ .Values.mongodb.auth.username | quote }}
+            - name: CONDUCTOR_MONGO_HOST
+              value: {{ printf "%s-%s" (include "netris-controller.fullname" .) "mongodb" }}
+            - name: CONDUCTOR_MONGO_PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  name: {{ printf "%s-%s" (include "netris-controller.fullname" .) "mongodb" }}
+                  key: mongodb-password
+            - name: CONDUCTOR_REDIS_HOST
+              value: {{ printf "%s-%s-%s" (include "netris-controller.fullname" .) "redis" "headless" }}
+            - name: CONDUCTOR_MON_TUNNEL_URI
+              value: {{ printf "%s%s-%s" "http://" (include "netris-controller.fullname" .) "telescope" }}:{{ (.Values.telescope.service.port ) }}
+            - name: CONDUCTOR_MON_TUNNEL_IP
+              value: {{ printf "%s-%s" (include "netris-controller.fullname" .) "telescope" }}:{{ (.Values.telescope.service.port ) }}
+          ports:
+            - name: {{ (index .Values $microservicename).service.name }}
+              containerPort: {{ (index .Values $microservicename).service.port }}
+              protocol: TCP
+          livenessProbe:
+            httpGet:
+              path: /
+              port: {{ (index .Values $microservicename).service.name }}
+          readinessProbe:
+            httpGet:
+              path: /
+              port: {{ (index .Values $microservicename).service.name }}
+          resources:
+            {{- toYaml .Values.resources | nindent 12 }}
+      {{- with .Values.nodeSelector }}
+      nodeSelector:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+      {{- with .Values.affinity }}
+      affinity:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+      {{- with .Values.tolerations }}
+      tolerations:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: {{ printf "%s-%s" (include "netris-controller.fullname" .) $microservicename }}
+  labels:
+    {{- include "netris-controller.labels" . | nindent 4 }}
+    {{- printf "%s-%s" (include "netris-controller.selectorLabels" .) $microservicename | nindent 4 }}
+spec:
+  type: {{ (index .Values $microservicename).service.type }}
+  ports:
+    - port: {{ (index .Values $microservicename).service.port }}
+      targetPort: {{ (index .Values $microservicename).service.name }}
+      protocol: TCP
+      name: {{ (index .Values $microservicename).service.name }}
+  selector:
+    {{- printf "%s-%s" (include "netris-controller.selectorLabels" .) $microservicename | nindent 4 }}
+---
+{{- if (index .Values $microservicename).ingress.enabled -}}
+{{- $fullName := printf "%s-%s" (include "netris-controller.fullname" .) $microservicename -}}
+{{- $servicePort := (index .Values $microservicename).service.port -}}
+{{- $ingressPath := (index .Values $microservicename).ingress.path -}}
+{{- $ingressPathType := (index .Values $microservicename).ingress.pathType -}}
+{{- $newAPI := .Capabilities.APIVersions.Has "networking.k8s.io/v1/Ingress" -}}
+{{- if $newAPI -}}
+apiVersion: networking.k8s.io/v1
+{{- else if .Capabilities.APIVersions.Has "networking.k8s.io/v1beta1/Ingress" }}
+apiVersion: networking.k8s.io/v1beta1
+{{- else }}
+apiVersion: extensions/v1beta1
+{{- end }}
+kind: Ingress
+metadata:
+  name: {{ $fullName }}
+  labels:
+    {{- include "netris-controller.labels" . | nindent 4 }}
+    {{- printf "%s-%s" (include "netris-controller.selectorLabels" .) $microservicename | nindent 4 }}
+{{- if (index .Values $microservicename).ingress.labels }}
+{{ toYaml (index .Values $microservicename).ingress.labels | indent 4 }}
+{{- end }}
+  {{- if (index .Values $microservicename).ingress.annotations }}
+  annotations:
+    {{- range $key, $value := (index .Values $microservicename).ingress.annotations }}
+    {{ $key }}: {{ tpl $value $ | quote }}
+    {{- end }}
+  {{- end }}
+spec:
+  {{- if (index .Values $microservicename).ingress.ingressClassName }}
+  ingressClassName: {{ (index .Values $microservicename).ingress.ingressClassName }}
+  {{- end -}}
+{{- if (index .Values $microservicename).ingress.tls }}
+  tls:
+{{ tpl (toYaml (index .Values $microservicename).ingress.tls) $ | indent 4 }}
+{{- end }}
+  rules:
+  {{- if (index .Values $microservicename).ingress.hosts  }}
+  {{- range (index .Values $microservicename).ingress.hosts }}
+    - host: {{ tpl . $}}
+      http:
+        paths:
+          - path: {{ $ingressPath }}
+            {{- if $newAPI }}
+            pathType: {{ $ingressPathType }}
+            {{- end }}
+            backend:
+              {{- if $newAPI }}
+              service:
+                name: {{ $fullName }}
+                port:
+                  number: {{ $servicePort }}
+              {{- else }}
+              serviceName: {{ $fullName }}
+              servicePort: {{ $servicePort }}
+              {{- end }}
+  {{- end }}
+  {{- else }}
+    - http:
+        paths:
+          - backend:
+              {{- if $newAPI }}
+              service:
+                name: {{ $fullName }}
+                port:
+                  number: {{ $servicePort }}
+            pathType: {{ $ingressPathType }}
+              {{- else }}
+              serviceName: {{ $fullName }}
+              servicePort: {{ $servicePort }}
+              {{- end }}
+          {{- if $ingressPath }}
+            path: {{ $ingressPath }}
+            {{- end }}
+  {{- end -}}
+{{- end }}
+---
+{{- if (index .Values $microservicename).autoscaling.enabled }}
+apiVersion: autoscaling/v2beta1
+kind: HorizontalPodAutoscaler
+metadata:
+  name: {{ printf "%s-%s" (include "netris-controller.fullname" .) $microservicename }}
+  labels:
+    {{- include "netris-controller.labels" . | nindent 4 }}
+    {{- printf "%s-%s" (include "netris-controller.selectorLabels" .) $microservicename | nindent 4 }}
+spec:
+  scaleTargetRef:
+    apiVersion: apps/v1
+    kind: Deployment
+    name: {{ printf "%s-%s" (include "netris-controller.fullname" .) $microservicename }}
+  minReplicas: {{ (index .Values $microservicename).autoscaling.minReplicas }}
+  maxReplicas: {{ (index .Values $microservicename).autoscaling.maxReplicas }}
+  metrics:
+    {{- if (index .Values $microservicename).autoscaling.targetCPUUtilizationPercentage }}
+    - type: Resource
+      resource:
+        name: cpu
+        targetAverageUtilization: {{ (index .Values $microservicename).autoscaling.targetCPUUtilizationPercentage }}
+    {{- end }}
+    {{- if (index .Values $microservicename).autoscaling.targetMemoryUtilizationPercentage }}
+    - type: Resource
+      resource:
+        name: memory
+        targetAverageUtilization: {{ (index .Values $microservicename).autoscaling.targetMemoryUtilizationPercentage }}
+    {{- end }}
+{{- end }}
+---
+apiVersion: v1
+kind: Pod
+metadata:
+  name: "{{ printf "%s-%s" (include "netris-controller.fullname" .) $microservicename }}-test-connection"
+  labels:
+    {{- include "netris-controller.labels" . | nindent 4 }}
+    {{- printf "%s-%s" (include "netris-controller.selectorLabels" .) $microservicename | nindent 4 }}
+  annotations:
+    "helm.sh/hook": test
+spec:
+  containers:
+    - name: wget
+      image: busybox
+      command: ['wget']
+      args: ['{{ printf "%s-%s" (include "netris-controller.fullname" .) $microservicename }}:{{ (index .Values $microservicename).service.port }}']
+  restartPolicy: Never
+...

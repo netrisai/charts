@@ -1,0 +1,343 @@
+# Default values for netris-controller.
+# This is a YAML-formatted file.
+# Declare variables to be passed into your templates.
+
+nameOverride: ""
+fullnameOverride: ""
+
+serviceAccount:
+  # Specifies whether a service account should be created
+  create: true
+  # Annotations to add to the service account
+  annotations: {}
+  # The name of the service account to use.
+  # If not set and create is true, a name is generated using the fullname template
+  name: ""
+
+podAnnotations: {}
+
+podSecurityContext: {}
+  # fsGroup: 2000
+
+securityContext: {}
+  # capabilities:
+  #   drop:
+  #   - ALL
+  # readOnlyRootFilesystem: true
+  # runAsNonRoot: true
+  # runAsUser: 1000
+
+resources: {}
+  # We usually recommend not to specify default resources and to leave this as a conscious
+  # choice for the user. This also increases chances charts run on environments with little
+  # resources, such as Minikube. If you do want to specify resources, uncomment the following
+  # lines, adjust them as necessary, and remove the curly braces after 'resources:'.
+  # limits:
+  #   cpu: 100m
+  #   memory: 128Mi
+  # requests:
+  #   cpu: 100m
+  #   memory: 128Mi
+
+
+nodeSelector: {}
+
+tolerations: []
+
+affinity: {}
+
+
+netris:
+  webLogin: netris
+  webPassword: newNet0ps
+  authKey: mystrongkey
+
+
+app:
+  replicaCount: 1
+
+  image:
+    repository: netrisai/xcaas-xcaas-web
+    pullPolicy: IfNotPresent
+    # Overrides the image tag whose default is the chart appVersion.
+    tag: ""
+
+  imagePullSecrets: []
+
+  service:
+    type: ClusterIP
+    port: 80
+    name: http
+
+  ingress:
+    enabled: true
+    # For Kubernetes >= 1.18 you should specify the ingress-controller via the field ingressClassName
+    # See https://kubernetes.io/blog/2020/04/02/improvements-to-the-ingress-api-in-kubernetes-1.18/#specifying-the-class-of-an-ingress
+    # ingressClassName: nginx
+    # Values can be templated
+    annotations:
+      kubernetes.io/ingress.class: nginx
+      # kubernetes.io/tls-acme: "true"
+    labels: {}
+    path: /
+
+    # pathType is only for k8s > 1.19
+    pathType: Prefix
+
+    hosts:
+      - chart-example.local
+
+
+    tls: []
+    #  - secretName: chart-example-tls
+    #    hosts:
+    #      - chart-example.local
+
+  autoscaling:
+    enabled: false
+    minReplicas: 1
+    maxReplicas: 100
+    targetCPUUtilizationPercentage: 80
+    # targetMemoryUtilizationPercentage: 80
+
+
+grpc:
+  replicaCount: 1
+
+  image:
+    repository: netrisai/xcaas-agent-api-server
+    pullPolicy: IfNotPresent
+    # Overrides the image tag whose default is the chart appVersion.
+    tag: ""
+
+  imagePullSecrets: []
+
+  service:
+    type: ClusterIP
+    port: 443
+    name: grpc
+
+  autoscaling:
+    enabled: false
+    minReplicas: 1
+    maxReplicas: 100
+    targetCPUUtilizationPercentage: 80
+    # targetMemoryUtilizationPercentage: 80
+
+
+telescope:
+  replicaCount: 1
+
+  image:
+    repository: netrisai/xcaas-telescope-go
+    pullPolicy: IfNotPresent
+    # Overrides the image tag whose default is the chart appVersion.
+    tag: ""
+
+  imagePullSecrets: []
+
+  service:
+    type: ClusterIP
+    port: 80
+    name: ws
+    securePort: 443
+    securePortName: wss
+
+  autoscaling:
+    enabled: false
+    minReplicas: 1
+    maxReplicas: 100
+    targetCPUUtilizationPercentage: 80
+    # targetMemoryUtilizationPercentage: 80
+
+
+k8s-watcher:
+  replicaCount: 1
+
+  image:
+    repository: netrisai/xcaas-kuberis-k8-api-agent
+    pullPolicy: IfNotPresent
+    # Overrides the image tag whose default is the chart appVersion.
+    tag: ""
+
+  imagePullSecrets: []
+
+  autoscaling:
+    enabled: false
+    minReplicas: 1
+    maxReplicas: 100
+    targetCPUUtilizationPercentage: 80
+    # targetMemoryUtilizationPercentage: 80
+
+telescope-notifier:
+  replicaCount: 1
+
+  image:
+    repository: netrisai/xcaas-xcaas-notifier
+    pullPolicy: IfNotPresent
+    # Overrides the image tag whose default is the chart appVersion.
+    tag: ""
+
+  imagePullSecrets: []
+
+  autoscaling:
+    enabled: false
+    minReplicas: 1
+    maxReplicas: 100
+    targetCPUUtilizationPercentage: 80
+    # targetMemoryUtilizationPercentage: 80
+
+
+## Using default values from https://github.com/bitnami/charts/tree/master/bitnami/mariadb/values.yaml
+## Auth from existing secret not supported at the momment
+mariadb:
+  auth:
+    database: netris
+    username: netris
+    password: changeme
+    rootPassword: changeme
+  image:
+    repository: netrisai/netris-mariadb
+    tag: 10.1
+  initdbScriptsConfigMap: netris-controller-initdb
+
+
+## Using default values from https://github.com/bitnami/charts/tree/master/bitnami/mongodb/values.yaml
+## Auth from existing secret not supported at the momment
+mongodb:
+  useStatefulSet: true
+  auth:
+    database: netris
+    username: netris
+    password: changeme
+    rootPassword: changeme
+  initdbScriptsConfigMap: netris-controller-initdb-mongodb
+
+
+## Using default values from https://github.com/bitnami/charts/tree/master/bitnami/redis/values.yaml
+redis:
+  cluster:
+    enabled: false
+  usePassword: false
+
+
+## Using default values from https://github.com/ntppool/charts/tree/main/charts/smtp/values.yaml
+smtp:
+  config:
+    # MAILNAME: smtp
+    DISABLE_IPV6: "1"
+    RELAY_NETWORKS: ":172.16.0.0/12:10.0.0.0/8:192.168.0.0/16"
+    # SMARTHOST_ADDRESS: mail.example.com
+    # SMARTHOST_PORT: "587"
+    # SMARTHOST_USER: myuser
+    # SMARTHOST_PASSWORD: secret
+    # SMARTHOST_ALIASES: "*.example.com"
+
+
+## Using default values from https://github.com/haproxytech/helm-charts/tree/master/haproxy/values.yaml
+haproxy:
+  enabled: true                                 # Used for exposing netris agents ports from single loadbalancer ip
+  containerPorts:                               # Don't change ports
+    grpc: 50051
+    http: 3033
+    https: 3034
+    stat: 2003
+  config: false                                 # We don't support haproxy default config
+  service:
+    type: LoadBalancer
+
+
+## Using default values from https://github.com/kiwigrid/helm-charts/tree/master/charts/graphite/values.yaml
+graphite:
+  configMaps:
+    carbon.conf: |-
+      [cache]
+      DATABASE = whisper
+      ENABLE_LOGROTATION = True
+      USER =
+      MAX_CACHE_SIZE = inf
+      MAX_UPDATES_PER_SECOND = 500
+      MAX_CREATES_PER_MINUTE = 30
+      MIN_TIMESTAMP_RESOLUTION = 1
+      LINE_RECEIVER_INTERFACE = 0.0.0.0
+      LINE_RECEIVER_PORT = 2003
+      ENABLE_UDP_LISTENER = False
+      UDP_RECEIVER_INTERFACE = 0.0.0.0
+      UDP_RECEIVER_PORT = 2003
+      PICKLE_RECEIVER_INTERFACE = 0.0.0.0
+      PICKLE_RECEIVER_PORT = 2004
+      ENABLE_TAGS = False
+      USE_INSECURE_UNPICKLER = False
+      CACHE_QUERY_INTERFACE = 0.0.0.0
+      CACHE_QUERY_PORT = 7002
+      USE_FLOW_CONTROL = True
+      LOG_UPDATES = False
+      LOG_CREATES = False
+      LOG_CACHE_HITS = False
+      LOG_CACHE_QUEUE_SORTS = False
+      CACHE_WRITE_STRATEGY = sorted
+      WHISPER_AUTOFLUSH = False
+      WHISPER_FALLOCATE_CREATE = True
+      GRAPHITE_URL = http://127.0.0.1:8080
+      [relay]
+      LINE_RECEIVER_INTERFACE = 0.0.0.0
+      LINE_RECEIVER_PORT = 2013
+      PICKLE_RECEIVER_INTERFACE = 0.0.0.0
+      PICKLE_RECEIVER_PORT = 2014
+      RELAY_METHOD = rules
+      REPLICATION_FACTOR = 1
+      DESTINATIONS = 127.0.0.1:2004
+      MAX_QUEUE_SIZE = 10000
+      MAX_DATAPOINTS_PER_MESSAGE = 500
+      QUEUE_LOW_WATERMARK_PCT = 0.8
+      TIME_TO_DEFER_SENDING = 0.0001
+      USE_FLOW_CONTROL = True
+      USE_RATIO_RESET=False
+      MIN_RESET_STAT_FLOW=1000
+      MIN_RESET_RATIO=0.9
+      MIN_RESET_INTERVAL=121
+
+      [aggregator]
+      LINE_RECEIVER_INTERFACE = 0.0.0.0
+      LINE_RECEIVER_PORT = 2023
+      PICKLE_RECEIVER_INTERFACE = 0.0.0.0
+      PICKLE_RECEIVER_PORT = 2024
+      FORWARD_ALL = True
+      DESTINATIONS = 127.0.0.1:2004
+      REPLICATION_FACTOR = 1
+      MAX_QUEUE_SIZE = 10000
+      USE_FLOW_CONTROL = True
+      MAX_DATAPOINTS_PER_MESSAGE = 500
+      MAX_AGGREGATION_INTERVALS = 5
+    storage-aggregation.conf: |-
+      [min]
+      pattern = \.min$
+      xFilesFactor = 0.1
+      aggregationMethod = min
+
+      [max]
+      pattern = \.max$
+      xFilesFactor = 0.1
+      aggregationMethod = max
+
+      [sum]
+      pattern = \.count$
+      xFilesFactor = 0
+      aggregationMethod = sum
+
+      [default_average]
+      pattern = .*
+      xFilesFactor = 0.0
+      aggregationMethod = average
+    storage-schemas.conf: |-
+      [carbon]
+      pattern = ^carbon\.
+      retentions = 60:1d
+
+      [sitespeed]
+      pattern = ^sitespeed_io\.
+      retentions = 10m:40d
+
+      [collectd]
+      pattern = ^collectd.*
+      retentions = 1m:7d,5m:90d,1h:2y
