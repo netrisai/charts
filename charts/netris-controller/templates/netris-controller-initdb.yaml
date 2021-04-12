@@ -1652,10 +1652,10 @@ data:
 
   users.sql: |-
     USE {{ .Values.mariadb.auth.database }};
-    INSERT INTO `users` VALUES (1,'{{ .Values.netris.webLogin }}','{{ .Values.netris.webPassword | sha1sum }}','','info@netris.ai','',NULL,0,'','','Netris',NULL,0,1,'enabled','','', NULL, NULL);
+    INSERT INTO `users` VALUES (1,'{{ .Values.netris.webLogin }}','{{ .Values.netris.webPassword | sha1sum }}','Netris','info@netris.local','',NULL,0,'','','Netris',NULL,0,1,'enabled','','', NULL, NULL);
     INSERT INTO `user_to_tenant` VALUES (1,1,0,'w');
 
-    INSERT INTO `users` VALUES (2,'k8swatcher','{{ .Values.netris.authKey | sha1sum }}','K8SWatcher Agent','k8swatcher@netris.ai','',NULL,0,'','','Netris',NULL,0,1,'disabled','','', NULL, NULL);
+    INSERT INTO `users` VALUES (2,'k8swatcher','{{ .Values.netris.authKey | sha1sum }}','K8SWatcher Agent','k8swatcher@netris.local','',NULL,0,'','','Netris',NULL,0,1,'disabled','','', NULL, NULL);
     INSERT INTO `user_to_tenant` VALUES (2,2,0,'w');
   vpn_scores.sql: |
     USE {{ .Values.mariadb.auth.database }};
