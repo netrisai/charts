@@ -756,7 +756,8 @@ data:
     NOT NULL DEFAULT '0',\n  `prefix_list_inbound` text NOT NULL,\n  `prefix_list_outbound`
     text NOT NULL,\n  `local_preference` int(11) unsigned DEFAULT '100',\n  `weight`
     int(32) unsigned DEFAULT '0',\n  `status` enum('enabled','disabled') NOT NULL
-    DEFAULT 'enabled',\n  `default_originate` enum('enabled','disabled') NOT NULL
+    DEFAULT 'enabled',\n  `nexthop_self` enum('enabled','disabled') NOT NULL 
+    DEFAULT 'disabled',\n  `default_originate` enum('enabled','disabled') NOT NULL
     DEFAULT 'disabled',\n  `offloader_interface` varchar(45) DEFAULT NULL,\n  `ip_version`
     enum('ipv4','ipv6') NOT NULL DEFAULT 'ipv4',\n  `rcircuit_id` bigint(22) DEFAULT
     NULL,\n  `terminate_on_switch` enum('yes','no') NOT NULL DEFAULT 'no',\n  `multihop`
