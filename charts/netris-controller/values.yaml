@@ -277,7 +277,7 @@ graphite:
       LOG_CACHE_QUEUE_SORTS = False
       CACHE_WRITE_STRATEGY = sorted
       WHISPER_AUTOFLUSH = False
-      WHISPER_FALLOCATE_CREATE = True
+      WHISPER_FALLOCATE_CREATE = False
       GRAPHITE_URL = http://127.0.0.1:8080
       [relay]
       LINE_RECEIVER_INTERFACE = 0.0.0.0
