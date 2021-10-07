@@ -153,7 +153,6 @@ data:
     bind_address=0.0.0.0
     bind_port={{ (index .Values $microservicename).service.port }}
     auth=yes
-    auth_keys={{ .Values.netris.authKey }}
 
 
     [database]
@@ -161,4 +160,5 @@ data:
     user={{ .Values.mariadb.auth.username }}
     password={{ .Values.mariadb.auth.password }}
     database={{ .Values.mariadb.auth.database }}
+    port={{ .Values.mariadb.primary.service.port }}
 ...

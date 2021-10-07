@@ -27,18 +27,12 @@ Create the namespace for netris-controller:
 kubectl create namespace netris-controller
 ```
 
-Generate strong auth key
-```
-export mystrongauthkey=$(date |base64 | md5sum | base64 | head -c 32)
-```
-
 Install helm chart with netris-controller
 
 ```
 helm install netris-controller netrisai/netris-controller \
   --namespace netris-controller \
-  --set app.ingress.hosts={my.domain.com} \
-  --set netris.authKey=$mystrongauthkey
+  --set app.ingress.hosts={my.domain.com}
 ```
 
 ## Uninstalling the Chart
@@ -77,14 +71,13 @@ The following table lists the configurable parameters of the netris-controller c
 | ------------------------------------- | --------------------------------------------------------------------------------------------------------- | -------------------------- |
 | `netris.webLogin`                     | Netris Controller GUI default login                                                                       | `netris`                   |
 | `netris.webPassword`                  | Netris Controller GUI default password                                                                    | `newNet0ps`                |
-| `netris.authKey`                      | Netris Controller agents authentication key                                                               | `mystrongkey`              |
 
 
 ### Netris-Controller app parameters
 | Parameter                             | Description                                                                                               | Default                    |
 | ------------------------------------- | --------------------------------------------------------------------------------------------------------- | -------------------------- |
 | `app.replicaCount`                    | Number of replicas in app deployment                                                                      | `1`                        |
-| `app.image.repository`                | Image repository                                                                                          | `netrisai/xcaas-xcaas-web` |
+| `app.image.repository`                | Image repository                                                                                          | `netrisai/controller-webservice` |
 | `app.image.tag`                       | Image tag. Overrides the image tag whose default is the chart appVersion                                  | `""`                       |
 | `app.image.pullPolicy`                | Image pull policy                                                                                         | `IfNotPresent`             |
 | `app.imagePullSecrets`                | Reference to one or more secrets to be used when pulling images                                           | `[]`                       |
@@ -92,7 +85,7 @@ The following table lists the configurable parameters of the netris-controller c
 | `app.service.port`                    | Kubernetes port where service is expose 	                                                                | `80`                       |
 | `app.service.portName`                | Name of the port on the service                                                                           | `http`                     |
 | `app.ingress.enabled`                 | Enables Ingress                                                                                           | `true`                     |
-| `app.ingress.annotations`             | Ingress annotations (values are templated)                                                                | `{ kubernetes.io/ingress.class: nginx }` |
+| `app.ingress.annotations`             | Ingress annotations (values are templated)                                                                | `{}`                       |
 | `app.ingress.labels`                  | Custom labels                                                                                             | `{}`                           |
 | `app.ingress.path`                    | Ingress accepted path                                                                                     | `/`                            |
 | `app.ingress.pathType`                | Ingress type of path                                                                                      | `Prefix`                       |
@@ -108,7 +101,7 @@ The following table lists the configurable parameters of the netris-controller c
 | Parameter                              | Description                                                                                               | Default                    |
 | -------------------------------------- | --------------------------------------------------------------------------------------------------------- | -------------------------- |
 | `grpc.replicaCount`                    | Number of replicas in grpc deployment                                                                     | `1`                        |
-| `grpc.image.repository`                | Image repository                                                                                          | `netrisai/xcaas-agent-api-server` |
+| `grpc.image.repository`                | Image repository                                                                                          | `netrisai/controller-grpc` |
 | `grpc.image.tag`                       | Image tag. Overrides the image tag whose default is the chart appVersion                                  | `""`                       |
 | `grpc.image.pullPolicy`                | Image pull policy                                                                                         | `IfNotPresent`             |
 | `grpc.imagePullSecrets`                | Reference to one or more secrets to be used when pulling images                                           | `[]`                       |
@@ -125,7 +118,7 @@ The following table lists the configurable parameters of the netris-controller c
 | Parameter                             | Description                                                                                               | Default                    |
 | ------------------------------------- | --------------------------------------------------------------------------------------------------------- | -------------------------- |
 | `telescope.replicaCount`                    | Number of replicas in telescope deployment                                                          | `1`                        |
-| `telescope.image.repository`                | Image repository                                                                                          | `netrisai/xcaas-telescope-go` |
+| `telescope.image.repository`                | Image repository                                                                                          | `netrisai/controller-telescope` |
 | `telescope.image.tag`                       | Image tag. Overrides the image tag whose default is the chart appVersion                                  | `""`                       |
 | `telescope.image.pullPolicy`                | Image pull policy                                                                                         | `IfNotPresent`             |
 | `telescope.imagePullSecrets`                | Reference to one or more secrets to be used when pulling images                                           | `[]`                       |
@@ -140,25 +133,11 @@ The following table lists the configurable parameters of the netris-controller c
 | `telescope.autoscaling.targetCPUUtilizationPercentage`  | The desired target CPU utilization for autoscaling                                                        | `80`                          |
 
 
-### Netris-Controller k8s-watcher parameters
-| Parameter                             | Description                                                                                               | Default                    |
-| ------------------------------------- | --------------------------------------------------------------------------------------------------------- | -------------------------- |
-| `k8s-watcher.replicaCount`                    | Number of replicas in k8s-watcher deployment                                                      | `1`                        |
-| `k8s-watcher.image.repository`                | Image repository                                                                                  | `netrisai/xcaas-kuberis-k8-api-agent` |
-| `k8s-watcher.image.tag`                       | Image tag. Overrides the image tag whose default is the chart appVersion                          | `""`                       |
-| `k8s-watcher.image.pullPolicy`                | Image pull policy                                                                                 | `IfNotPresent`             |
-| `k8s-watcher.imagePullSecrets`                | Reference to one or more secrets to be used when pulling images                                   | `[]`                       |
-| `k8s-watcher.autoscaling.enabled`                         | Option to turn autoscaling on for app and specify params for HPA. Autoscaling needs metrics-server to access cpu metrics | `false`        |
-| `k8s-watcher.autoscaling.minReplicas`                     | Default min replicas for autoscaling                                                                      | `1`                           |
-| `k8s-watcher.autoscaling.maxReplicas`                     | Default max replicas for autoscaling                                                                      | `100`                         |
-| `k8s-watcher.autoscaling.targetCPUUtilizationPercentage`  | The desired target CPU utilization for autoscaling                                                        | `80`                          |
-
-
 ### Netris-Controller telescope-notifier parameters
 | Parameter                             | Description                                                                                               | Default                    |
 | ------------------------------------- | --------------------------------------------------------------------------------------------------------- | -------------------------- |
 | `telescope-notifier.replicaCount`                    | Number of replicas in telescope-notifier deployment                                        | `1`                        |
-| `telescope-notifier.image.repository`                | Image repository                                                                           | `netrisai/xcaas-xcaas-notifier` |
+| `telescope-notifier.image.repository`                | Image repository                                                                           | `netrisai/controller-telescope-notifier` |
 | `telescope-notifier.image.tag`                       | Image tag. Overrides the image tag whose default is the chart appVersion                   | `""`                       |
 | `telescope-notifier.image.pullPolicy`                | Image pull policy                                                                          | `IfNotPresent`             |
 | `telescope-notifier.imagePullSecrets`                | Reference to one or more secrets to be used when pulling images                            | `[]`                       |
@@ -173,8 +152,6 @@ _Using default values [from](https://github.com/bitnami/charts/tree/master/bitna
 
 | Parameter                             | Description                                                                                               | Default                    |
 | ------------------------------------- | --------------------------------------------------------------------------------------------------------- | -------------------------- |
-| `mariadb.image.repository`            | MariaDB image name. We extended bitnami's mariadb image with own plugin                                   | `netrisai/netris-mariadb`  |
-| `mariadb.image.tag`                   | MariaDB image tag. (only 10.1 is supported)                                                               | `10.1`                     |
 | `mariadb.initdbScriptsConfigMap`      | ConfigMap with the initdb scripts.                                                                        | `netris-controller-initdb` |
 | `mariadb.auth.database`               | Name for a database to create                                                                             | `netris`                   |
 | `mariadb.auth.username`               | Name for a user to create                                                                                 | `netris`                   |
@@ -245,14 +222,13 @@ Specify each parameter using the --set key=value[,key=value] argument to helm in
 helm install netris-controller netrisai/netris-controller \
   --namespace netris-controller \
   --set app.ingress.hosts={my.domain.com} \
-  --set netris.authKey=$mystrongauthkey \
   --set mariadb.auth.rootPassword=my-root-password \
   --set mariadb.auth.password=my-password \
   --set mongodb.auth.rootPassword=my-root-password \
   --set mongodb.auth.password=my-password
 ```
 
-The above command sets netris-controller application ingress host to `my.domain.com` and sets generated netris.authKey. Additionally, it sets MariaDB and MongoDB root account password to `my-root-password` and user account password to `my-password`.
+The above command sets netris-controller application ingress host to `my.domain.com`. Additionally, it sets MariaDB and MongoDB root account password to `my-root-password` and user account password to `my-password`.
 
 Alternatively, a YAML file that specifies the values for the parameters can be provided while installing the chart. For example,
 
@@ -263,10 +239,6 @@ helm install netris-controller netrisai/netris-controller --namespace netris-con
 After installation use `EXTERNAL-IP` of haproxy service as `--controller` parameter in [netris-setup](https://docs.netris.ai/en/stable/switch_agent_installation.html#install-the-netris-agent)
 ```
 kubectl get svc -nnetris-controller |grep haproxy
-```
-and `$mystrongauthkey` as `--auth` parameter in [netris-setup](https://docs.netris.ai/en/stable/switch_agent_installation.html#install-the-netris-agent)
-```
-echo $mystrongauthkey
 ```
 
 Also you can see overrides values from helm get values 

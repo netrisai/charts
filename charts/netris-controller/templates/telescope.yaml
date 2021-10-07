@@ -37,6 +37,12 @@ spec:
           - sh
           - -c
           - for i in $(seq 1 200); do nc -z -w3 {{ printf "%s-%s" (include "netris-controller.fullname" .) "mariadb" }} {{ .Values.mariadb.primary.service.port }} && exit 0 || sleep 3; done; exit 1
+      - name: init-wait-grpc
+        image: alpine:3.11
+        command:
+          - sh
+          - -c
+          - for i in $(seq 1 200); do nc -z -w3 {{ printf "%s-%s" (include "netris-controller.fullname" .) "grpc" }} {{ .Values.grpc.service.port }} && exit 0 || sleep 3; done; exit 1
       containers:
         - name: {{ printf "%s-%s" .Chart.Name $microservicename }}
           securityContext:
@@ -199,7 +205,8 @@ data:
 
     [server]
     #dbfile=(path) Internal database file. Re-loadable
-    dbfile=/opt/telescope/db.json
+    dbfile=/var/lib/db.json
+    dbmode=mongo
 
     #dbupdate=(seconds) Snapshot telescope-server's in-memory database to database file. Re-loadable.
     dbupdate=120
@@ -209,7 +216,6 @@ data:
     port_ssl={{ (index .Values $microservicename).service.securePort }}
     ssl_cert=cert/tls.crt
     ssl_key=cert/tls.key
-    auth_key={{ .Values.netris.authKey }}
 
 
     [database]
@@ -218,6 +224,15 @@ data:
     password={{ .Values.mariadb.auth.password }}
     db_name={{ .Values.mariadb.auth.database }}
     port={{ .Values.mariadb.primary.service.port }}
+
+
+    [mongo]
+    address={{ printf "%s-%s" (include "netris-controller.fullname" .) "mongodb" }}
+    user={{ .Values.mongodb.auth.username }}
+    password={{ .Values.mongodb.auth.password }}
+    db_name={{ .Values.mongodb.auth.database }}
+    port={{ .Values.mongodb.service.port }}
+
 
     [redis]
     address={{ printf "%s-%s-%s" (include "netris-controller.fullname" .) "redis" "headless" }}

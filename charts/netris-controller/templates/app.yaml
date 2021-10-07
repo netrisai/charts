@@ -74,6 +74,8 @@ spec:
               value: {{ printf "%s%s-%s" "http://" (include "netris-controller.fullname" .) "telescope" }}:{{ (.Values.telescope.service.port ) }}
             - name: CONDUCTOR_MON_TUNNEL_IP
               value: {{ printf "%s-%s" (include "netris-controller.fullname" .) "telescope" }}:{{ (.Values.telescope.service.port ) }}
+            - name: GRAPHITE_WEBAPP_URL
+              value: {{ printf "%s%s-%s" "http://" (include "netris-controller.fullname" .) "graphite" }}:{{ printf "%s%s" (.Values.graphite.service.port |toString ) "/render/" }}
           ports:
             - name: {{ (index .Values $microservicename).service.name }}
               containerPort: {{ (index .Values $microservicename).service.port }}

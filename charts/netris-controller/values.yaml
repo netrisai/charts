@@ -50,17 +50,16 @@ affinity: {}
 netris:
   webLogin: netris
   webPassword: newNet0ps
-  authKey: mystrongkey
 
 
 app:
   replicaCount: 1
 
   image:
-    repository: netrisai/xcaas-xcaas-web
+    repository: netrisai/controller-webservice
     pullPolicy: IfNotPresent
     # Overrides the image tag whose default is the chart appVersion.
-    tag: ""
+    tag: "3.0.0-alpha.8"
 
   imagePullSecrets: []
 
@@ -75,9 +74,9 @@ app:
     # See https://kubernetes.io/blog/2020/04/02/improvements-to-the-ingress-api-in-kubernetes-1.18/#specifying-the-class-of-an-ingress
     # ingressClassName: nginx
     # Values can be templated
-    annotations:
-      kubernetes.io/ingress.class: nginx
-      # kubernetes.io/tls-acme: "true"
+    # annotations:
+    #   kubernetes.io/ingress.class: nginx
+    #   kubernetes.io/tls-acme: "true"
     labels: {}
     path: /
 
@@ -105,10 +104,10 @@ grpc:
   replicaCount: 1
 
   image:
-    repository: netrisai/xcaas-agent-api-server
+    repository: netrisai/controller-grpc
     pullPolicy: IfNotPresent
     # Overrides the image tag whose default is the chart appVersion.
-    tag: ""
+    tag: "3.0.0-alpha.10"
 
   imagePullSecrets: []
 
@@ -129,10 +128,10 @@ telescope:
   replicaCount: 1
 
   image:
-    repository: netrisai/xcaas-telescope-go
+    repository: netrisai/controller-telescope
     pullPolicy: IfNotPresent
     # Overrides the image tag whose default is the chart appVersion.
-    tag: ""
+    tag: "3.0.0-alpha.3"
 
   imagePullSecrets: []
 
@@ -151,32 +150,14 @@ telescope:
     # targetMemoryUtilizationPercentage: 80
 
 
-k8s-watcher:
-  replicaCount: 1
-
-  image:
-    repository: netrisai/xcaas-kuberis-k8-api-agent
-    pullPolicy: IfNotPresent
-    # Overrides the image tag whose default is the chart appVersion.
-    tag: ""
-
-  imagePullSecrets: []
-
-  autoscaling:
-    enabled: false
-    minReplicas: 1
-    maxReplicas: 100
-    targetCPUUtilizationPercentage: 80
-    # targetMemoryUtilizationPercentage: 80
-
 telescope-notifier:
   replicaCount: 1
 
   image:
-    repository: netrisai/xcaas-xcaas-notifier
+    repository: netrisai/controller-telescope-notifier
     pullPolicy: IfNotPresent
     # Overrides the image tag whose default is the chart appVersion.
-    tag: ""
+    tag: "3.0.0-alpha.1"
 
   imagePullSecrets: []
 
@@ -196,9 +177,6 @@ mariadb:
     username: netris
     password: changeme
     rootPassword: changeme
-  image:
-    repository: netrisai/netris-mariadb
-    tag: 10.1
   initdbScriptsConfigMap: netris-controller-initdb
 
 
