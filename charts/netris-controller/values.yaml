@@ -56,10 +56,10 @@ app:
   replicaCount: 1
 
   image:
-    repository: netrisai/controller-webservice
+    repository: netrisai/controller-web-service
     pullPolicy: IfNotPresent
     # Overrides the image tag whose default is the chart appVersion.
-    tag: ""
+    tag: "3.0.1-alpha.12"
 
   imagePullSecrets: []
 
@@ -107,7 +107,7 @@ grpc:
     repository: netrisai/controller-grpc
     pullPolicy: IfNotPresent
     # Overrides the image tag whose default is the chart appVersion.
-    tag: ""
+    tag: "3.0.1-alpha.6"
 
   imagePullSecrets: []
 
@@ -131,7 +131,7 @@ telescope:
     repository: netrisai/controller-telescope
     pullPolicy: IfNotPresent
     # Overrides the image tag whose default is the chart appVersion.
-    tag: ""
+    tag: "3.0.1-alpha.0"
 
   imagePullSecrets: []
 
@@ -157,7 +157,7 @@ telescope-notifier:
     repository: netrisai/controller-telescope-notifier
     pullPolicy: IfNotPresent
     # Overrides the image tag whose default is the chart appVersion.
-    tag: ""
+    tag: "3.0.0"
 
   imagePullSecrets: []
 
