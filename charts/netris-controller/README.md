@@ -77,7 +77,7 @@ The following table lists the configurable parameters of the netris-controller c
 | Parameter                             | Description                                                                                               | Default                    |
 | ------------------------------------- | --------------------------------------------------------------------------------------------------------- | -------------------------- |
 | `app.replicaCount`                    | Number of replicas in app deployment                                                                      | `1`                        |
-| `app.image.repository`                | Image repository                                                                                          | `netrisai/controller-webservice` |
+| `app.image.repository`                | Image repository                                                                                          | `netrisai/controller-web-service` |
 | `app.image.tag`                       | Image tag. Overrides the image tag whose default is the chart appVersion                                  | `""`                       |
 | `app.image.pullPolicy`                | Image pull policy                                                                                         | `IfNotPresent`             |
 | `app.imagePullSecrets`                | Reference to one or more secrets to be used when pulling images                                           | `[]`                       |
