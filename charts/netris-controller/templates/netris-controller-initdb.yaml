@@ -1321,118 +1321,136 @@ data:
     \        = @@character_set_results */;\n/*!50001 SET @saved_col_connection     =
     @@collation_connection */;\n/*!50001 SET character_set_client      = utf8 */;\n/*!50001
     SET character_set_results     = utf8 */;\n/*!50001 SET collation_connection      =
-    utf8_general_ci */;\n/*!50001 CREATE ALGORITHM=UNDEFINED */\n/*!50001 VIEW `atz_sub_to_pub`
-    AS select `atz_services`.`id` AS `id`,`atz_services`.`name` AS `name`,`sub_assignments`.`address`
-    AS `sub_ips`,`pub_assignments`.`address` AS `pub_ips`,case when `atz_pub_protoport`.`port_group_id`
-    is null then concat(`atz_pub_protoport`.`proto`,':',`atz_pub_protoport`.`port`)
-    else concat(`atz_pub_protoport`.`proto`,':',`acl_port_in_group`.`port`,if(`acl_port_in_group`.`port_to`
-    > 0,concat('-',`acl_port_in_group`.`port_to`),'')) end AS `pub_protoport` from
-    (((((((((`atz_services` left join `atz_pub_instances` on(`atz_services`.`id` =
-    `atz_pub_instances`.`service_id`)) left join `atz_pub_protoport` on(`atz_services`.`id`
-    = `atz_pub_protoport`.`service_id`)) left join `atz_sub_instances` on(`atz_services`.`id`
-    = `atz_sub_instances`.`service_id`)) left join `ip_reservation` `ipr_pub` on(`ipr_pub`.`consumer_id`
-    = `atz_pub_instances`.`instance_id`)) left join `ip_host` `pub_assignments` on(`pub_assignments`.`id`
-    = `ipr_pub`.`host_id`)) left join `ip_reservation` `ipr_sub` on(`ipr_sub`.`consumer_id`
-    = `atz_sub_instances`.`instance_id`)) left join `ip_host` `sub_assignments` on(`sub_assignments`.`id`
-    = `ipr_sub`.`host_id`)) left join `atz_sub_instances_approve` on(`atz_sub_instances`.`id`
-    = `atz_sub_instances_approve`.`instance_sub_id`)) left join `acl_port_in_group`
-    on(`atz_pub_protoport`.`port_group_id` = `acl_port_in_group`.`port_grp_id`)) where
-    `atz_sub_instances_approve`.`action` = 'delete' or `atz_sub_instances_approve`.`action`
-    is null and json_value(`ipr_pub`.`meta`,'$.anycast') is null and json_value(`ipr_sub`.`meta`,'$.anycast')
-    is null and `atz_services`.`status` = 'enabled' union select `atz_services`.`id`
-    AS `id`,`atz_services`.`name` AS `name`,`sub_assignments`.`address` AS `sub_ips`,`atz_pub_lb`.`ip_address`
-    AS `pub_ips`,case when `atz_pub_protoport`.`port_group_id` is null then concat(`atz_pub_protoport`.`proto`,':',`atz_pub_protoport`.`port`)
-    else concat(`atz_pub_protoport`.`proto`,':',`acl_port_in_group`.`port`,if(`acl_port_in_group`.`port_to`
-    > 0,concat('-',`acl_port_in_group`.`port_to`),'')) end AS `pub_protoport` from
-    (((((((`atz_services` join `atz_pub_lb` on(`atz_services`.`id` = `atz_pub_lb`.`service_id`))
-    left join `atz_pub_protoport` on(`atz_services`.`id` = `atz_pub_protoport`.`service_id`))
-    left join `atz_sub_instances` on(`atz_services`.`id` = `atz_sub_instances`.`service_id`))
-    left join `ip_reservation` `ipr_sub` on(`ipr_sub`.`consumer_id` = `atz_sub_instances`.`instance_id`))
-    left join `ip_host` `sub_assignments` on(`sub_assignments`.`id` = `ipr_sub`.`host_id`))
-    left join `atz_sub_instances_approve` on(`atz_sub_instances`.`id` = `atz_sub_instances_approve`.`instance_sub_id`))
-    left join `acl_port_in_group` on(`atz_pub_protoport`.`port_group_id` = `acl_port_in_group`.`port_grp_id`))
-    where `atz_sub_instances_approve`.`action` = 'delete' or `atz_sub_instances_approve`.`action`
-    is null and json_value(`ipr_sub`.`meta`,'$.anycast') is null and `atz_services`.`status`
-    = 'enabled' union select `atz_services`.`id` AS `id`,`atz_services`.`name` AS
-    `name`,`sub_assignments`.`address` AS `sub_ips`,concat(`atz_pub_prefixes`.`prefix`,'/',`atz_pub_prefixes`.`length`)
-    AS `pub_ips`,case when `atz_pub_protoport`.`port_group_id` is null then concat(`atz_pub_protoport`.`proto`,':',`atz_pub_protoport`.`port`)
-    else concat(`atz_pub_protoport`.`proto`,':',`acl_port_in_group`.`port`,if(`acl_port_in_group`.`port_to`
-    > 0,concat('-',`acl_port_in_group`.`port_to`),'')) end AS `pub_protoport` from
-    ((((((((`atz_services` left join `atz_pub_prefixes` on(`atz_services`.`id` = `atz_pub_prefixes`.`service_id`))
-    left join `atz_pub_protoport` on(`atz_services`.`id` = `atz_pub_protoport`.`service_id`))
-    left join `atz_sub_instances` on(`atz_services`.`id` = `atz_sub_instances`.`service_id`))
-    left join `ip_reservation` `ipr_sub` on(`ipr_sub`.`consumer_id` = `atz_sub_instances`.`instance_id`))
-    left join `ip_host` `sub_assignments` on(`sub_assignments`.`id` = `ipr_sub`.`host_id`))
-    left join `atz_sub_instances_approve` on(`atz_sub_instances`.`id` = `atz_sub_instances_approve`.`instance_sub_id`))
-    left join `acl_port_in_group` on(`atz_pub_protoport`.`port_group_id` = `acl_port_in_group`.`port_grp_id`))
-    left join `atz_pub_external_prefix_approve` on(`atz_pub_external_prefix_approve`.`atz_pub_prefix_id`
-    = `atz_pub_prefixes`.`id`)) where `atz_sub_instances_approve`.`action` = 'delete'
-    or `atz_sub_instances_approve`.`action` is null and json_value(`ipr_sub`.`meta`,'$.anycast')
-    is null and `atz_services`.`status` = 'enabled' and (`atz_pub_external_prefix_approve`.`action`
-    is null or `atz_pub_external_prefix_approve`.`action` = 'delete') */;\n/*!50001
-    SET character_set_client      = @saved_cs_client */;\n/*!50001 SET character_set_results
-    \    = @saved_cs_results */;\n/*!50001 SET collation_connection      = @saved_col_connection
-    */;\n\n--\n-- Final view structure for view `atz_subprefix_to_pub`\n--\n\n/*!50001
+    utf8_general_ci */;\nDELIMITER $$\nCREATE ALGORITHM=UNDEFINED \nVIEW `atz_sub_to_pub`
+    AS \nSELECT \n`atz_services`.`id` AS `id`,\n`atz_services`.`name` AS `name`,\n`sub_assignments`.`address`
+    AS `sub_ips`,\n`pub_assignments`.`address` AS `pub_ips`,\nCASE WHEN `atz_pub_protoport`.`port_group_id`
+    IS NULL \n    THEN CONCAT(`atz_pub_protoport`.`proto`,':',`atz_pub_protoport`.`port`)
+    \n    ELSE CONCAT(`atz_pub_protoport`.`proto`,':',`acl_port_in_group`.`port`,IF(`acl_port_in_group`.`port_to`
+    > 0,CONCAT('-',`acl_port_in_group`.`port_to`),'')) \nEND AS `pub_protoport` \nFROM
+    `atz_services` \n    LEFT JOIN `atz_pub_instances` ON `atz_services`.`id` = `atz_pub_instances`.`service_id`\n
+    \   LEFT JOIN `atz_pub_protoport` ON `atz_services`.`id` = `atz_pub_protoport`.`service_id`\n
+    \   LEFT JOIN `atz_sub_instances` ON `atz_services`.`id` = `atz_sub_instances`.`service_id`\n
+    \   LEFT JOIN `ip_reservation` `ipr_pub` ON `ipr_pub`.`consumer_id` =  `atz_pub_instances`.`instance_id`\n
+    \   LEFT JOIN `ip_host` `pub_assignments` ON `pub_assignments`.`id` = `ipr_pub`.`host_id`\n
+    \   LEFT JOIN `ip_reservation` `ipr_sub` ON `ipr_sub`.`consumer_id` =  `atz_sub_instances`.`instance_id`\n
+    \   LEFT JOIN `ip_host` `sub_assignments` ON `sub_assignments`.`id` = `ipr_sub`.`host_id`
+    \n    LEFT JOIN `atz_sub_instances_approve` ON `atz_sub_instances`.`id` = `atz_sub_instances_approve`.`instance_sub_id`\n
+    \   LEFT JOIN `acl_port_in_group` ON `atz_pub_protoport`.`port_group_id` = `acl_port_in_group`.`port_grp_id`\nWHERE
+    \n    `atz_sub_instances_approve`.`action` = 'delete' OR `atz_sub_instances_approve`.`action`
+    IS NULL \n    AND (json_value(`ipr_pub`.`meta`, \"$.anycast\") IS NULL OR json_value(`ipr_pub`.`meta`,
+    \"$.anycast\") = FALSE)\n    AND (json_value(`ipr_sub`.`meta`, \"$.anycast\")
+    IS NULL OR json_value(`ipr_sub`.`meta`, \"$.anycast\") = FALSE)\n    AND `atz_services`.`status`
+    = 'enabled' \nUNION \n\nSELECT \n    `atz_services`.`id` AS `id`,\n    `atz_services`.`name`
+    AS `name`,\n    `sub_assignments`.`address` AS `sub_ips`,\n    `atz_pub_lb`.`ip_address`
+    AS `pub_ips`,\n    CASE WHEN `atz_pub_protoport`.`port_group_id` IS NULL \n        THEN
+    CONCAT(`atz_pub_protoport`.`proto`,':',`atz_pub_protoport`.`port`) \n        ELSE
+    CONCAT(`atz_pub_protoport`.`proto`,':',`acl_port_in_group`.`port`,IF(`acl_port_in_group`.`port_to`
+    > 0,CONCAT('-',`acl_port_in_group`.`port_to`),'')) \n    END AS `pub_protoport`
+    \nFROM `atz_services` \n    JOIN `atz_pub_lb` ON `atz_services`.`id` = `atz_pub_lb`.`service_id`\n
+    \   LEFT JOIN `atz_pub_protoport` ON `atz_services`.`id` = `atz_pub_protoport`.`service_id`\n
+    \   LEFT JOIN `atz_sub_instances` ON `atz_services`.`id` = `atz_sub_instances`.`service_id`\n
+    \   LEFT JOIN `ip_reservation` `ipr_sub` ON `ipr_sub`.`consumer_id` =  `atz_sub_instances`.`instance_id`\n
+    \   LEFT JOIN `ip_host` `sub_assignments` ON `sub_assignments`.`id` = `ipr_sub`.`host_id`
+    \n    LEFT JOIN `atz_sub_instances_approve` ON `atz_sub_instances`.`id` = `atz_sub_instances_approve`.`instance_sub_id`\n
+    \   LEFT JOIN `acl_port_in_group` ON `atz_pub_protoport`.`port_group_id` = `acl_port_in_group`.`port_grp_id`\nWHERE
+    `atz_sub_instances_approve`.`action` = 'delete' OR `atz_sub_instances_approve`.`action`
+    IS NULL \n    AND (json_value(`ipr_sub`.`meta`, \"$.anycast\") IS NULL OR json_value(`ipr_sub`.`meta`,
+    \"$.anycast\") = FALSE)\n    AND `atz_services`.`status` = 'enabled' \nUNION \nSELECT
+    \n    `atz_services`.`id` AS `id`,\n    `atz_services`.`name` AS `name`,\n    `sub_assignments`.`address`
+    AS `sub_ips`,\n    CONCAT(`atz_pub_prefixes`.`prefix`,'/',`atz_pub_prefixes`.`length`)
+    AS `pub_ips`,\n    CASE WHEN `atz_pub_protoport`.`port_group_id` IS NULL \n        THEN
+    CONCAT(`atz_pub_protoport`.`proto`,':',`atz_pub_protoport`.`port`) \n        ELSE
+    CONCAT(`atz_pub_protoport`.`proto`,':',`acl_port_in_group`.`port`,IF(`acl_port_in_group`.`port_to`
+    > 0,CONCAT('-',`acl_port_in_group`.`port_to`),'')) \n    END AS `pub_protoport`
+    \n    FROM `atz_services` \n        LEFT JOIN `atz_pub_prefixes` ON `atz_services`.`id`
+    = `atz_pub_prefixes`.`service_id`\n        LEFT JOIN `atz_pub_protoport` ON `atz_services`.`id`
+    = `atz_pub_protoport`.`service_id`\n        LEFT JOIN `atz_sub_instances` ON `atz_services`.`id`
+    = `atz_sub_instances`.`service_id`\n        LEFT JOIN `ip_reservation` `ipr_sub`
+    ON `ipr_sub`.`consumer_id` =  `atz_sub_instances`.`instance_id`\n        LEFT
+    JOIN `ip_host` `sub_assignments` ON `sub_assignments`.`id` = `ipr_sub`.`host_id`
+    \n        LEFT JOIN `atz_sub_instances_approve` ON `atz_sub_instances`.`id` =
+    `atz_sub_instances_approve`.`instance_sub_id` \n        LEFT JOIN `acl_port_in_group`
+    ON `atz_pub_protoport`.`port_group_id` = `acl_port_in_group`.`port_grp_id`\n        LEFT
+    JOIN `atz_pub_external_prefix_approve` ON `atz_pub_external_prefix_approve`.`atz_pub_prefix_id`
+    = `atz_pub_prefixes`.`id`\n    WHERE `atz_sub_instances_approve`.`action` = 'delete'
+    OR `atz_sub_instances_approve`.`action` IS NULL \n        AND (json_value(`ipr_sub`.`meta`,
+    \"$.anycast\") IS NULL OR json_value(`ipr_sub`.`meta`, \"$.anycast\") = FALSE)\n
+    \       AND `atz_services`.`status` = 'enabled' \n        AND (`atz_pub_external_prefix_approve`.`action`
+    IS NULL OR `atz_pub_external_prefix_approve`.`action` = 'delete')$$\nDELIMITER
+    ;\n/*!50001 SET character_set_client      = @saved_cs_client */;\n/*!50001 SET
+    character_set_results     = @saved_cs_results */;\n/*!50001 SET collation_connection
+    \     = @saved_col_connection */;\n\n--\n-- Final view structure for view `atz_subprefix_to_pub`\n--\n\n/*!50001
     DROP TABLE IF EXISTS `atz_subprefix_to_pub`*/;\n/*!50001 DROP VIEW IF EXISTS `atz_subprefix_to_pub`*/;\n/*!50001
     SET @saved_cs_client          = @@character_set_client */;\n/*!50001 SET @saved_cs_results
     \        = @@character_set_results */;\n/*!50001 SET @saved_col_connection     =
     @@collation_connection */;\n/*!50001 SET character_set_client      = utf8 */;\n/*!50001
     SET character_set_results     = utf8 */;\n/*!50001 SET collation_connection      =
-    utf8_general_ci */;\n/*!50001 CREATE ALGORITHM=UNDEFINED */\n/*!50001 VIEW `atz_subprefix_to_pub`
-    AS select `atz_services`.`id` AS `id`,`atz_services`.`name` AS `name`,concat(`atz_sub_prefixes`.`prefix`,'/',`atz_sub_prefixes`.`length`)
-    AS `sub_prefix`,concat(`atz_pub_prefixes`.`prefix`,'/',`atz_pub_prefixes`.`length`)
-    AS `pub_ips`,case when `atz_pub_protoport`.`port_group_id` is null then concat(`atz_pub_protoport`.`proto`,':',`atz_pub_protoport`.`port`)
-    else concat(`atz_pub_protoport`.`proto`,':',`acl_port_in_group`.`port`,if(`acl_port_in_group`.`port_to`
-    > 0,concat('-',`acl_port_in_group`.`port_to`),'')) end AS `pub_protoport` from
-    ((((((`atz_services` left join `atz_pub_protoport` on(`atz_services`.`id` = `atz_pub_protoport`.`service_id`))
-    left join `atz_pub_prefixes` on(`atz_services`.`id` = `atz_pub_prefixes`.`service_id`))
-    left join `atz_sub_prefixes` on(`atz_services`.`id` = `atz_sub_prefixes`.`service_id`))
-    left join `acl_port_in_group` on(`atz_pub_protoport`.`port_group_id` = `acl_port_in_group`.`port_grp_id`))
-    left join `atz_pub_external_prefix_approve` on(`atz_pub_external_prefix_approve`.`atz_pub_prefix_id`
-    = `atz_pub_prefixes`.`id`)) left join `atz_sub_external_prefixies_approve` on(`atz_sub_external_prefixies_approve`.`atz_sub_prefix_id`
-    = `atz_sub_prefixes`.`id`)) where `atz_services`.`status` = 'enabled' and `atz_pub_prefixes`.`prefix`
-    is not null and `atz_sub_prefixes`.`prefix` is not null and (`atz_pub_external_prefix_approve`.`action`
-    is null or `atz_pub_external_prefix_approve`.`action` = 'delete') and (`atz_sub_external_prefixies_approve`.`action`
-    is null or `atz_sub_external_prefixies_approve`.`action` = 'delete') union select
-    `atz_services`.`id` AS `id`,`atz_services`.`name` AS `name`,concat(`atz_sub_prefixes`.`prefix`,'/',`atz_sub_prefixes`.`length`)
-    AS `sub_prefix`,concat(`atz_pub_lb`.`ip_address`) AS `pub_ips`,case when `atz_pub_protoport`.`port_group_id`
-    is null then concat(`atz_pub_protoport`.`proto`,':',`atz_pub_protoport`.`port`)
-    else concat(`atz_pub_protoport`.`proto`,':',`acl_port_in_group`.`port`,if(`acl_port_in_group`.`port_to`
-    > 0,concat('-',`acl_port_in_group`.`port_to`),'')) end AS `pub_protoport` from
-    (((((`atz_services` left join `atz_pub_protoport` on(`atz_services`.`id` = `atz_pub_protoport`.`service_id`))
-    join `atz_pub_lb` on(`atz_services`.`id` = `atz_pub_lb`.`service_id`)) left join
-    `atz_sub_prefixes` on(`atz_services`.`id` = `atz_sub_prefixes`.`service_id`))
-    left join `acl_port_in_group` on(`atz_pub_protoport`.`port_group_id` = `acl_port_in_group`.`port_grp_id`))
-    left join `atz_sub_external_prefixies_approve` on(`atz_sub_external_prefixies_approve`.`atz_sub_prefix_id`
-    = `atz_sub_prefixes`.`id`)) where `atz_services`.`status` = 'enabled' and `atz_pub_lb`.`ip_address`
-    is not null and (`atz_sub_external_prefixies_approve`.`action` is null or `atz_sub_external_prefixies_approve`.`action`
-    = 'delete') union select `atz_services`.`id` AS `id`,`atz_services`.`name` AS
-    `name`,concat(`atz_sub_prefixes`.`prefix`,'/',`atz_sub_prefixes`.`length`) AS
-    `sub_prefix`,`pub_assignments`.`address` AS `pub_ips`,case when `atz_pub_protoport`.`port_group_id`
-    is null then concat(`atz_pub_protoport`.`proto`,':',`atz_pub_protoport`.`port`)
-    else concat(`atz_pub_protoport`.`proto`,':',`acl_port_in_group`.`port`,if(`acl_port_in_group`.`port_to`
-    > 0,concat('-',`acl_port_in_group`.`port_to`),'')) end AS `pub_protoport` from
-    (((((((`atz_services` left join `atz_pub_instances` on(`atz_services`.`id` = `atz_pub_instances`.`service_id`))
-    left join `atz_pub_protoport` on(`atz_services`.`id` = `atz_pub_protoport`.`service_id`))
-    left join `atz_sub_prefixes` on(`atz_services`.`id` = `atz_sub_prefixes`.`service_id`))
-    join `ip_reservation` `ipr` on(`ipr`.`consumer_id` = `atz_pub_instances`.`instance_id`
-    and `ipr`.`consumer_type` = 'roh')) left join `ip_host` `pub_assignments` on(`ipr`.`host_id`
-    = `pub_assignments`.`id`)) left join `acl_port_in_group` on(`atz_pub_protoport`.`port_group_id`
-    = `acl_port_in_group`.`port_grp_id`)) left join `atz_sub_external_prefixies_approve`
-    on(`atz_sub_external_prefixies_approve`.`atz_sub_prefix_id` = `atz_sub_prefixes`.`id`))
-    where json_value(`ipr`.`meta`,'$.anycast') is null and `atz_services`.`status`
-    = 'enabled' and `pub_assignments`.`address` is not null and `atz_sub_prefixes`.`prefix`
-    is not null and (`atz_sub_external_prefixies_approve`.`action` is null or `atz_sub_external_prefixies_approve`.`action`
-    = 'delete') */;\n/*!50001 SET character_set_client      = @saved_cs_client */;\n/*!50001
-    SET character_set_results     = @saved_cs_results */;\n/*!50001 SET collation_connection
-    \     = @saved_col_connection */;\n\n--\n-- Final view structure for view `instance_port_view`\n--\n\n/*!50001
-    DROP TABLE IF EXISTS `instance_port_view`*/;\n/*!50001 DROP VIEW IF EXISTS `instance_port_view`*/;\n/*!50001
-    SET @saved_cs_client          = @@character_set_client */;\n/*!50001 SET @saved_cs_results
-    \        = @@character_set_results */;\n/*!50001 SET @saved_col_connection     =
-    @@collation_connection */;\n/*!50001 SET character_set_client      = utf8 */;\n/*!50001
-    SET character_set_results     = utf8 */;\n/*!50001 SET collation_connection      =
-    utf8_general_ci */;\n/*!50001 CREATE ALGORITHM=UNDEFINED */\n/*!50001 VIEW `instance_port_view`
-    AS select `instances`.`id` AS `instance_id`,`instances`.`name` AS `instance_name`,`instances`.`tenant_id`
+    utf8_general_ci */;\nDELIMITER $$\nCREATE ALGORITHM=UNDEFINED  \nVIEW `atz_subprefix_to_pub`
+    AS \nSELECT \n        `atz_services`.`id` AS `id`,\n        `atz_services`.`name`
+    AS `name`,\n        CONCAT(`atz_sub_prefixes`.`prefix`,'/',`atz_sub_prefixes`.`length`)
+    AS `sub_prefix`,\n        CONCAT(`atz_pub_prefixes`.`prefix`,'/',`atz_pub_prefixes`.`length`)
+    AS `pub_ips`,\n        CASE WHEN `atz_pub_protoport`.`port_group_id` IS NULL \n
+    \           THEN CONCAT(`atz_pub_protoport`.`proto`,':',`atz_pub_protoport`.`port`)
+    \n            ELSE CONCAT(`atz_pub_protoport`.`proto`,':',`acl_port_in_group`.`port`,IF(`acl_port_in_group`.`port_to`
+    > 0,CONCAT('-',`acl_port_in_group`.`port_to`),'')) \n        END AS `pub_protoport`
+    \n        FROM `atz_services` \n            LEFT JOIN `atz_pub_protoport` ON `atz_services`.`id`
+    = `atz_pub_protoport`.`service_id`\n            LEFT JOIN `atz_pub_prefixes` ON
+    `atz_services`.`id` = `atz_pub_prefixes`.`service_id` \n            LEFT JOIN
+    `atz_sub_prefixes` ON `atz_services`.`id` = `atz_sub_prefixes`.`service_id` \n
+    \           LEFT JOIN `acl_port_in_group` ON `atz_pub_protoport`.`port_group_id`
+    = `acl_port_in_group`.`port_grp_id`\n            LEFT JOIN `atz_pub_external_prefix_approve`
+    ON `atz_pub_external_prefix_approve`.`atz_pub_prefix_id` = `atz_pub_prefixes`.`id`
+    \n            LEFT JOIN `atz_sub_external_prefixies_approve` ON `atz_sub_external_prefixies_approve`.`atz_sub_prefix_id`
+    = `atz_sub_prefixes`.`id`\n        WHERE \n            `atz_services`.`status`
+    = 'enabled' \n            AND `atz_pub_prefixes`.`prefix` IS NOT NULL \n            AND
+    `atz_sub_prefixes`.`prefix` IS NOT NULL \n            AND (`atz_pub_external_prefix_approve`.`action`
+    IS NULL OR `atz_pub_external_prefix_approve`.`action` = 'delete') \n            AND
+    (`atz_sub_external_prefixies_approve`.`action` IS NULL OR `atz_sub_external_prefixies_approve`.`action`
+    = 'delete') \nUNION \nSELECT \n        `atz_services`.`id` AS `id`,\n        `atz_services`.`name`
+    AS `name`,\n        CONCAT(`atz_sub_prefixes`.`prefix`,'/',`atz_sub_prefixes`.`length`)
+    AS `sub_prefix`,\n        CONCAT(`atz_pub_lb`.`ip_address`) AS `pub_ips`,\n        CASE
+    WHEN `atz_pub_protoport`.`port_group_id` IS NULL \n            THEN CONCAT(`atz_pub_protoport`.`proto`,':',`atz_pub_protoport`.`port`)
+    \n            ELSE CONCAT(`atz_pub_protoport`.`proto`,':',`acl_port_in_group`.`port`,IF(`acl_port_in_group`.`port_to`
+    > 0,CONCAT('-',`acl_port_in_group`.`port_to`),'')) \n            END AS `pub_protoport`
+    \n    FROM `atz_services` \n            LEFT JOIN `atz_pub_protoport` ON `atz_services`.`id`
+    = `atz_pub_protoport`.`service_id`\n            JOIN `atz_pub_lb` ON `atz_services`.`id`
+    = `atz_pub_lb`.`service_id`\n            LEFT JOIN `atz_sub_prefixes` ON `atz_services`.`id`
+    = `atz_sub_prefixes`.`service_id`\n            LEFT JOIN `acl_port_in_group` ON
+    `atz_pub_protoport`.`port_group_id` = `acl_port_in_group`.`port_grp_id`\n            LEFT
+    JOIN `atz_sub_external_prefixies_approve` ON `atz_sub_external_prefixies_approve`.`atz_sub_prefix_id`
+    = `atz_sub_prefixes`.`id`\n    WHERE `atz_services`.`status` = 'enabled' \n    AND
+    `atz_pub_lb`.`ip_address` IS NOT NULL \n    AND (`atz_sub_external_prefixies_approve`.`action`
+    IS NULL OR `atz_sub_external_prefixies_approve`.`action` = 'delete') \n\nUNION
+    \n\nSELECT \n    `atz_services`.`id` AS `id`,`atz_services`.`name` AS `name`,\n
+    \   CONCAT(`atz_sub_prefixes`.`prefix`,'/',`atz_sub_prefixes`.`length`) AS `sub_prefix`,\n
+    \   `pub_assignments`.`address` AS `pub_ips`,\n    CASE WHEN `atz_pub_protoport`.`port_group_id`
+    IS NULL THEN CONCAT(`atz_pub_protoport`.`proto`,':',`atz_pub_protoport`.`port`)
+    \n    ELSE CONCAT(`atz_pub_protoport`.`proto`,':',`acl_port_in_group`.`port`,IF(`acl_port_in_group`.`port_to`
+    > 0,CONCAT('-',`acl_port_in_group`.`port_to`),'')) \n    END AS `pub_protoport`
+    \n    FROM `atz_services` \n        LEFT JOIN `atz_pub_instances` ON `atz_services`.`id`
+    = `atz_pub_instances`.`service_id`\n        LEFT JOIN `atz_pub_protoport` ON `atz_services`.`id`
+    = `atz_pub_protoport`.`service_id`\n        LEFT JOIN `atz_sub_prefixes` ON `atz_services`.`id`
+    = `atz_sub_prefixes`.`service_id`\n        JOIN `ip_reservation` `ipr` ON `ipr`.`consumer_id`
+    = `atz_pub_instances`.`instance_id` AND `ipr`.`consumer_type` = \"roh\"\n        LEFT
+    JOIN `ip_host` `pub_assignments` ON `ipr`.`host_id` = `pub_assignments`.`id`\n
+    \       LEFT JOIN `acl_port_in_group` ON `atz_pub_protoport`.`port_group_id` =
+    `acl_port_in_group`.`port_grp_id`\n        LEFT JOIN `atz_sub_external_prefixies_approve`
+    ON `atz_sub_external_prefixies_approve`.`atz_sub_prefix_id` = `atz_sub_prefixes`.`id`\nWHERE
+    (json_value(`ipr`.`meta`, \"$.anycast\") IS NULL OR json_value(`ipr`.`meta`, \"$.anycast\")
+    = FALSE)\n        AND `atz_services`.`status` = 'enabled' \n        AND `pub_assignments`.`address`
+    IS NOT NULL \n        AND `atz_sub_prefixes`.`prefix` IS NOT NULL \n        AND
+    (`atz_sub_external_prefixies_approve`.`action` IS NULL OR `atz_sub_external_prefixies_approve`.`action`
+    = 'delete')$$\nDELIMITER ;\n/*!50001 SET character_set_client      = @saved_cs_client
+    */;\n/*!50001 SET character_set_results     = @saved_cs_results */;\n/*!50001
+    SET collation_connection      = @saved_col_connection */;\n\n--\n-- Final view
+    structure for view `instance_port_view`\n--\n\n/*!50001 DROP TABLE IF EXISTS `instance_port_view`*/;\n/*!50001
+    DROP VIEW IF EXISTS `instance_port_view`*/;\n/*!50001 SET @saved_cs_client          =
+    @@character_set_client */;\n/*!50001 SET @saved_cs_results         = @@character_set_results
+    */;\n/*!50001 SET @saved_col_connection     = @@collation_connection */;\n/*!50001
+    SET character_set_client      = utf8 */;\n/*!50001 SET character_set_results     =
+    utf8 */;\n/*!50001 SET collation_connection      = utf8_general_ci */;\n/*!50001
+    CREATE ALGORITHM=UNDEFINED */\n/*!50001 VIEW `instance_port_view` AS select `instances`.`id`
+    AS `instance_id`,`instances`.`name` AS `instance_name`,`instances`.`tenant_id`
     AS `tenant_id`,`instances`.`type` AS `instance_type`,concat('',ifnull(`instances`.`compute`,''))
     AS `hardware`,'' AS `port_id`,concat(ifnull(`instances`.`interface`,''),'') AS
     `port` from `instances` where `instances`.`interface` is not null */;\n/*!50001
