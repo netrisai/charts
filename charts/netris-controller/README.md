@@ -138,7 +138,7 @@ The following table lists the configurable parameters of the netris-controller c
 | ------------------------------------- | --------------------------------------------------------------------------------------------------------- | -------------------------- |
 | `telescope-notifier.replicaCount`                    | Number of replicas in telescope-notifier deployment                                        | `1`                        |
 | `telescope-notifier.image.repository`                | Image repository                                                                           | `netrisai/controller-telescope-notifier` |
-| `telescope-notifier.image.tag`                       | Image tag. Overrides the image tag whose default is the chart appVersion                   | `""`                       |
+| `telescope-notifier.image.tag`                       | Image tag. Overrides the image tag whose default is the chart appVersion                   | `"3.0.0"`                  |
 | `telescope-notifier.image.pullPolicy`                | Image pull policy                                                                          | `IfNotPresent`             |
 | `telescope-notifier.imagePullSecrets`                | Reference to one or more secrets to be used when pulling images                            | `[]`                       |
 | `telescope-notifier.autoscaling.enabled`                         | Option to turn autoscaling on for app and specify params for HPA. Autoscaling needs metrics-server to access cpu metrics | `false`        |
