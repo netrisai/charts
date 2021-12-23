@@ -1192,18 +1192,18 @@ data:
     float NOT NULL DEFAULT 0,\n  `discount` int(11) unsigned NOT NULL DEFAULT 0,\n
     \ `billing_type` enum('region','path') NOT NULL DEFAULT 'region',\n  `pausable`
     int(10) unsigned NOT NULL DEFAULT 0,\n  `min_bill_cycle` int(11) NOT NULL DEFAULT
-    10,\n  `sym_policer` int(11) NOT NULL DEFAULT 0,\n  `currency_id` int(11) NOT
-    NULL,\n  `privacy` enum('public','private') NOT NULL DEFAULT 'private',\n  `create_date`
-    timestamp /* mariadb-5.3 */ NOT NULL DEFAULT current_timestamp(),\n  `modified_date`
-    timestamp /* mariadb-5.3 */ NOT NULL DEFAULT current_timestamp() ON UPDATE current_timestamp(),\n
-    \ `description` varchar(255) NOT NULL,\n  PRIMARY KEY (`id`),\n  UNIQUE KEY `name`
-    (`name`)\n) ENGINE=InnoDB DEFAULT CHARSET=latin1;\n/*!40101 SET character_set_client
-    = @saved_cs_client */;\n\n--\n-- Table structure for table `topology`\n--\n\nDROP
-    TABLE IF EXISTS `topology`;\n/*!40101 SET @saved_cs_client     = @@character_set_client
-    */;\n/*!40101 SET character_set_client = utf8 */;\nCREATE TABLE `topology` (\n
-    \ `id` bigint(20) unsigned NOT NULL AUTO_INCREMENT,\n  `user_id` bigint(22) NOT
-    NULL,\n  `site_id` bigint(22) NOT NULL,\n  `positions` text DEFAULT NULL,\n  `options`
-    text DEFAULT NULL,\n  PRIMARY KEY (`id`)\n) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;\n/*!40101
+    10,\n  `sym_policer` int(11) NOT NULL DEFAULT 0,\n  `privacy` enum('public','private')
+    NOT NULL DEFAULT 'private',\n  `create_date` timestamp /* mariadb-5.3 */ NOT NULL
+    DEFAULT current_timestamp(),\n  `modified_date` timestamp /* mariadb-5.3 */ NOT
+    NULL DEFAULT current_timestamp() ON UPDATE current_timestamp(),\n  `description`
+    varchar(255) NOT NULL,\n  PRIMARY KEY (`id`),\n  UNIQUE KEY `name` (`name`)\n)
+    ENGINE=InnoDB DEFAULT CHARSET=latin1;\n/*!40101 SET character_set_client = @saved_cs_client
+    */;\n\n--\n-- Table structure for table `topology`\n--\n\nDROP TABLE IF EXISTS
+    `topology`;\n/*!40101 SET @saved_cs_client     = @@character_set_client */;\n/*!40101
+    SET character_set_client = utf8 */;\nCREATE TABLE `topology` (\n  `id` bigint(20)
+    unsigned NOT NULL AUTO_INCREMENT,\n  `user_id` bigint(22) NOT NULL,\n  `site_id`
+    bigint(22) NOT NULL,\n  `positions` text DEFAULT NULL,\n  `options` text DEFAULT
+    NULL,\n  PRIMARY KEY (`id`)\n) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;\n/*!40101
     SET character_set_client = @saved_cs_client */;\n\n--\n-- Table structure for
     table `topology_link`\n--\n\nDROP TABLE IF EXISTS `topology_link`;\n/*!40101 SET
     @saved_cs_client     = @@character_set_client */;\n/*!40101 SET character_set_client
