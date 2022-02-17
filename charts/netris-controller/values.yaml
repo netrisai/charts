@@ -59,7 +59,7 @@ app:
     repository: netrisai/controller-web-service
     pullPolicy: IfNotPresent
     # Overrides the image tag whose default is the chart appVersion.
-    tag: "3.0.4-003"
+    tag: "3.0.5-003"
 
   imagePullSecrets: []
 
@@ -107,7 +107,7 @@ grpc:
     repository: netrisai/controller-grpc
     pullPolicy: IfNotPresent
     # Overrides the image tag whose default is the chart appVersion.
-    tag: "3.0.4.002"
+    tag: "3.0.4.005"
 
   imagePullSecrets: []
 
@@ -319,3 +319,9 @@ graphite:
       [collectd]
       pattern = ^collectd.*
       retentions = 1m:7d,5m:90d,1h:2y
+
+migration:
+  image:
+    repository: netrisai/controller-web-service-migration
+    pullPolicy: IfNotPresent
+    tag: "3.0.5"
