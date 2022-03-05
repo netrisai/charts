@@ -119,7 +119,7 @@ The following table lists the configurable parameters of the netris-controller c
 | ------------------------------------- | --------------------------------------------------------------------------------------------------------- | -------------------------- |
 | `telescope.replicaCount`                    | Number of replicas in telescope deployment                                                          | `1`                        |
 | `telescope.image.repository`                | Image repository                                                                                          | `netrisai/controller-telescope` |
-| `telescope.image.tag`                       | Image tag. Overrides the image tag whose default is the chart appVersion                                  | `"3.0.5"`                       |
+| `telescope.image.tag`                       | Image tag. Overrides the image tag whose default is the chart appVersion                                  | `"3.0.5-002"`                       |
 | `telescope.image.pullPolicy`                | Image pull policy                                                                                         | `IfNotPresent`             |
 | `telescope.imagePullSecrets`                | Reference to one or more secrets to be used when pulling images                                           | `[]`                       |
 | `telescope.service.type`                    | Kubernetes service type 	                                                                                | `ClusterIP`                |
