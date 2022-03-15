@@ -2,7 +2,7 @@
 apiVersion: batch/v1
 kind: Job
 metadata:
-  name: {{ printf "%s-%s" (include "netris-controller.fullname" .) $microservicename }}
+  name: {{ printf "%s-%s" (include "netris-controller.fullname" .) $microservicename }}-{{ randAlphaNum 5 | lower }}
   labels:
     {{- include "netris-controller.labels" . | nindent 4 }}
     {{- printf "%s-%s" (include "netris-controller.selectorLabels" .) $microservicename | nindent 4 }}
