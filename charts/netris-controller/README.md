@@ -78,7 +78,7 @@ The following table lists the configurable parameters of the netris-controller c
 | ------------------------------------- | --------------------------------------------------------------------------------------------------------- | -------------------------- |
 | `app.replicaCount`                    | Number of replicas in app deployment                                                                      | `1`                        |
 | `app.image.repository`                | Image repository                                                                                          | `netrisai/controller-web-service` |
-| `app.image.tag`                       | Image tag. Overrides the image tag whose default is the chart appVersion                                  | `"3.0.5-019"`                       |
+| `app.image.tag`                       | Image tag. Overrides the image tag whose default is the chart appVersion                                  | `"3.0.6-005"`                       |
 | `app.image.pullPolicy`                | Image pull policy                                                                                         | `IfNotPresent`             |
 | `app.imagePullSecrets`                | Reference to one or more secrets to be used when pulling images                                           | `[]`                       |
 | `app.service.type`                    | Kubernetes service type 	                                                                                | `ClusterIP`                |
@@ -102,7 +102,7 @@ The following table lists the configurable parameters of the netris-controller c
 | -------------------------------------- | --------------------------------------------------------------------------------------------------------- | -------------------------- |
 | `grpc.replicaCount`                    | Number of replicas in grpc deployment                                                                     | `1`                        |
 | `grpc.image.repository`                | Image repository                                                                                          | `netrisai/controller-grpc` |
-| `grpc.image.tag`                       | Image tag. Overrides the image tag whose default is the chart appVersion                                  | `"3.0.4.005"`                       |
+| `grpc.image.tag`                       | Image tag. Overrides the image tag whose default is the chart appVersion                                  | `"3.0.6.003"`                       |
 | `grpc.image.pullPolicy`                | Image pull policy                                                                                         | `IfNotPresent`             |
 | `grpc.imagePullSecrets`                | Reference to one or more secrets to be used when pulling images                                           | `[]`                       |
 | `grpc.service.type`                    | Kubernetes service type 	                                                                                 | `ClusterIP`                |
@@ -119,7 +119,7 @@ The following table lists the configurable parameters of the netris-controller c
 | ------------------------------------- | --------------------------------------------------------------------------------------------------------- | -------------------------- |
 | `telescope.replicaCount`                    | Number of replicas in telescope deployment                                                          | `1`                        |
 | `telescope.image.repository`                | Image repository                                                                                          | `netrisai/controller-telescope` |
-| `telescope.image.tag`                       | Image tag. Overrides the image tag whose default is the chart appVersion                                  | `"3.0.5-005"`                       |
+| `telescope.image.tag`                       | Image tag. Overrides the image tag whose default is the chart appVersion                                  | `"3.0.6-001"`                       |
 | `telescope.image.pullPolicy`                | Image pull policy                                                                                         | `IfNotPresent`             |
 | `telescope.imagePullSecrets`                | Reference to one or more secrets to be used when pulling images                                           | `[]`                       |
 | `telescope.service.type`                    | Kubernetes service type 	                                                                                | `ClusterIP`                |
