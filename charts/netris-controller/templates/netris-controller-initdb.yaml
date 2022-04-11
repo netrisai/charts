@@ -1136,25 +1136,26 @@ data:
     */;\n\n--\n-- Table structure for table `supported_platforms`\n--\n\nDROP TABLE
     IF EXISTS `supported_platforms`;\n/*!40101 SET @saved_cs_client     = @@character_set_client
     */;\n/*!40101 SET character_set_client = utf8 */;\nCREATE TABLE `supported_platforms`
-    (\n  `id` bigint(20) DEFAULT NULL,\n  `searchkey` varchar(300) DEFAULT NULL,\n
-    \ `platform` varchar(300) DEFAULT NULL,\n  `asic` varchar(255) NOT NULL,\n  `acl4_count`
-    int(11) DEFAULT NULL,\n  `acl6_count` int(11) DEFAULT NULL\n) ENGINE=InnoDB DEFAULT
-    CHARSET=utf8mb4;\n/*!40101 SET character_set_client = @saved_cs_client */;\n\n--\n--
-    Table structure for table `switch`\n--\n\nDROP TABLE IF EXISTS `switch`;\n/*!40101
-    SET @saved_cs_client     = @@character_set_client */;\n/*!40101 SET character_set_client
-    = utf8 */;\nCREATE TABLE `switch` (\n  `switch_id` bigint(20) unsigned NOT NULL
-    AUTO_INCREMENT,\n  `netpop_id` bigint(22) unsigned NOT NULL DEFAULT 0,\n  `offload_port_id`
-    bigint(22) unsigned DEFAULT NULL,\n  `offload_link_ip` int(10) unsigned DEFAULT
-    NULL,\n  `location` varchar(255) CHARACTER SET latin1 DEFAULT NULL,\n  `status`
-    enum('ok','maintenance') CHARACTER SET latin1 NOT NULL DEFAULT 'ok',\n  `asn`
-    varchar(255) CHARACTER SET latin1 DEFAULT NULL,\n  `last_adj_change` timestamp
-    NOT NULL DEFAULT '0000-00-00 00:00:00',\n  `heartbeat` timestamp NOT NULL DEFAULT
-    '0000-00-00 00:00:00',\n  `description` varchar(255) CHARACTER SET latin1 DEFAULT
-    NULL,\n  `routes` int(10) unsigned NOT NULL DEFAULT 0,\n  `macs` int(10) unsigned
-    NOT NULL DEFAULT 0,\n  `ingress_acls` int(10) unsigned NOT NULL DEFAULT 0,\n  `egress_acls`
-    int(10) unsigned NOT NULL DEFAULT 0,\n  `uptime` varchar(255) CHARACTER SET latin1
-    NOT NULL DEFAULT '',\n  `sync_acl` enum('ok','ongoing','failed') CHARACTER SET
-    latin1 NOT NULL DEFAULT 'ok',\n  `heartbeat_acl` timestamp NOT NULL DEFAULT '0000-00-00
+    (\n  `id` bigint(20) unsigned NOT NULL AUTO_INCREMENT,\n  `searchkey` varchar(300)
+    DEFAULT NULL,\n  `platform` varchar(300) DEFAULT NULL,\n  `asic` varchar(255)
+    NOT NULL,\n  `acl4_count` int(11) DEFAULT NULL,\n  `acl6_count` int(11) DEFAULT
+    NULL,\n  PRIMARY KEY (`id`)\n) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;\n/*!40101
+    SET character_set_client = @saved_cs_client */;\n\n--\n-- Table structure for
+    table `switch`\n--\n\nDROP TABLE IF EXISTS `switch`;\n/*!40101 SET @saved_cs_client
+    \    = @@character_set_client */;\n/*!40101 SET character_set_client = utf8 */;\nCREATE
+    TABLE `switch` (\n  `switch_id` bigint(20) unsigned NOT NULL AUTO_INCREMENT,\n
+    \ `netpop_id` bigint(22) unsigned NOT NULL DEFAULT 0,\n  `offload_port_id` bigint(22)
+    unsigned DEFAULT NULL,\n  `offload_link_ip` int(10) unsigned DEFAULT NULL,\n  `location`
+    varchar(255) CHARACTER SET latin1 DEFAULT NULL,\n  `status` enum('ok','maintenance')
+    CHARACTER SET latin1 NOT NULL DEFAULT 'ok',\n  `asn` varchar(255) CHARACTER SET
+    latin1 DEFAULT NULL,\n  `last_adj_change` timestamp NOT NULL DEFAULT '0000-00-00
+    00:00:00',\n  `heartbeat` timestamp NOT NULL DEFAULT '0000-00-00 00:00:00',\n
+    \ `description` varchar(255) CHARACTER SET latin1 DEFAULT NULL,\n  `routes` int(10)
+    unsigned NOT NULL DEFAULT 0,\n  `macs` int(10) unsigned NOT NULL DEFAULT 0,\n
+    \ `ingress_acls` int(10) unsigned NOT NULL DEFAULT 0,\n  `egress_acls` int(10)
+    unsigned NOT NULL DEFAULT 0,\n  `uptime` varchar(255) CHARACTER SET latin1 NOT
+    NULL DEFAULT '',\n  `sync_acl` enum('ok','ongoing','failed') CHARACTER SET latin1
+    NOT NULL DEFAULT 'ok',\n  `heartbeat_acl` timestamp NOT NULL DEFAULT '0000-00-00
     00:00:00',\n  `type` enum('switch','haproxy','openstack','proxmox','calient','controller','offloader','brdswitch','spine','softgate')
     CHARACTER SET latin1 NOT NULL DEFAULT 'switch',\n  `rangecut` int(10) unsigned
     NOT NULL DEFAULT 0,\n  `cumulus_version` varchar(100) CHARACTER SET latin1 DEFAULT
@@ -1525,7 +1526,7 @@ data:
     INSERT INTO `global_settings` VALUES (36,'wireguard_port_range','59000-60999','VPN peers port range','true');
     INSERT INTO `global_settings` VALUES (37,'k8s_lb_check_timeout','2000','K8s Layer 4 load-balancer timeout (ms)','true');
     INSERT INTO `global_settings` VALUES (38,'vpn_measurement_wait_secs','30','Site Mesh measurement module wait interval (sec)','true');
-    INSERT INTO `global_settings` VALUES (39,'migration_version', '3.0.5', 'Database scheme version', 'false');
+    INSERT INTO `global_settings` VALUES (39,'migration_version', '3.0.7', 'Database scheme version', 'false');
     INSERT INTO `global_settings` VALUES (40,'system_asn_range', '4200000000 - 4209999999', 'System ASN range', 'true');
     INSERT INTO `global_settings` VALUES (41,'vpn_asn_range', '4210000000 - 4219999999', 'Site Mesh VPN ASN range', 'true');
     INSERT INTO `global_settings` VALUES (42,'calico_asn_range', '4230000000 - 4239999999', 'Calico ASN range', 'true');
@@ -1584,6 +1585,7 @@ data:
     INSERT INTO `supported_platforms` VALUES (11,'MSN2700|MSN2700-CS2F|MSN2700-CS2R|MSN2700-CS2RC|MSN2700-CS2FC|MSN2700-CS2FO|MSN2700-CS2RO|MSN2700-CBBFO|MSN2700-BS2F|MSN2700-BS2R|MSN2700-BS2FC|MSN2700-BS2FO|MSN2700-BS2RC','Mellanox MSN2700 Spectrum','spectrum',2980,300);
     INSERT INTO `supported_platforms` VALUES (12,'as7326-56x','Edge-Core AS7326-56X T3','trident3',4096,300);
     INSERT INTO `supported_platforms` VALUES (13,'AS7712-32X','Edge-Core AS7712-32X Tomahawk','tomahawk',4096,300);
+    INSERT INTO `supported_platforms` VALUES (14,'MSN3700C','Mellanox MSN3700C Spectrum-2','spectrum',2980,300);
   tenants.sql: |
     USE {{ .Values.mariadb.auth.database }};
     SET sql_mode='NO_AUTO_VALUE_ON_ZERO';
