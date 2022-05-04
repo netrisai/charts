@@ -78,7 +78,7 @@ The following table lists the configurable parameters of the netris-controller c
 | ------------------------------------- | --------------------------------------------------------------------------------------------------------- | -------------------------- |
 | `app.replicaCount`                    | Number of replicas in app deployment                                                                      | `1`                        |
 | `app.image.repository`                | Image repository                                                                                          | `netrisai/controller-web-service` |
-| `app.image.tag`                       | Image tag. Overrides the image tag whose default is the chart appVersion                                  | `"3.0.7-003"`                       |
+| `app.image.tag`                       | Image tag. Overrides the image tag whose default is the chart appVersion                                  | `"3.0.8-009"`                       |
 | `app.image.pullPolicy`                | Image pull policy                                                                                         | `IfNotPresent`             |
 | `app.imagePullSecrets`                | Reference to one or more secrets to be used when pulling images                                           | `[]`                       |
 | `app.service.type`                    | Kubernetes service type 	                                                                                | `ClusterIP`                |
@@ -102,7 +102,7 @@ The following table lists the configurable parameters of the netris-controller c
 | -------------------------------------- | --------------------------------------------------------------------------------------------------------- | -------------------------- |
 | `grpc.replicaCount`                    | Number of replicas in grpc deployment                                                                     | `1`                        |
 | `grpc.image.repository`                | Image repository                                                                                          | `netrisai/controller-grpc` |
-| `grpc.image.tag`                       | Image tag. Overrides the image tag whose default is the chart appVersion                                  | `"3.0.6.003"`                       |
+| `grpc.image.tag`                       | Image tag. Overrides the image tag whose default is the chart appVersion                                  | `"3.0.8.002"`                       |
 | `grpc.image.pullPolicy`                | Image pull policy                                                                                         | `IfNotPresent`             |
 | `grpc.imagePullSecrets`                | Reference to one or more secrets to be used when pulling images                                           | `[]`                       |
 | `grpc.service.type`                    | Kubernetes service type 	                                                                                 | `ClusterIP`                |
@@ -234,11 +234,6 @@ Alternatively, a YAML file that specifies the values for the parameters can be p
 
 ```
 helm install netris-controller netrisai/netris-controller --namespace netris-controller -f values.yaml 
-```
-
-After installation use `EXTERNAL-IP` of haproxy service as `--controller` parameter in [netris-setup](https://docs.netris.ai/en/stable/switch_agent_installation.html#install-the-netris-agent)
-```
-kubectl get svc -nnetris-controller |grep haproxy
 ```
 
 Also you can see overrides values from helm get values 
