@@ -1,5 +1,5 @@
 ---
-{{- $microservicename := "grpc" }}
+{{- $microservicename := "web-session-generator" }}
 apiVersion: apps/v1
 kind: Deployment
 metadata:
@@ -43,41 +43,40 @@ spec:
             {{- toYaml .Values.securityContext | nindent 12 }}
           image: "{{ (index .Values $microservicename).image.repository }}:{{ (index .Values $microservicename).image.tag | default .Chart.AppVersion }}"
           imagePullPolicy: {{ (index .Values $microservicename).image.pullPolicy }}
-          command: ['/app/servicebin', '-c', '/app/config/grpc.conf']
+          command: ['/app/servicebin']
           ports:
             - name: {{ (index .Values $microservicename).service.name }}
               containerPort: {{ (index .Values $microservicename).service.port }}
               protocol: TCP
+          env:
+            - name: APP_LISTEN_TO
+              value: 0.0.0.0:{{ ((index .Values $microservicename).service.port) }}
+            - name: DB_NAME
+              value: {{ .Values.mariadb.auth.database | quote }}
+            - name: DB_USER
+              value: {{ .Values.mariadb.auth.username | quote }}
+            - name: DB_HOST
+              value: {{ printf "%s-%s" (include "netris-controller.fullname" .) "mariadb" }}
+            - name: DB_PASS
+              valueFrom:
+                secretKeyRef:
+                  name: {{ printf "%s-%s" (include "netris-controller.fullname" .) "mariadb" }}
+                  key: mariadb-password
+            - name: WEB_SESSION_SECRET
+              valueFrom:
+                secretKeyRef:
+                  name: {{ printf "%s-%s" (include "netris-controller.fullname" .) "web-session-secret" }}
+                  key: secret-key
           livenessProbe:
-            failureThreshold: 3
-            initialDelaySeconds: 5
-            periodSeconds: 5
-            successThreshold: 1
-            tcpSocket:
-              port: {{ (index .Values $microservicename).service.port }}
-            timeoutSeconds: 1
+            httpGet:
+              path: /health
+              port: {{ (index .Values $microservicename).service.name }}
           readinessProbe:
-            failureThreshold: 3
-            initialDelaySeconds: 15
-            periodSeconds: 5
-            successThreshold: 1
-            tcpSocket:
-              port: {{ (index .Values $microservicename).service.port }}
-            timeoutSeconds: 1
+            httpGet:
+              path: /health
+              port: {{ (index .Values $microservicename).service.name }}
           resources:
             {{- toYaml .Values.resources | nindent 12 }}
-          volumeMounts:
-            - name: certs
-              mountPath: /app/cert
-            - name: config
-              mountPath: /app/config
-      volumes:
-        - name: certs
-          secret:
-            secretName: {{ printf "%s-%s" (include "netris-controller.fullname" .) "certs" }}
-        - name: config
-          configMap:
-            name: {{ printf "%s-%s-%s" (include "netris-controller.fullname" .) $microservicename "config" }}
       {{- with .Values.nodeSelector }}
       nodeSelector:
         {{- toYaml . | nindent 8 }}
@@ -137,27 +136,3 @@ spec:
         targetAverageUtilization: {{ (index .Values $microservicename).autoscaling.targetMemoryUtilizationPercentage }}
     {{- end }}
 {{- end }}
----
-apiVersion: v1
-kind: ConfigMap
-metadata:
-  name: {{ printf "%s-%s-%s" (include "netris-controller.fullname" .) $microservicename "config" }}
-  labels:
-    {{- include "netris-controller.labels" . | nindent 4 }}
-    {{- printf "%s-%s" (include "netris-controller.selectorLabels" .) $microservicename | nindent 4 }}
-data:
-  grpc.conf: |-
-    [server]
-    tls_cert=cert/tls.crt
-    tls_key=cert/tls.key
-    bind_address=0.0.0.0
-    bind_port={{ (index .Values $microservicename).service.port }}
-    auth=yes
-
-
-    [database]
-    address={{ printf "%s-%s" (include "netris-controller.fullname" .) "mariadb" }}
-    user={{ .Values.mariadb.auth.username }}
-    password={{ .Values.mariadb.auth.password }}
-    database={{ .Values.mariadb.auth.database }}
-    port={{ .Values.mariadb.primary.service.port }}
