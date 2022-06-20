@@ -35,6 +35,12 @@ spec:
           - sh
           - -c
           - for i in $(seq 1 200); do nc -z -w3 {{ printf "%s-%s" (include "netris-controller.fullname" .) "app" }} {{ .Values.app.service.port }} && exit 0 || sleep 3; done; exit 1
+      - name: init-wait-websession
+        image: alpine:3.11
+        command:
+          - sh
+          - -c
+          - for i in $(seq 1 200); do nc -z -w3 {{ printf "%s-%s" (include "netris-controller.fullname" .) "web-session-generator" }} {{ (index .Values "web-session-generator").service.port }} && exit 0 || sleep 3; done; exit 1
       containers:
         - name: {{ printf "%s-%s" .Chart.Name $microservicename }}
           securityContext:
