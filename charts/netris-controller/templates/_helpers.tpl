@@ -70,15 +70,3 @@ Generate certificates for netris-controller api server
 tls.crt: {{ $cert.Cert | b64enc }}
 tls.key: {{ $cert.Key | b64enc }}
 {{- end -}}
-
-{{/*
-Generate a web-session-secret secret or use the existing one
-*/}}
-{{- define "web.session.secret" -}}
-{{- $secret := lookup "v1" "Secret" .Release.Namespace (printf "%s-%s" (include "netris-controller.fullname" .) "web-session-secret") -}}
-{{- if $secret }}
-secret-key: {{ (index $secret.data "secret-key") }}
-{{- else }}
-secret-key: {{ randAlphaNum 40 | b64enc }}
-{{- end }}
-{{- end }}

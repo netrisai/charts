@@ -161,3 +161,4 @@ data:
     password={{ .Values.mariadb.auth.password }}
     database={{ .Values.mariadb.auth.database }}
     port={{ .Values.mariadb.primary.service.port }}
+...

@@ -237,3 +237,4 @@ data:
     [redis]
     address={{ printf "%s-%s-%s" (include "netris-controller.fullname" .) "redis" "headless" }}
     port={{ .Values.redis.redisPort }}
+...

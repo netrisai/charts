@@ -76,11 +76,6 @@ spec:
               value: {{ printf "%s-%s" (include "netris-controller.fullname" .) "telescope" }}:{{ (.Values.telescope.service.port ) }}
             - name: GRAPHITE_WEBAPP_URL
               value: {{ printf "%s%s-%s" "http://" (include "netris-controller.fullname" .) "graphite" }}:{{ printf "%s%s" (.Values.graphite.service.port |toString ) "/render/" }}
-            - name: WEB_SESSION_SECRET
-              valueFrom:
-                secretKeyRef:
-                  name: {{ printf "%s-%s" (include "netris-controller.fullname" .) "web-session-secret" }}
-                  key: secret-key
           ports:
             - name: {{ (index .Values $microservicename).service.name }}
               containerPort: {{ (index .Values $microservicename).service.port }}
@@ -248,3 +243,4 @@ spec:
       command: ['wget']
       args: ['{{ printf "%s-%s" (include "netris-controller.fullname" .) $microservicename }}:{{ (index .Values $microservicename).service.port }}']
   restartPolicy: Never
+...
