@@ -126,4 +126,3 @@ data:
     [smtp]
     transport=smtp://{{ printf "%s-%s" (include "netris-controller.fullname" .) "smtp" }}:{{ .Values.smtp.service.port }}
 
-...

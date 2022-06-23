@@ -78,7 +78,7 @@ The following table lists the configurable parameters of the netris-controller c
 | ------------------------------------- | --------------------------------------------------------------------------------------------------------- | -------------------------- |
 | `app.replicaCount`                    | Number of replicas in app deployment                                                                      | `1`                        |
 | `app.image.repository`                | Image repository                                                                                          | `netrisai/controller-web-service` |
-| `app.image.tag`                       | Image tag. Overrides the image tag whose default is the chart appVersion                                  | `"3.0.9-015"`                       |
+| `app.image.tag`                       | Image tag. Overrides the image tag whose default is the chart appVersion                                  | `"3.0.10-023"`             |
 | `app.image.pullPolicy`                | Image pull policy                                                                                         | `IfNotPresent`             |
 | `app.imagePullSecrets`                | Reference to one or more secrets to be used when pulling images                                           | `[]`                       |
 | `app.service.type`                    | Kubernetes service type 	                                                                                | `ClusterIP`                |
@@ -102,7 +102,7 @@ The following table lists the configurable parameters of the netris-controller c
 | -------------------------------------- | --------------------------------------------------------------------------------------------------------- | -------------------------- |
 | `grpc.replicaCount`                    | Number of replicas in grpc deployment                                                                     | `1`                        |
 | `grpc.image.repository`                | Image repository                                                                                          | `netrisai/controller-grpc` |
-| `grpc.image.tag`                       | Image tag. Overrides the image tag whose default is the chart appVersion                                  | `"3.0.8.002"`                       |
+| `grpc.image.tag`                       | Image tag. Overrides the image tag whose default is the chart appVersion                                  | `"3.0.10.004"`                       |
 | `grpc.image.pullPolicy`                | Image pull policy                                                                                         | `IfNotPresent`             |
 | `grpc.imagePullSecrets`                | Reference to one or more secrets to be used when pulling images                                           | `[]`                       |
 | `grpc.service.type`                    | Kubernetes service type 	                                                                                 | `ClusterIP`                |
@@ -145,6 +145,33 @@ The following table lists the configurable parameters of the netris-controller c
 | `telescope-notifier.autoscaling.minReplicas`                     | Default min replicas for autoscaling                                                                      | `1`                           |
 | `telescope-notifier.autoscaling.maxReplicas`                     | Default max replicas for autoscaling                                                                      | `100`                         |
 | `telescope-notifier.autoscaling.targetCPUUtilizationPercentage`  | The desired target CPU utilization for autoscaling                                                        | `80`                          |
+
+
+### Netris-Controller web-session-generator parameters
+| Parameter                                               | Description                                                                                               | Default                    |
+| ------------------------------------------------------- | --------------------------------------------------------------------------------------------------------- | -------------------------- |
+| `web-session-generator.replicaCount`                    | Number of replicas in web-session-generator deployment                                                    | `1`                        |
+| `web-session-generator.image.repository`                | Image repository                                                                                          | `netrisai/controller-web-session-generator` |
+| `web-session-generator.image.tag`                       | Image tag. Overrides the image tag whose default is the chart appVersion                                  | `"0.2.0"`                  |
+| `web-session-generator.image.pullPolicy`                | Image pull policy                                                                                         | `IfNotPresent`             |
+| `web-session-generator.imagePullSecrets`                | Reference to one or more secrets to be used when pulling images                                           | `[]`                       |
+| `web-session-generator.service.type`                    | Kubernetes service type 	                                                                                | `ClusterIP`                |
+| `web-session-generator.service.port`                    | Kubernetes port where service is expose 	                                                                | `80`                       |
+| `web-session-generator.service.portName`                | Name of the port on the service                                                                           | `http`                     |
+| `web-session-generator.autoscaling.enabled`                         | Option to turn autoscaling on for app and specify params for HPA. Autoscaling needs metrics-server to access cpu metrics | `false`        |
+| `web-session-generator.autoscaling.minReplicas`                     | Default min replicas for autoscaling                                                                      | `1`                           |
+| `web-session-generator.autoscaling.maxReplicas`                     | Default max replicas for autoscaling                                                                      | `100`                         |
+| `web-session-generator.autoscaling.targetCPUUtilizationPercentage`  | The desired target CPU utilization for autoscaling                                                        | `80`                          |
+
+
+### Netris-Controller equinix-metal-agent parameters
+| Parameter                                             | Description                                                                                               | Default                    |
+| ----------------------------------------------------- | --------------------------------------------------------------------------------------------------------- | -------------------------- |
+| `equinix-metal-agent.enabled`                         | Enable equinix-metal-agent deployment                                                                     | `true`                     |
+| `equinix-metal-agent.image.repository`                | Image repository                                                                                          | `netrisai/bare-metal-equinix-metal-agent` |
+| `equinix-metal-agent.image.tag`                       | Image tag. Overrides the image tag whose default is the chart appVersion                                  | `"0.4.3"`                  |
+| `equinix-metal-agent.image.pullPolicy`                | Image pull policy                                                                                         | `IfNotPresent`             |
+| `equinix-metal-agent.imagePullSecrets`                | Reference to one or more secrets to be used when pulling images                                           | `[]`                       |
 
 
 ### Mariadb parameters

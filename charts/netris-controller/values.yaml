@@ -59,7 +59,7 @@ app:
     repository: netrisai/controller-web-service
     pullPolicy: IfNotPresent
     # Overrides the image tag whose default is the chart appVersion.
-    tag: "3.0.9-015"
+    tag: "3.0.10-023"
 
   imagePullSecrets: []
 
@@ -107,7 +107,7 @@ grpc:
     repository: netrisai/controller-grpc
     pullPolicy: IfNotPresent
     # Overrides the image tag whose default is the chart appVersion.
-    tag: "3.0.8.002"
+    tag: "3.0.10.004"
 
   imagePullSecrets: []
 
@@ -167,6 +167,41 @@ telescope-notifier:
     maxReplicas: 100
     targetCPUUtilizationPercentage: 80
     # targetMemoryUtilizationPercentage: 80
+
+
+web-session-generator:
+  replicaCount: 1
+
+  image:
+    repository: netrisai/controller-web-session-generator
+    pullPolicy: IfNotPresent
+    # Overrides the image tag whose default is the chart appVersion.
+    tag: "0.2.0"
+
+  imagePullSecrets: []
+
+  service:
+    type: ClusterIP
+    port: 80
+    name: http
+
+  autoscaling:
+    enabled: false
+    minReplicas: 1
+    maxReplicas: 100
+    targetCPUUtilizationPercentage: 80
+    # targetMemoryUtilizationPercentage: 80
+
+
+equinix-metal-agent:
+  enabled: true
+  image:
+    repository: netrisai/bare-metal-equinix-metal-agent
+    pullPolicy: IfNotPresent
+    # Overrides the image tag whose default is the chart appVersion.
+    tag: "0.4.3"
+
+  imagePullSecrets: []
 
 
 ## Using default values from https://github.com/bitnami/charts/tree/master/bitnami/mariadb/values.yaml
@@ -324,4 +359,4 @@ migration:
   image:
     repository: netrisai/controller-web-service-migration
     pullPolicy: IfNotPresent
-    tag: "3.0.9"
+    tag: "3.0.10"
