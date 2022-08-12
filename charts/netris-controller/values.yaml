@@ -108,7 +108,7 @@ web-service-frontend:
     repository: netrisai/controller-web-service-frontend
     pullPolicy: IfNotPresent
     # Overrides the image tag whose default is the chart appVersion.
-    tag: "3.1.0-013"
+    tag: "3.1.0-014"
 
   imagePullSecrets: []
 
