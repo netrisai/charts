@@ -11,6 +11,7 @@ metadata:
     "helm.sh/hook-weight": "1"
     "helm.sh/hook-delete-policy": hook-succeeded
 spec:
+  backoffLimit: 0
   template:
     metadata:
       {{- with .Values.podAnnotations }}
@@ -54,6 +55,11 @@ spec:
                 secretKeyRef:
                   name: {{ printf "%s-%s" (include "netris-controller.fullname" .) "mariadb" }}
                   key: mariadb-password
+            - name: DB_PASS_ROOT
+              valueFrom:
+                secretKeyRef:
+                  name: {{ printf "%s-%s" (include "netris-controller.fullname" .) "mariadb" }}
+                  key: mariadb-root-password
           resources:
             {{- toYaml .Values.resources | nindent 12 }}
       {{- with .Values.nodeSelector }}

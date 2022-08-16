@@ -52,14 +52,38 @@ netris:
   webPassword: newNet0ps
 
 
-app:
+ingress:
+  enabled: true
+  # For Kubernetes >= 1.18 you should specify the ingress-controller via the field ingressClassName
+  # See https://kubernetes.io/blog/2020/04/02/improvements-to-the-ingress-api-in-kubernetes-1.18/#specifying-the-class-of-an-ingress
+  # ingressClassName: nginx
+  # Values can be templated
+  # annotations:
+  #   kubernetes.io/ingress.class: nginx
+  #   kubernetes.io/tls-acme: "true"
+  labels: {}
+  path: /
+
+  # pathType is only for k8s > 1.19
+  pathType: Prefix
+
+  hosts:
+    - chart-example.local
+
+  tls: []
+  #  - secretName: chart-example-tls
+  #    hosts:
+  #      - chart-example.local
+
+
+web-service-backend:
   replicaCount: 1
 
   image:
-    repository: netrisai/controller-web-service
+    repository: netrisai/controller-web-service-backend
     pullPolicy: IfNotPresent
     # Overrides the image tag whose default is the chart appVersion.
-    tag: "3.0.10-031"
+    tag: "3.1.0-014"
 
   imagePullSecrets: []
 
@@ -68,29 +92,30 @@ app:
     port: 80
     name: http
 
-  ingress:
-    enabled: true
-    # For Kubernetes >= 1.18 you should specify the ingress-controller via the field ingressClassName
-    # See https://kubernetes.io/blog/2020/04/02/improvements-to-the-ingress-api-in-kubernetes-1.18/#specifying-the-class-of-an-ingress
-    # ingressClassName: nginx
-    # Values can be templated
-    # annotations:
-    #   kubernetes.io/ingress.class: nginx
-    #   kubernetes.io/tls-acme: "true"
-    labels: {}
-    path: /
 
-    # pathType is only for k8s > 1.19
-    pathType: Prefix
-
-    hosts:
-      - chart-example.local
+  autoscaling:
+    enabled: false
+    minReplicas: 1
+    maxReplicas: 100
+    targetCPUUtilizationPercentage: 80
+    # targetMemoryUtilizationPercentage: 80
 
 
-    tls: []
-    #  - secretName: chart-example-tls
-    #    hosts:
-    #      - chart-example.local
+web-service-frontend:
+  replicaCount: 1
+
+  image:
+    repository: netrisai/controller-web-service-frontend
+    pullPolicy: IfNotPresent
+    # Overrides the image tag whose default is the chart appVersion.
+    tag: "3.1.0-015"
+
+  imagePullSecrets: []
+
+  service:
+    type: ClusterIP
+    port: 80
+    name: http
 
   autoscaling:
     enabled: false
@@ -107,7 +132,7 @@ grpc:
     repository: netrisai/controller-grpc
     pullPolicy: IfNotPresent
     # Overrides the image tag whose default is the chart appVersion.
-    tag: "3.0.10.004"
+    tag: "3.1.0.002"
 
   imagePullSecrets: []
 
@@ -131,7 +156,7 @@ telescope:
     repository: netrisai/controller-telescope
     pullPolicy: IfNotPresent
     # Overrides the image tag whose default is the chart appVersion.
-    tag: "3.0.6-001"
+    tag: "3.1.0.001"
 
   imagePullSecrets: []
 
@@ -199,9 +224,16 @@ equinix-metal-agent:
     repository: netrisai/bare-metal-equinix-metal-agent
     pullPolicy: IfNotPresent
     # Overrides the image tag whose default is the chart appVersion.
-    tag: "0.5.0"
+    tag: "0.7.6"
 
   imagePullSecrets: []
+
+
+migration:
+  image:
+    repository: netrisai/controller-web-service-migration
+    pullPolicy: IfNotPresent
+    tag: "3.1.0"
 
 
 ## Using default values from https://github.com/bitnami/charts/tree/master/bitnami/mariadb/values.yaml
@@ -354,9 +386,3 @@ graphite:
       [collectd]
       pattern = ^collectd.*
       retentions = 1m:7d,5m:90d,1h:2y
-
-migration:
-  image:
-    repository: netrisai/controller-web-service-migration
-    pullPolicy: IfNotPresent
-    tag: "3.0.10"
