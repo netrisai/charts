@@ -49,12 +49,6 @@ spec:
             {{- toYaml .Values.securityContext | nindent 12 }}
           image: "{{ (index .Values $microservicename).image.repository }}:{{ (index .Values $microservicename).image.tag | default .Chart.AppVersion }}"
           imagePullPolicy: {{ (index .Values $microservicename).image.pullPolicy }}
-          env:
-            - name: GRPC_AUTH_KEYS
-              valueFrom:
-                secretKeyRef:
-                  name: {{ printf "%s-%s" (include "netris-controller.fullname" .) "grpc-secret" }}
-                  key: secret-key
           command: ['/app/servicebin', '-c', '/app/config/telescope.conf']
           ports:
             - name: {{ (index .Values $microservicename).service.name }}

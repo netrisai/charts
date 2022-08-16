@@ -32,7 +32,7 @@ Install helm chart with netris-controller
 ```
 helm install netris-controller netrisai/netris-controller \
   --namespace netris-controller \
-  --set ingress.hosts={my.domain.com}
+  --set app.ingress.hosts={my.domain.com}
 ```
 
 ## Uninstalling the Chart
@@ -51,8 +51,8 @@ The following table lists the configurable parameters of the netris-controller c
 
 | Parameter                             | Description                                                                                               | Default                    |
 | ------------------------------------- | --------------------------------------------------------------------------------------------------------- | -------------------------- |
-| `nameOverride`                        | String to partially override common.names.fullname template with a string (will prepend the release name) | `""`                      |
-| `fullnameOverride`                    | String to fully override common.names.fullname template with a string                                     | `""`                      |
+| `nameOverride`                        | String to partially override common.names.fullname template with a string (will prepend the release name) | `nil`                      |
+| `fullnameOverride`                    | String to fully override common.names.fullname template with a string                                     | `nil`                      |
 | `serviceAccount.create`               | Create a serviceAccount for the deployment                                                                | `true`                     |
 | `serviceAccount.name`                 | Use the serviceAccount with the specified name                                                            | `""`                       |
 | `serviceAccount.annotations`          | Annotations to add to the service account                                                                 | `{}`                       |
@@ -72,49 +72,29 @@ The following table lists the configurable parameters of the netris-controller c
 | `netris.webLogin`                     | Netris Controller GUI default login                                                                       | `netris`                   |
 | `netris.webPassword`                  | Netris Controller GUI default password                                                                    | `newNet0ps`                |
 
-### Netris-Controller ingress resources parameters
+
+### Netris-Controller app parameters
 | Parameter                             | Description                                                                                               | Default                    |
 | ------------------------------------- | --------------------------------------------------------------------------------------------------------- | -------------------------- |
-| `ingress.enabled`                     | Enables Ingress                                                                                           | `true`                     |
-| `ingress.annotations`                 | Ingress annotations (values are templated)                                                                | `{}`                       |
-| `ingress.labels`                      | Custom labels                                                                                             | `{}`                       |
-| `ingress.path`                        | Ingress accepted path                                                                                     | `/`                        |
-| `ingress.pathType`                    | Ingress type of path                                                                                      | `Prefix`                   |
-| `ingress.hosts`                       | Ingress accepted hostnames                                                                                | `["chart-example.local"]`  |
-| `ingress.tls`                         | Ingress TLS configuration                                                                                 | `[]`                       |
-
-
-### Netris-Controller web-service-backend parameters
-| Parameter                                                         | Description                                                                                               | Default                           |
-| ------------------------------------------------------------------| --------------------------------------------------------------------------------------------------------- | --------------------------------- |
-| `web-service-backend.replicaCount`                                | Number of replicas in web-service-backend deployment                                                      | `1`                               |
-| `web-service-backend.image.repository`                            | Image repository                                                                                          | `netrisai/controller-web-service-backend` |
-| `web-service-backend.image.tag`                                   | Image tag. Overrides the image tag whose default is the chart appVersion                                  | `"3.1.0-011"`                         |
-| `web-service-backend.image.pullPolicy`                            | Image pull policy                                                                                         | `IfNotPresent`                    |
-| `web-service-backend.imagePullSecrets`                            | Reference to one or more secrets to be used when pulling images                                           | `[]`                              |
-| `web-service-backend.service.type`                                | Kubernetes service type 	                                                                                | `ClusterIP`                       |
-| `web-service-backend.service.port`                                | Kubernetes port where service is expose 	                                                                | `80`                              |
-| `web-service-backend.service.portName`                            | Name of the port on the service                                                                           | `http`                            |
-| `web-service-backend.autoscaling.enabled`                         | Option to turn autoscaling on for app and specify params for HPA. Autoscaling needs metrics-server to access cpu metrics  | `false` |
-| `web-service-backend.autoscaling.minReplicas`                     | Default min replicas for autoscaling                                                                      | `1`                              |
-| `web-service-backend.autoscaling.maxReplicas`                     | Default max replicas for autoscaling                                                                      | `100`                            |
-| `web-service-backend.autoscaling.targetCPUUtilizationPercentage`  | The desired target CPU utilization for autoscaling                                                        | `80`                             |
-
-### Netris-Controller web-service-frontend parameters
-| Parameter                                                         | Description                                                                                               | Default                           |
-| ------------------------------------------------------------------| --------------------------------------------------------------------------------------------------------- | --------------------------------- |
-| `web-service-frontend.replicaCount`                               | Number of replicas in web-service-frontend deployment                                                     | `1`                               |
-| `web-service-frontend.image.repository`                           | Image repository                                                                                          | `netrisai/controller-web-service-frontend` |
-| `web-service-frontend.image.tag`                                  | Image tag. Overrides the image tag whose default is the chart appVersion                                  | `"3.1.0-014"`                         |
-| `web-service-frontend.image.pullPolicy`                           | Image pull policy                                                                                         | `IfNotPresent`                    |
-| `web-service-frontend.imagePullSecrets`                           | Reference to one or more secrets to be used when pulling images                                           | `[]`                              |
-| `web-service-frontend.service.type`                               | Kubernetes service type 	                                                                                | `ClusterIP`                       |
-| `web-service-frontend.service.port`                               | Kubernetes port where service is expose 	                                                                | `80`                              |
-| `web-service-frontend.service.portName`                           | Name of the port on the service                                                                           | `http`                            |
-| `web-service-frontend.autoscaling.enabled`                        | Option to turn autoscaling on for app and specify params for HPA. Autoscaling needs metrics-server to access cpu metrics  | `false` |
-| `web-service-frontend.autoscaling.minReplicas`                    | Default min replicas for autoscaling                                                                      | `1`                              |
-| `web-service-frontend.autoscaling.maxReplicas`                    | Default max replicas for autoscaling                                                                      | `100`                            |
-| `web-service-frontend.autoscaling.targetCPUUtilizationPercentage` | The desired target CPU utilization for autoscaling                                                        | `80`                             |
+| `app.replicaCount`                    | Number of replicas in app deployment                                                                      | `1`                        |
+| `app.image.repository`                | Image repository                                                                                          | `netrisai/controller-web-service` |
+| `app.image.tag`                       | Image tag. Overrides the image tag whose default is the chart appVersion                                  | `"3.0.10-031"`             |
+| `app.image.pullPolicy`                | Image pull policy                                                                                         | `IfNotPresent`             |
+| `app.imagePullSecrets`                | Reference to one or more secrets to be used when pulling images                                           | `[]`                       |
+| `app.service.type`                    | Kubernetes service type 	                                                                                | `ClusterIP`                |
+| `app.service.port`                    | Kubernetes port where service is expose 	                                                                | `80`                       |
+| `app.service.portName`                | Name of the port on the service                                                                           | `http`                     |
+| `app.ingress.enabled`                 | Enables Ingress                                                                                           | `true`                     |
+| `app.ingress.annotations`             | Ingress annotations (values are templated)                                                                | `{}`                       |
+| `app.ingress.labels`                  | Custom labels                                                                                             | `{}`                           |
+| `app.ingress.path`                    | Ingress accepted path                                                                                     | `/`                            |
+| `app.ingress.pathType`                | Ingress type of path                                                                                      | `Prefix`                       |
+| `app.ingress.hosts`                   | Ingress accepted hostnames                                                                                | `["chart-example.local"]`      |
+| `app.ingress.tls`                     | Ingress TLS configuration                                                                                 | `[]`                           |
+| `app.autoscaling.enabled`                         | Option to turn autoscaling on for app and specify params for HPA. Autoscaling needs metrics-server to access cpu metrics  | `false`       |
+| `app.autoscaling.minReplicas`                     | Default min replicas for autoscaling                                                                      | `1`                           |
+| `app.autoscaling.maxReplicas`                     | Default max replicas for autoscaling                                                                      | `100`                         |
+| `app.autoscaling.targetCPUUtilizationPercentage`  | The desired target CPU utilization for autoscaling                                                        | `80`                          |
 
 
 ### Netris-Controller grpc parameters
@@ -122,7 +102,7 @@ The following table lists the configurable parameters of the netris-controller c
 | -------------------------------------- | --------------------------------------------------------------------------------------------------------- | -------------------------- |
 | `grpc.replicaCount`                    | Number of replicas in grpc deployment                                                                     | `1`                        |
 | `grpc.image.repository`                | Image repository                                                                                          | `netrisai/controller-grpc` |
-| `grpc.image.tag`                       | Image tag. Overrides the image tag whose default is the chart appVersion                                  | `"3.1.0.002"`              |
+| `grpc.image.tag`                       | Image tag. Overrides the image tag whose default is the chart appVersion                                  | `"3.0.10.004"`                       |
 | `grpc.image.pullPolicy`                | Image pull policy                                                                                         | `IfNotPresent`             |
 | `grpc.imagePullSecrets`                | Reference to one or more secrets to be used when pulling images                                           | `[]`                       |
 | `grpc.service.type`                    | Kubernetes service type 	                                                                                 | `ClusterIP`                |
@@ -139,7 +119,7 @@ The following table lists the configurable parameters of the netris-controller c
 | ------------------------------------- | --------------------------------------------------------------------------------------------------------- | -------------------------- |
 | `telescope.replicaCount`                    | Number of replicas in telescope deployment                                                          | `1`                        |
 | `telescope.image.repository`                | Image repository                                                                                          | `netrisai/controller-telescope` |
-| `telescope.image.tag`                       | Image tag. Overrides the image tag whose default is the chart appVersion                                  | `"3.1.0.001"`                       |
+| `telescope.image.tag`                       | Image tag. Overrides the image tag whose default is the chart appVersion                                  | `"3.0.6-001"`                       |
 | `telescope.image.pullPolicy`                | Image pull policy                                                                                         | `IfNotPresent`             |
 | `telescope.imagePullSecrets`                | Reference to one or more secrets to be used when pulling images                                           | `[]`                       |
 | `telescope.service.type`                    | Kubernetes service type 	                                                                                | `ClusterIP`                |
@@ -189,18 +169,9 @@ The following table lists the configurable parameters of the netris-controller c
 | ----------------------------------------------------- | --------------------------------------------------------------------------------------------------------- | -------------------------- |
 | `equinix-metal-agent.enabled`                         | Enable equinix-metal-agent deployment                                                                     | `true`                     |
 | `equinix-metal-agent.image.repository`                | Image repository                                                                                          | `netrisai/bare-metal-equinix-metal-agent` |
-| `equinix-metal-agent.image.tag`                       | Image tag. Overrides the image tag whose default is the chart appVersion                                  | `"0.7.6"`                  |
+| `equinix-metal-agent.image.tag`                       | Image tag. Overrides the image tag whose default is the chart appVersion                                  | `"0.5.0"`                  |
 | `equinix-metal-agent.image.pullPolicy`                | Image pull policy                                                                                         | `IfNotPresent`             |
 | `equinix-metal-agent.imagePullSecrets`                | Reference to one or more secrets to be used when pulling images                                           | `[]`                       |
-
-
-### Netris-Controller migration parameters
-| Parameter                        | Description                                                                   | Default                                     |
-| ---------------------------------| ----------------------------------------------------------------------------- | ------------------------------------------- |
-| `migration.image.repository`     | Image repository                                                              | `netrisai/controller-web-service-migration` |
-| `migration.image.tag`            | Image tag. Overrides the image tag whose default is the chart appVersion      | `"3.1.0"`                                   |
-| `migration.image.pullPolicy`     | Image pull policy                                                             | `IfNotPresent`                              |
-| `migration.imagePullSecrets`     | Reference to one or more secrets to be used when pulling images               | `[]`                                        |
 
 
 ### Mariadb parameters
@@ -277,7 +248,7 @@ Specify each parameter using the --set key=value[,key=value] argument to helm in
 ```
 helm install netris-controller netrisai/netris-controller \
   --namespace netris-controller \
-  --set ingress.hosts={my.domain.com} \
+  --set app.ingress.hosts={my.domain.com} \
   --set mariadb.auth.rootPassword=my-root-password \
   --set mariadb.auth.password=my-password \
   --set mongodb.auth.rootPassword=my-root-password \

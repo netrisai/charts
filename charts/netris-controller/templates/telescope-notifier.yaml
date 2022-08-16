@@ -106,10 +106,10 @@ metadata:
 data:
   telescope-notifier.conf: |-
     [general]
-    {{- if and (.Values.ingress.enabled) (.Values.ingress.hosts )}}
-    fqdn=http://{{ index .Values.ingress.hosts 0 | default (printf "%s-%s" (include "netris-controller.fullname" .) "web-service-frontend") }}
+    {{- if and (.Values.app.ingress.enabled) (.Values.app.ingress.hosts )}}
+    fqdn=http://{{ index .Values.app.ingress.hosts 0 | default (printf "%s-%s" (include "netris-controller.fullname" .) "app") }}
     {{- else }}
-    fqdn=http://{{ printf "%s-%s" (include "netris-controller.fullname" .) "web-service-frontend" }}
+    fqdn=http://{{ printf "%s-%s" (include "netris-controller.fullname" .) "app" }}
     {{- end }}
 
     [database]
