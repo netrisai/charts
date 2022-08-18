@@ -1533,6 +1533,9 @@ data:
     INSERT INTO `global_settings` VALUES (40,'system_asn_range', '4200000000 - 4209999999', 'System ASN range', 'true');
     INSERT INTO `global_settings` VALUES (41,'vpn_asn_range', '4210000000 - 4219999999', 'Site Mesh VPN ASN range', 'true');
     INSERT INTO `global_settings` VALUES (42,'calico_asn_range', '4230000000 - 4239999999', 'Calico ASN range', 'true');
+  inventory_profiles.sql: |
+    USE {{ .Values.mariadb.auth.database }};
+    INSERT INTO `inventory_profiles` VALUES (1,'default-inventory-profile','Default inventory profile','0.0.0.0/0','','{\"offset\":\"-08:00\",\"label\":\"(GMT-08:00) Pacific Time\",\"tzCode\":\"America/Los_Angeles\"}','pool.ntp.org','1.1.1.1,8.8.8.8',NULL,NULL);
   mon_thresholds.sql: |
     USE {{ .Values.mariadb.auth.database }};
     INSERT INTO `mon_default_thresholds` VALUES (2,'check_port','Link Utilization (RX)','*.rx',0,0,90,70,NULL,'%','');
@@ -1560,12 +1563,12 @@ data:
     USE {{ .Values.mariadb.auth.database }};
     SET sql_mode='NO_AUTO_VALUE_ON_ZERO';
     INSERT INTO `permissions` VALUES (0,'Permit All','','',NULL,'2019-01-18 07:17:36','2019-02-07 07:01:33','true','true');
-  port.sql: "USE {{ .Values.mariadb.auth.database }};\nSET sql_mode='NO_AUTO_VALUE_ON_ZERO';\nINSERT
-    INTO `port` (`port_id`, `switch_id`, `tenant_id`, `port_index`, `break_index`,
-    `name`, `port`, `iface`, `present`, `status`, `speed`, `speed_desired`, `transceiver`,
-    `mtu`, `lacp`, `port_extension`, `parent_port`, `admin_down`, `autoneg`, `duplex`,
-    `breakout`, `created_date`, `modified_date`) \n        VALUES (0,0,0,0,0,'not
-    defined','NOPORT','NOIFACE',1,'N/A','N/A','auto','hh',9000,'off',0,0,'no','off','none','0',NULL,NULL);\n"
+  port.sql: |
+    USE {{ .Values.mariadb.auth.database }};
+    SET sql_mode='NO_AUTO_VALUE_ON_ZERO';
+    INSERT INTO `port` (`port_id`, `switch_id`, `tenant_id`, `port_index`, `break_index`, `name`, `port`, `iface`, `present`, `status`, `speed`, `speed_desired`, `transceiver`, `mtu`, `lacp`, `port_extension`, `parent_port`, `admin_down`, `autoneg`, `duplex`, `breakout`, `created_date`, `modified_date`) VALUES (0,0,0,0,0,'not defined','NOPORT','NOIFACE',1,'N/A','N/A','auto','hh',9000,'off',0,0,'no','off','none','0',NULL,NULL);
+    INSERT INTO `port` (`port_id`, `switch_id`, `tenant_id`, `port_index`, `break_index`, `name`, `port`, `iface`, `present`, `status`, `speed`, `speed_desired`, `transceiver`, `mtu`, `lacp`, `port_extension`, `parent_port`, `admin_down`, `autoneg`, `duplex`, `breakout`, `created_date`, `modified_date`) VALUES (1,1,1,1,0,'swp1','swp1',NULL,1,'Unknown',NULL,'auto',NULL,9000,'off',0,0,'no','none','none','off',NULL,NULL);
+    INSERT INTO `port` (`port_id`, `switch_id`, `tenant_id`, `port_index`, `break_index`, `name`, `port`, `iface`, `present`, `status`, `speed`, `speed_desired`, `transceiver`, `mtu`, `lacp`, `port_extension`, `parent_port`, `admin_down`, `autoneg`, `duplex`, `breakout`, `created_date`, `modified_date`) VALUES (2,2,1,1,0,'swp1','swp1',NULL,1,'Unknown',NULL,'auto',NULL,9000,'off',0,0,'no','none','none','off',NULL,NULL);
   roh_profiles.sql: |
     USE {{ .Values.mariadb.auth.database }};
     INSERT INTO `roh_profiles` VALUES (1,'Default','default');
@@ -1573,12 +1576,49 @@ data:
     INSERT INTO `roh_profiles` VALUES (3,'Full table','full_table');
   sites.sql: "USE {{ .Values.mariadb.auth.database }};\nINSERT INTO `net_pops` (`id`,
     `name`, `asn`, `physical_instance_asn`, `virtual_instance_asn`, `vpn`, `rp_id`,
-    `acl_policy`) \n                VALUES (1,'Default',65000,65500,65501,'hub',1,'permit');\n"
+    `acl_policy`, `switch_fabric`, `vlan_range`) \n                VALUES (1, 'Default',
+    65000, 65500, 65501, 'disabled', 1, 'permit', 'dot1q_trunk', '700-900');\n"
   subnets.sql: |
     USE {{ .Values.mariadb.auth.database }};
+    -- allocations (id,parent_id,allocation_id,name,description,tenant_id,ip_version,purpose,readonly,prefix,length,meta)
     INSERT INTO `ip_allocation` VALUES(1, "private-1", "", 1, "ipv4", "no", "10.0.0.0", 8);
     INSERT INTO `ip_allocation` VALUES(2, "private-2", "", 1, "ipv4", "no", "172.16.0.0", 12);
     INSERT INTO `ip_allocation` VALUES(3, "private-3", "", 1, "ipv4", "no", "192.168.0.0", 16);
+
+    -- subnets (id,parent_id,allocation_id,name,description,tenant_id,ip_version,purpose,readonly,prefix,length,meta)
+    INSERT INTO `ip_subnet` VALUES(1, 0, 2, "private-ip-for-default-site",      "", 1, "ipv4", "common", "no", "172.24.0.0", 16, '{}');
+    INSERT INTO `ip_subnet` VALUES(2, 1, 2, "private-subnet-172.24.0.0/20",     "", 2, "ipv4", "common", "no", "172.24.0.0", 20, '{}');
+    INSERT INTO `ip_subnet` VALUES(3, 1, 2, "private-subnet-172.24.16.0/20",    "", 2, "ipv4", "common", "no", "172.24.16.0", 20, '{}');
+    INSERT INTO `ip_subnet` VALUES(4, 1, 2, "private-subnet-172.24.32.0/20",    "", 2, "ipv4", "common", "no", "172.24.32.0", 20, '{}');
+    INSERT INTO `ip_subnet` VALUES(5, 1, 2, "private-subnet-172.24.48.0/20",    "", 2, "ipv4", "common", "no", "172.24.48.0", 20, '{}');
+    INSERT INTO `ip_subnet` VALUES(6, 1, 2, "private-subnet-172.24.64.0/20",    "", 2, "ipv4", "common", "no", "172.24.64.0", 20, '{}');
+    INSERT INTO `ip_subnet` VALUES(7, 1, 2, "private-subnet-172.24.80.0/20",    "", 2, "ipv4", "common", "no", "172.24.80.0", 20, '{}');
+    INSERT INTO `ip_subnet` VALUES(8, 1, 2, "private-subnet-172.24.96.0/20",    "", 2, "ipv4", "common", "no", "172.24.96.0", 20, '{}');
+    INSERT INTO `ip_subnet` VALUES(9, 1, 2, "private-subnet-172.24.112.0/20",  "", 2, "ipv4", "common", "no", "172.24.112.0", 20, '{}');
+    INSERT INTO `ip_subnet` VALUES(10, 1, 2, "loopbacks-172.24.254.0/24", "", 1, "ipv4", "loopback", "no", "172.24.254.0", 24, '{}');
+    INSERT INTO `ip_subnet` VALUES(11, 1, 2, "management-172.24.255.0/24", "", 1, "ipv4", "mgmt", "no", "172.24.255.0", 24, '{}');
+
+
+    -- map subnets to site (id, site_id, subnet_id)
+    INSERT INTO `ip2site` VALUES(1,     1, 1);
+    INSERT INTO `ip2site` VALUES(2,     1, 2);
+    INSERT INTO `ip2site` VALUES(3,     1, 3);
+    INSERT INTO `ip2site` VALUES(4,     1, 4);
+    INSERT INTO `ip2site` VALUES(5,     1, 5);
+    INSERT INTO `ip2site` VALUES(6,     1, 6);
+    INSERT INTO `ip2site` VALUES(7,     1, 7);
+    INSERT INTO `ip2site` VALUES(8,     1, 8);
+    INSERT INTO `ip2site` VALUES(9,     1, 9);
+    INSERT INTO `ip2site` VALUES(10,    1, 10);
+    INSERT INTO `ip2site` VALUES(11,    1, 11);
+
+    -- map hosts to subnet (id, subnet_id, name, desc, ip_version, readonly, address)
+    INSERT INTO `ip_host` VALUES(1, 11, "network", "", "ipv4", "no", "172.24.255.0");
+    INSERT INTO `ip_host` VALUES(2, 11, "broadcast", "", "ipv4", "no", "172.24.255.255");
+
+    -- add host to ip_reservation (id, host_id, consumer_id, consumer_type, meta)
+    INSERT INTO `ip_reservation` VALUES(1,  1,  NULL,   'sys',  '{"tag":"network"}');
+    INSERT INTO `ip_reservation` VALUES(2,  2,  NULL,   'sys',  '{"tag":"broadcast"}');
   supported_platforms.sql: |
     USE {{ .Values.mariadb.auth.database }};
     INSERT INTO `supported_platforms` VALUES (1,'vx|i440FX|VirtualBox|Standard PC (i440FX + PIIX, 1996)','Virtual Switch','vm',4000,300);
@@ -1595,11 +1635,28 @@ data:
     INSERT INTO `supported_platforms` VALUES (12,'as7326-56x','Edge-Core AS7326-56X T3','trident3',4096,300);
     INSERT INTO `supported_platforms` VALUES (13,'AS7712-32X','Edge-Core AS7712-32X Tomahawk','tomahawk',4096,300);
     INSERT INTO `supported_platforms` VALUES (14,'MSN3700C','Mellanox MSN3700C Spectrum-2','spectrum',2980,300);
+  switch.sql: |
+    USE {{ .Values.mariadb.auth.database }};
+    INSERT INTO `switch` VALUES (1,1,NULL,1,'softgate1-default','ok',NULL,'0000-00-00 00:00:00','0000-00-00 00:00:00','',0,0,0,0,'','ok','0000-00-00 00:00:00','offloader',0,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,0,NULL,NULL,NULL,NULL,NULL,NULL,1,1,0,'{\"uuid\":\"\"}');
+    INSERT INTO `switch` VALUES (2,1,NULL,2,'softgate2-default','ok',NULL,'0000-00-00 00:00:00','0000-00-00 00:00:00','',0,0,0,0,'','ok','0000-00-00 00:00:00','offloader',0,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,0,NULL,NULL,NULL,NULL,NULL,NULL,1,1,0,'{\"uuid\":\"\"}');
+
+    -- ip hosts
+    INSERT INTO `ip_host` (`id`, `subnet_id`, `name`, `description`, `ip_version`, `readonly`, `address`) VALUES (3,10,'softgate01-default',NULL,'ipv4','no','172.24.254.11');
+    INSERT INTO `ip_host` (`id`, `subnet_id`, `name`, `description`, `ip_version`, `readonly`, `address`) VALUES (4,11,'softgate01-default',NULL,'ipv4','no','172.24.255.11');
+    INSERT INTO `ip_host` (`id`, `subnet_id`, `name`, `description`, `ip_version`, `readonly`, `address`) VALUES (5,10,'softgate02-default',NULL,'ipv4','no','172.24.254.12');
+    INSERT INTO `ip_host` (`id`, `subnet_id`, `name`, `description`, `ip_version`, `readonly`, `address`) VALUES (6,11,'softgate02-default',NULL,'ipv4','no','172.24.255.12');
+
+    -- ip reservation
+    INSERT INTO `ip_reservation` (`id`, `host_id`, `consumer_id`, `consumer_type`, `meta`) VALUES (3,4,1,'hw','{\"tag\":\"mgmt\"}');
+    INSERT INTO `ip_reservation` (`id`, `host_id`, `consumer_id`, `consumer_type`, `meta`) VALUES (4,3,1,'hw','{\"tag\":\"main\"}');
+    INSERT INTO `ip_reservation` (`id`, `host_id`, `consumer_id`, `consumer_type`, `meta`) VALUES (5,6,2,'hw','{\"tag\":\"mgmt\"}');
+    INSERT INTO `ip_reservation` (`id`, `host_id`, `consumer_id`, `consumer_type`, `meta`) VALUES (6,5,2,'hw','{\"tag\":\"main\"}');
   tenants.sql: |
     USE {{ .Values.mariadb.auth.database }};
     SET sql_mode='NO_AUTO_VALUE_ON_ZERO';
     INSERT INTO `tenants` VALUES (0,'All Tenants',0,0,0,0,0,'region',0,10,0,'private','2019-01-17 08:07:23','2020-06-30 23:05:02','');
     INSERT INTO `tenants` VALUES (1,'Admin',0,0,0,0,0,'region',1,10,0,'public','2019-01-15 09:37:34','2020-07-14 19:00:02','');
+    INSERT INTO `tenants` VALUES (2,'DevOps',0,0,0,0,0,'region',1,10,0,'public','2019-01-15 09:37:34','2020-07-14 19:00:02','DevOps Resources');
   users.sql: |
     USE {{ .Values.mariadb.auth.database }};
     INSERT INTO `users` VALUES (1,'{{ .Values.netris.webLogin }}','{{ .Values.netris.webPassword | sha1sum }}','Netris','info@netris.local','',NULL,0,'','','Netris',NULL,0,1,'disabled','','{"approvals":"false","telescope":"false"}', NULL, NULL);
@@ -1614,6 +1671,20 @@ data:
   whitelist.sql: |
     USE {{ .Values.mariadb.auth.database }};
     INSERT INTO `login_whitelists` VALUES (1,'0.0.0.0',0,'ANY');
+  x-bgp.sql: |
+    USE {{ .Values.mariadb.auth.database }};
+    INSERT INTO `net_peers` (`id`, `name`, `description`, `neighbor_as`, `local_ip`, `remote_ip`, `prefix_length`, `switch_port_id`, `bgp_password`, `vlan`, `offload_vlan_id`, `offload_port_id`, `prefix_limit`, `prepend_inbound`, `prepend_outbound`, `prefix_list_inbound`, `prefix_list_outbound`, `local_preference`, `weight`, `status`, `nexthop_self`, `default_originate`, `offloader_interface`, `ip_version`, `rcircuit_id`, `terminate_on_switch`, `multihop`, `route_id`, `site_id`, `neighbor_address`, `update_source`, `community`, `internal`, `allowas_in`, `term_switch_id`, `created_date`, `modified_date`, `inbound_route_map`, `outbound_route_map`, `kubenet_info`, `meta`) VALUES (1,'peer0-2-sg-ipv4','System generated peer for connecting softgate nodes',65000,NULL,NULL,0,NULL,'',1,NULL,NULL,0,0,0,'','',500,0,'enabled','disabled','disabled',NULL,'ipv4',NULL,'no',0,NULL,1,NULL,NULL,NULL,2,0,2,NULL,NULL,NULL,NULL,NULL,'{}');
+    INSERT INTO `net_peers` (`id`, `name`, `description`, `neighbor_as`, `local_ip`, `remote_ip`, `prefix_length`, `switch_port_id`, `bgp_password`, `vlan`, `offload_vlan_id`, `offload_port_id`, `prefix_limit`, `prepend_inbound`, `prepend_outbound`, `prefix_list_inbound`, `prefix_list_outbound`, `local_preference`, `weight`, `status`, `nexthop_self`, `default_originate`, `offloader_interface`, `ip_version`, `rcircuit_id`, `terminate_on_switch`, `multihop`, `route_id`, `site_id`, `neighbor_address`, `update_source`, `community`, `internal`, `allowas_in`, `term_switch_id`, `created_date`, `modified_date`, `inbound_route_map`, `outbound_route_map`, `kubenet_info`, `meta`) VALUES (2,'peer0-2-sg-ipv6','System generated peer for connecting softgate nodes',65000,NULL,NULL,0,NULL,'',1,NULL,NULL,0,0,0,'','',500,0,'enabled','disabled','disabled',NULL,'ipv6',NULL,'no',0,NULL,1,NULL,NULL,NULL,2,0,2,NULL,NULL,NULL,NULL,NULL,'{}');
+    INSERT INTO `net_peers` (`id`, `name`, `description`, `neighbor_as`, `local_ip`, `remote_ip`, `prefix_length`, `switch_port_id`, `bgp_password`, `vlan`, `offload_vlan_id`, `offload_port_id`, `prefix_limit`, `prepend_inbound`, `prepend_outbound`, `prefix_list_inbound`, `prefix_list_outbound`, `local_preference`, `weight`, `status`, `nexthop_self`, `default_originate`, `offloader_interface`, `ip_version`, `rcircuit_id`, `terminate_on_switch`, `multihop`, `route_id`, `site_id`, `neighbor_address`, `update_source`, `community`, `internal`, `allowas_in`, `term_switch_id`, `created_date`, `modified_date`, `inbound_route_map`, `outbound_route_map`, `kubenet_info`, `meta`) VALUES (3,'peer0-2-sg-ipv4','System generated peer for connecting softgate nodes',65000,NULL,NULL,0,NULL,'',1,NULL,NULL,0,0,0,'','',500,0,'enabled','disabled','disabled',NULL,'ipv4',NULL,'no',0,NULL,1,NULL,NULL,NULL,1,0,1,NULL,NULL,NULL,NULL,NULL,'{}');
+    INSERT INTO `net_peers` (`id`, `name`, `description`, `neighbor_as`, `local_ip`, `remote_ip`, `prefix_length`, `switch_port_id`, `bgp_password`, `vlan`, `offload_vlan_id`, `offload_port_id`, `prefix_limit`, `prepend_inbound`, `prepend_outbound`, `prefix_list_inbound`, `prefix_list_outbound`, `local_preference`, `weight`, `status`, `nexthop_self`, `default_originate`, `offloader_interface`, `ip_version`, `rcircuit_id`, `terminate_on_switch`, `multihop`, `route_id`, `site_id`, `neighbor_address`, `update_source`, `community`, `internal`, `allowas_in`, `term_switch_id`, `created_date`, `modified_date`, `inbound_route_map`, `outbound_route_map`, `kubenet_info`, `meta`) VALUES (4,'peer0-2-sg-ipv6','System generated peer for connecting softgate nodes',65000,NULL,NULL,0,NULL,'',1,NULL,NULL,0,0,0,'','',500,0,'enabled','disabled','disabled',NULL,'ipv6',NULL,'no',0,NULL,1,NULL,NULL,NULL,1,0,1,NULL,NULL,NULL,NULL,NULL,'{}');
+
+    -- port reservations
+    INSERT INTO `port_reservation` (`id`, `port_id`, `consumer_id`, `consumer_type`, `meta`) VALUES (1,2,1,'port','{\"vlan\":900}');
+    INSERT INTO `port_reservation` (`id`, `port_id`, `consumer_id`, `consumer_type`, `meta`) VALUES (2,1,2,'port','{\"vlan\":900}');
+    INSERT INTO `port_reservation` (`id`, `port_id`, `consumer_id`, `consumer_type`, `meta`) VALUES (3,2,1,'bgp','{\"vlan\":900,\"notCheckConsumerTenant\":true,\"state\":\"active\"}');
+    INSERT INTO `port_reservation` (`id`, `port_id`, `consumer_id`, `consumer_type`, `meta`) VALUES (4,2,2,'bgp','{\"vlan\":900,\"notCheckConsumerTenant\":true,\"state\":\"active\"}');
+    INSERT INTO `port_reservation` (`id`, `port_id`, `consumer_id`, `consumer_type`, `meta`) VALUES (5,1,3,'bgp','{\"vlan\":900,\"notCheckConsumerTenant\":true,\"state\":\"active\"}');
+    INSERT INTO `port_reservation` (`id`, `port_id`, `consumer_id`, `consumer_type`, `meta`) VALUES (6,1,4,'bgp','{\"vlan\":900,\"notCheckConsumerTenant\":true,\"state\":\"active\"}');
 kind: ConfigMap
 metadata:
   name: netris-controller-initdb
