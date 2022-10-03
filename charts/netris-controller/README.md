@@ -189,7 +189,7 @@ The following table lists the configurable parameters of the netris-controller c
 | ----------------------------------------------------- | --------------------------------------------------------------------------------------------------------- | -------------------------- |
 | `equinix-metal-agent.enabled`                         | Enable equinix-metal-agent deployment                                                                     | `true`                     |
 | `equinix-metal-agent.image.repository`                | Image repository                                                                                          | `netrisai/bare-metal-equinix-metal-agent` |
-| `equinix-metal-agent.image.tag`                       | Image tag. Overrides the image tag whose default is the chart appVersion                                  | `"0.7.7"`                  |
+| `equinix-metal-agent.image.tag`                       | Image tag. Overrides the image tag whose default is the chart appVersion                                  | `"0.8.0"`                  |
 | `equinix-metal-agent.image.pullPolicy`                | Image pull policy                                                                                         | `IfNotPresent`             |
 | `equinix-metal-agent.imagePullSecrets`                | Reference to one or more secrets to be used when pulling images                                           | `[]`                       |
 
