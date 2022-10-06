@@ -224,7 +224,7 @@ equinix-metal-agent:
     repository: netrisai/bare-metal-equinix-metal-agent
     pullPolicy: IfNotPresent
     # Overrides the image tag whose default is the chart appVersion.
-    tag: "0.8.0"
+    tag: "0.8.1"
 
   imagePullSecrets: []
 
