@@ -198,7 +198,7 @@ The following table lists the configurable parameters of the netris-controller c
 | Parameter                        | Description                                                                   | Default                                     |
 | ---------------------------------| ----------------------------------------------------------------------------- | ------------------------------------------- |
 | `migration.image.repository`     | Image repository                                                              | `netrisai/controller-web-service-migration` |
-| `migration.image.tag`            | Image tag. Overrides the image tag whose default is the chart appVersion      | `"3.2.1"`                                   |
+| `migration.image.tag`            | Image tag. Overrides the image tag whose default is the chart appVersion      | `"3.3.0"`                                   |
 | `migration.image.pullPolicy`     | Image pull policy                                                             | `IfNotPresent`                              |
 | `migration.imagePullSecrets`     | Reference to one or more secrets to be used when pulling images               | `[]`                                        |
 
