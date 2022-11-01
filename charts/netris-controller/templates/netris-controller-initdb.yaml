@@ -483,15 +483,15 @@ data:
     Table structure for table `inv_profile_custom_rules`\n--\n\nDROP TABLE IF EXISTS
     `inv_profile_custom_rules`;\n/*!40101 SET @saved_cs_client     = @@character_set_client
     */;\n/*!40101 SET character_set_client = utf8 */;\nCREATE TABLE `inv_profile_custom_rules`
-    (\n  `id` bigint(20) NOT NULL AUTO_INCREMENT,\n  `source_subnet` varchar(255)
-    NOT NULL,\n  `source_port` int(10) DEFAULT NULL,\n  `destination_port` int(10)
-    DEFAULT NULL,\n  `protocol` enum('tcp','udp','any') NOT NULL,\n  `inv_profile_id`
-    bigint(20) unsigned NOT NULL,\n  PRIMARY KEY (`id`),\n  KEY `fkinvProfile_idx`
-    (`inv_profile_id`),\n  CONSTRAINT `fkinvProfile` FOREIGN KEY (`inv_profile_id`)
-    REFERENCES `inventory_profiles` (`id`) ON DELETE CASCADE ON UPDATE CASCADE\n)
-    ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;\n/*!40101 SET character_set_client = @saved_cs_client
-    */;\n\n--\n-- Table structure for table `inventory2profile`\n--\n\nDROP TABLE
-    IF EXISTS `inventory2profile`;\n/*!40101 SET @saved_cs_client     = @@character_set_client
+    (\n  `id` bigint(20) NOT NULL AUTO_INCREMENT,\n  `description` varchar(255) NOT
+    NULL,\n  `source_subnet` varchar(255) NOT NULL,\n  `source_port` int(10) DEFAULT
+    NULL,\n  `destination_port` int(10) DEFAULT NULL,\n  `protocol` enum('tcp','udp','any')
+    NOT NULL,\n  `inv_profile_id` bigint(20) unsigned NOT NULL,\n  PRIMARY KEY (`id`),\n
+    \ KEY `fkinvProfile_idx` (`inv_profile_id`),\n  CONSTRAINT `fkinvProfile` FOREIGN
+    KEY (`inv_profile_id`) REFERENCES `inventory_profiles` (`id`) ON DELETE CASCADE
+    ON UPDATE CASCADE\n) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;\n/*!40101 SET character_set_client
+    = @saved_cs_client */;\n\n--\n-- Table structure for table `inventory2profile`\n--\n\nDROP
+    TABLE IF EXISTS `inventory2profile`;\n/*!40101 SET @saved_cs_client     = @@character_set_client
     */;\n/*!40101 SET character_set_client = utf8 */;\nCREATE TABLE `inventory2profile`
     (\n  `id` bigint(20) NOT NULL AUTO_INCREMENT,\n  `inventory_id` bigint(20) unsigned
     NOT NULL,\n  `profile_id` bigint(20) unsigned NOT NULL,\n  PRIMARY KEY (`id`),\n
@@ -509,8 +509,8 @@ data:
     \ `timezone` varchar(255) DEFAULT NULL,\n  `ntp_servers` text DEFAULT NULL,\n
     \ `dns_servers` text DEFAULT NULL,\n  `created_date` timestamp /* mariadb-5.3
     */ NULL DEFAULT current_timestamp(),\n  `modified_date` timestamp /* mariadb-5.3
-    */ NULL DEFAULT current_timestamp(),\n  PRIMARY KEY (`id`),\n  UNIQUE KEY `id_UNIQUE`
-    (`id`)\n) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;\n/*!40101 SET character_set_client
+    */ NULL DEFAULT current_timestamp(),\n  PRIMARY KEY (`id`),\n  UNIQUE KEY `inv_prof_name_uniq`
+    (`name`)\n) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;\n/*!40101 SET character_set_client
     = @saved_cs_client */;\n\n--\n-- Table structure for table `ip`\n--\n\nDROP TABLE
     IF EXISTS `ip`;\n/*!40101 SET @saved_cs_client     = @@character_set_client */;\n/*!40101
     SET character_set_client = utf8 */;\nCREATE TABLE `ip` (\n  `id` bigint(20) unsigned
@@ -1294,30 +1294,50 @@ data:
     TABLE IF EXISTS `vlan_reservation`;\n/*!40101 SET @saved_cs_client     = @@character_set_client
     */;\n/*!40101 SET character_set_client = utf8 */;\nCREATE TABLE `vlan_reservation`
     (\n  `id` bigint(20) unsigned NOT NULL AUTO_INCREMENT,\n  `vlan` int(10) unsigned
-    NOT NULL,\n  `consumer_id` bigint(20) unsigned NOT NULL,\n  `consumer_type` enum('vnet')
-    DEFAULT 'vnet',\n  `meta` longtext CHARACTER SET utf8mb4 COLLATE utf8mb4_bin NOT
-    NULL DEFAULT '{}' CHECK (json_valid(`meta`)),\n  PRIMARY KEY (`id`)\n) ENGINE=InnoDB
+    NOT NULL,\n  `consumer_id` bigint(20) unsigned NOT NULL,\n  `consumer_type` enum('vnet',
+    'bgp') DEFAULT 'vnet',\n  `meta` longtext CHARACTER SET utf8mb4 COLLATE utf8mb4_bin
+    NOT NULL DEFAULT '{}' CHECK (json_valid(`meta`)),\n  PRIMARY KEY (`id`)\n) ENGINE=InnoDB
     DEFAULT CHARSET=utf8mb4;\n/*!40101 SET character_set_client = @saved_cs_client
-    */;\n\n--\n-- Table structure for table `mac_address`\n--\n\nDROP TABLE IF EXISTS
-    `mac_address`;\n/*!40101 SET @saved_cs_client     = @@character_set_client */;\n/*!40101
-    SET character_set_client = utf8 */;\nCREATE TABLE `mac_address` (\n  `id` bigint(20)
-    unsigned NOT NULL AUTO_INCREMENT,\n  `host_id` bigint(20) unsigned NOT NULL,\n
-    \ `mac` varchar(20) NOT NULL,\n  `state` enum('active','deleted') NOT NULL DEFAULT
-    'active',\n  `source` enum('none','dhcp','arp') NOT NULL DEFAULT 'none',\n  `created_date`
-    timestamp NOT NULL DEFAULT current_timestamp(),\n  `modified_date` timestamp NOT
-    NULL DEFAULT current_timestamp() ON UPDATE current_timestamp(),\n  PRIMARY KEY
-    (`id`),\n  KEY `host_id_idx` (`host_id`),\n  KEY `mac_address_idx` (`mac`),\n
-    \ KEY `state_source_idx` (`state`,`source`),\n  CONSTRAINT `host_id` FOREIGN KEY
-    (`host_id`) REFERENCES `ip_host` (`id`) ON DELETE CASCADE ON UPDATE CASCADE\n)
-    ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;\n/*!40101 SET character_set_client = @saved_cs_client
-    */;\n\n\nLOCK TABLES `mac_address` WRITE;\n/*!40000 ALTER TABLE `mac_address`
-    DISABLE KEYS */;\n/*!40000 ALTER TABLE `mac_address` ENABLE KEYS */;\nUNLOCK TABLES;\n/*!50003
-    SET @saved_cs_client      = @@character_set_client */ ;\n/*!50003 SET @saved_cs_results
-    \    = @@character_set_results */ ;\n/*!50003 SET @saved_col_connection = @@collation_connection
-    */ ;\n/*!50003 SET character_set_client  = utf8 */ ;\n/*!50003 SET character_set_results
-    = utf8 */ ;\n/*!50003 SET collation_connection  = utf8_general_ci */ ;\n/*!50003
-    SET @saved_sql_mode       = @@sql_mode */ ;\n/*!50003 SET sql_mode              =
-    'STRICT_TRANS_TABLES,ERROR_FOR_DIVISION_BY_ZERO,NO_AUTO_CREATE_USER,NO_ENGINE_SUBSTITUTION'
+    */;\n\n--\n-- Table structure for table `rcircuit_unmanaged`\n--\n\nDROP TABLE
+    IF EXISTS `rcircuit_unmanaged`;\n/*!40101 SET @saved_cs_client     = @@character_set_client
+    */;\n/*!40101 SET character_set_client = utf8 */;\nCREATE TABLE `rcircuit_unmanaged`
+    (\n  `id` BIGINT(20) UNSIGNED NOT NULL AUTO_INCREMENT,\n  `data` longtext DEFAULT
+    '{}' CHECK (json_valid(`data`)),\n  PRIMARY KEY (`id`)\n) ENGINE=InnoDB DEFAULT
+    CHARSET=utf8mb4;\n/*!40101 SET character_set_client = @saved_cs_client */;\n\n--\n--
+    Table structure for table `tag`\n--\n\nDROP TABLE IF EXISTS `tag`;\n/*!40101 SET
+    @saved_cs_client     = @@character_set_client */;\n/*!40101 SET character_set_client
+    = utf8 */;\nCREATE TABLE `tag` (\n  `id` bigint(20) unsigned NOT NULL AUTO_INCREMENT,\n
+    \ `name` varchar(255) NOT NULL,\n  PRIMARY KEY (`id`),\n  UNIQUE KEY `name_unique`
+    (`name`)\n) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;\n/*!40101 SET character_set_client
+    = @saved_cs_client */;\n\n--\n-- Table structure for table `tag_reservation`\n--\n\nDROP
+    TABLE IF EXISTS `tag_reservation`;\n/*!40101 SET @saved_cs_client     = @@character_set_client
+    */;\n/*!40101 SET character_set_client = utf8 */;\nCREATE TABLE `tag_reservation`
+    (\n  `id` bigint(20) unsigned NOT NULL AUTO_INCREMENT,\n  `tag_id` bigint(20)
+    unsigned NOT NULL,\n  `resource_id` bigint(20) unsigned NOT NULL,\n  `resource_type`
+    enum('hw','vnet','roh','bgp') DEFAULT NULL,\n  `meta` longtext NOT NULL DEFAULT
+    '{}' CHECK (json_valid(`meta`)),\n  PRIMARY KEY (`id`),\n  KEY `pairs_idx` (`tag_id`,`resource_id`)
+    USING BTREE,\n  CONSTRAINT `fk1` FOREIGN KEY (`tag_id`) REFERENCES `tag` (`id`)
+    ON DELETE RESTRICT ON UPDATE CASCADE\n) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;\n/*!40101
+    SET character_set_client = @saved_cs_client */;\n\n--\n-- Table structure for
+    table `mac_address`\n--\n\nDROP TABLE IF EXISTS `mac_address`;\n/*!40101 SET @saved_cs_client
+    \    = @@character_set_client */;\n/*!40101 SET character_set_client = utf8 */;\nCREATE
+    TABLE `mac_address` (\n  `id` bigint(20) unsigned NOT NULL AUTO_INCREMENT,\n  `host_id`
+    bigint(20) unsigned NOT NULL,\n  `mac` varchar(20) NOT NULL,\n  `state` enum('active','deleted')
+    NOT NULL DEFAULT 'active',\n  `source` enum('none','dhcp','arp') NOT NULL DEFAULT
+    'none',\n  `created_date` timestamp NOT NULL DEFAULT current_timestamp(),\n  `modified_date`
+    timestamp NOT NULL DEFAULT current_timestamp() ON UPDATE current_timestamp(),\n
+    \ PRIMARY KEY (`id`),\n  KEY `host_id_idx` (`host_id`),\n  KEY `mac_address_idx`
+    (`mac`),\n  KEY `state_source_idx` (`state`,`source`),\n  CONSTRAINT `host_id`
+    FOREIGN KEY (`host_id`) REFERENCES `ip_host` (`id`) ON DELETE CASCADE ON UPDATE
+    CASCADE\n) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;\n/*!40101 SET character_set_client
+    = @saved_cs_client */;\n\n\nLOCK TABLES `mac_address` WRITE;\n/*!40000 ALTER TABLE
+    `mac_address` DISABLE KEYS */;\n/*!40000 ALTER TABLE `mac_address` ENABLE KEYS
+    */;\nUNLOCK TABLES;\n/*!50003 SET @saved_cs_client      = @@character_set_client
+    */ ;\n/*!50003 SET @saved_cs_results     = @@character_set_results */ ;\n/*!50003
+    SET @saved_col_connection = @@collation_connection */ ;\n/*!50003 SET character_set_client
+    \ = utf8 */ ;\n/*!50003 SET character_set_results = utf8 */ ;\n/*!50003 SET collation_connection
+    \ = utf8_general_ci */ ;\n/*!50003 SET @saved_sql_mode       = @@sql_mode */ ;\n/*!50003
+    SET sql_mode              = 'STRICT_TRANS_TABLES,ERROR_FOR_DIVISION_BY_ZERO,NO_AUTO_CREATE_USER,NO_ENGINE_SUBSTITUTION'
     */ ;\nDELIMITER ;;\n/*!50003 CREATE TRIGGER `dhcp-lease-delete` AFTER DELETE ON
     `mac_address` \nFOR EACH ROW BEGIN\n    SELECT count(id) INTO @UsedHostCount FROM
     `mac_address` WHERE `host_id` = OLD.host_id;\n    IF @UsedHostCount = 0\n    THEN\n
@@ -1582,7 +1602,7 @@ data:
     INSERT INTO `global_settings` VALUES (36,'wireguard_port_range','59000-60999','VPN peers port range','true');
     INSERT INTO `global_settings` VALUES (37,'k8s_lb_check_timeout','2000','K8s Layer 4 load-balancer timeout (ms)','true');
     INSERT INTO `global_settings` VALUES (38,'vpn_measurement_wait_secs','30','Site Mesh measurement module wait interval (sec)','true');
-    INSERT INTO `global_settings` VALUES (39,'migration_version', '3.2.1', 'Database scheme version', 'false');
+    INSERT INTO `global_settings` VALUES (39,'migration_version', '3.3.0', 'Database scheme version', 'false');
     INSERT INTO `global_settings` VALUES (40,'system_asn_range', '4200000000 - 4209999999', 'System ASN range', 'true');
     INSERT INTO `global_settings` VALUES (41,'vpn_asn_range', '4210000000 - 4219999999', 'Site Mesh VPN ASN range', 'true');
     INSERT INTO `global_settings` VALUES (42,'calico_asn_range', '4230000000 - 4239999999', 'Calico ASN range', 'true');
@@ -1741,10 +1761,11 @@ data:
     -- port reservations
     INSERT INTO `port_reservation` (`id`, `port_id`, `consumer_id`, `consumer_type`, `meta`) VALUES (1,2,1,'port','{\"vlan\":900}');
     INSERT INTO `port_reservation` (`id`, `port_id`, `consumer_id`, `consumer_type`, `meta`) VALUES (2,1,2,'port','{\"vlan\":900}');
-    INSERT INTO `port_reservation` (`id`, `port_id`, `consumer_id`, `consumer_type`, `meta`) VALUES (3,2,1,'bgp','{\"vlan\":900,\"notCheckConsumerTenant\":true,\"state\":\"active\"}');
-    INSERT INTO `port_reservation` (`id`, `port_id`, `consumer_id`, `consumer_type`, `meta`) VALUES (4,2,2,'bgp','{\"vlan\":900,\"notCheckConsumerTenant\":true,\"state\":\"active\"}');
-    INSERT INTO `port_reservation` (`id`, `port_id`, `consumer_id`, `consumer_type`, `meta`) VALUES (5,1,3,'bgp','{\"vlan\":900,\"notCheckConsumerTenant\":true,\"state\":\"active\"}');
-    INSERT INTO `port_reservation` (`id`, `port_id`, `consumer_id`, `consumer_type`, `meta`) VALUES (6,1,4,'bgp','{\"vlan\":900,\"notCheckConsumerTenant\":true,\"state\":\"active\"}');
+
+    INSERT INTO `vlan_reservation` (`id`, `vlan`, `consumer_id`, `consumer_type`, `meta`) VALUES (1, 900, 1, 'bgp', '{\"portID\":2, \"siteID\":1}');
+    INSERT INTO `vlan_reservation` (`id`, `vlan`, `consumer_id`, `consumer_type`, `meta`) VALUES (2, 900, 2, 'bgp', '{\"portID\":2, \"siteID\":1}');
+    INSERT INTO `vlan_reservation` (`id`, `vlan`, `consumer_id`, `consumer_type`, `meta`) VALUES (3, 900, 3, 'bgp', '{\"portID\":1, \"siteID\":1}');
+    INSERT INTO `vlan_reservation` (`id`, `vlan`, `consumer_id`, `consumer_type`, `meta`) VALUES (4, 900, 4, 'bgp', '{\"portID\":1, \"siteID\":1}');
 kind: ConfigMap
 metadata:
   name: netris-controller-initdb

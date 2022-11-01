@@ -89,7 +89,7 @@ The following table lists the configurable parameters of the netris-controller c
 | ------------------------------------------------------------------| --------------------------------------------------------------------------------------------------------- | --------------------------------- |
 | `web-service-backend.replicaCount`                                | Number of replicas in web-service-backend deployment                                                      | `1`                               |
 | `web-service-backend.image.repository`                            | Image repository                                                                                          | `netrisai/controller-web-service-backend` |
-| `web-service-backend.image.tag`                                   | Image tag. Overrides the image tag whose default is the chart appVersion                                  | `"3.3.0-002"`                         |
+| `web-service-backend.image.tag`                                   | Image tag. Overrides the image tag whose default is the chart appVersion                                  | `"3.3.0-003"`                         |
 | `web-service-backend.image.pullPolicy`                            | Image pull policy                                                                                         | `IfNotPresent`                    |
 | `web-service-backend.imagePullSecrets`                            | Reference to one or more secrets to be used when pulling images                                           | `[]`                              |
 | `web-service-backend.service.type`                                | Kubernetes service type 	                                                                                | `ClusterIP`                       |
@@ -105,7 +105,7 @@ The following table lists the configurable parameters of the netris-controller c
 | ------------------------------------------------------------------| --------------------------------------------------------------------------------------------------------- | --------------------------------- |
 | `web-service-frontend.replicaCount`                               | Number of replicas in web-service-frontend deployment                                                     | `1`                               |
 | `web-service-frontend.image.repository`                           | Image repository                                                                                          | `netrisai/controller-web-service-frontend` |
-| `web-service-frontend.image.tag`                                  | Image tag. Overrides the image tag whose default is the chart appVersion                                  | `"3.3.0-002"`                         |
+| `web-service-frontend.image.tag`                                  | Image tag. Overrides the image tag whose default is the chart appVersion                                  | `"3.3.0-005"`                         |
 | `web-service-frontend.image.pullPolicy`                           | Image pull policy                                                                                         | `IfNotPresent`                    |
 | `web-service-frontend.imagePullSecrets`                           | Reference to one or more secrets to be used when pulling images                                           | `[]`                              |
 | `web-service-frontend.service.type`                               | Kubernetes service type 	                                                                                | `ClusterIP`                       |
@@ -139,7 +139,7 @@ The following table lists the configurable parameters of the netris-controller c
 | ------------------------------------- | --------------------------------------------------------------------------------------------------------- | -------------------------- |
 | `telescope.replicaCount`                    | Number of replicas in telescope deployment                                                          | `1`                        |
 | `telescope.image.repository`                | Image repository                                                                                          | `netrisai/controller-telescope` |
-| `telescope.image.tag`                       | Image tag. Overrides the image tag whose default is the chart appVersion                                  | `"3.1.0.001"`                       |
+| `telescope.image.tag`                       | Image tag. Overrides the image tag whose default is the chart appVersion                                  | `"3.3.0.002"`                       |
 | `telescope.image.pullPolicy`                | Image pull policy                                                                                         | `IfNotPresent`             |
 | `telescope.imagePullSecrets`                | Reference to one or more secrets to be used when pulling images                                           | `[]`                       |
 | `telescope.service.type`                    | Kubernetes service type 	                                                                                | `ClusterIP`                |
@@ -189,7 +189,7 @@ The following table lists the configurable parameters of the netris-controller c
 | ----------------------------------------------------- | --------------------------------------------------------------------------------------------------------- | -------------------------- |
 | `equinix-metal-agent.enabled`                         | Enable equinix-metal-agent deployment                                                                     | `true`                     |
 | `equinix-metal-agent.image.repository`                | Image repository                                                                                          | `netrisai/bare-metal-equinix-metal-agent` |
-| `equinix-metal-agent.image.tag`                       | Image tag. Overrides the image tag whose default is the chart appVersion                                  | `"0.9.0"`                  |
+| `equinix-metal-agent.image.tag`                       | Image tag. Overrides the image tag whose default is the chart appVersion                                  | `"0.9.1"`                  |
 | `equinix-metal-agent.image.pullPolicy`                | Image pull policy                                                                                         | `IfNotPresent`             |
 | `equinix-metal-agent.imagePullSecrets`                | Reference to one or more secrets to be used when pulling images                                           | `[]`                       |
 
