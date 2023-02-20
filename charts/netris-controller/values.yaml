@@ -132,7 +132,7 @@ grpc:
     repository: netrisai/controller-grpc
     pullPolicy: IfNotPresent
     # Overrides the image tag whose default is the chart appVersion.
-    tag: "3.4.0.006"
+    tag: "3.4.0.007"
 
   imagePullSecrets: []
 
@@ -235,7 +235,7 @@ phoenixnap-bmc-agent:
     repository: netrisai/bare-metal-phoenixnap-bmc-agent
     pullPolicy: IfNotPresent
     # Overrides the image tag whose default is the chart appVersion.
-    tag: "0.3.1"
+    tag: "0.3.5"
 
   imagePullSecrets: []
 
