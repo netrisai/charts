@@ -108,7 +108,7 @@ web-service-frontend:
     repository: netrisai/controller-web-service-frontend
     pullPolicy: IfNotPresent
     # Overrides the image tag whose default is the chart appVersion.
-    tag: "3.4.0-rc3"
+    tag: "3.4.0-002"
 
   imagePullSecrets: []
 
@@ -235,7 +235,7 @@ phoenixnap-bmc-agent:
     repository: netrisai/bare-metal-phoenixnap-bmc-agent
     pullPolicy: IfNotPresent
     # Overrides the image tag whose default is the chart appVersion.
-    tag: "0.3.5"
+    tag: "0.3.6"
 
   imagePullSecrets: []
 
