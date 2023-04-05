@@ -89,7 +89,7 @@ The following table lists the configurable parameters of the netris-controller c
 | ------------------------------------------------------------------| --------------------------------------------------------------------------------------------------------- | --------------------------------- |
 | `web-service-backend.replicaCount`                                | Number of replicas in web-service-backend deployment                                                      | `1`                               |
 | `web-service-backend.image.repository`                            | Image repository                                                                                          | `netrisai/controller-web-service-backend` |
-| `web-service-backend.image.tag`                                   | Image tag. Overrides the image tag whose default is the chart appVersion                                  | `"3.4.0-003"`                         |
+| `web-service-backend.image.tag`                                   | Image tag. Overrides the image tag whose default is the chart appVersion                                  | `"3.4.1-001"`                         |
 | `web-service-backend.image.pullPolicy`                            | Image pull policy                                                                                         | `IfNotPresent`                    |
 | `web-service-backend.imagePullSecrets`                            | Reference to one or more secrets to be used when pulling images                                           | `[]`                              |
 | `web-service-backend.service.type`                                | Kubernetes service type 	                                                                                | `ClusterIP`                       |
@@ -199,7 +199,7 @@ The following table lists the configurable parameters of the netris-controller c
 | ----------------------------------------------------- | --------------------------------------------------------------------------------------------------------- | -------------------------- |
 | `phoenixnap-bmc-agent.enabled`                         | Enable phoenixnap-bmc-agent deployment                                                                   | `true`                     |
 | `phoenixnap-bmc-agent.image.repository`                | Image repository                                                                                         | `netrisai/bare-metal-phoenixnap-bmc-agent` |
-| `phoenixnap-bmc-agent.image.tag`                       | Image tag. Overrides the image tag whose default is the chart appVersion                                 | `"0.3.6"`                  |
+| `phoenixnap-bmc-agent.image.tag`                       | Image tag. Overrides the image tag whose default is the chart appVersion                                 | `"0.4.0"`                  |
 | `phoenixnap-bmc-agent.image.pullPolicy`                | Image pull policy                                                                                        | `IfNotPresent`             |
 | `phoenixnap-bmc-agent.imagePullSecrets`                | Reference to one or more secrets to be used when pulling images                                          | `[]`                       |
 
@@ -208,7 +208,7 @@ The following table lists the configurable parameters of the netris-controller c
 | Parameter                        | Description                                                                   | Default                                     |
 | ---------------------------------| ----------------------------------------------------------------------------- | ------------------------------------------- |
 | `migration.image.repository`     | Image repository                                                              | `netrisai/controller-web-service-migration` |
-| `migration.image.tag`            | Image tag. Overrides the image tag whose default is the chart appVersion      | `"3.4.0"`                                 |
+| `migration.image.tag`            | Image tag. Overrides the image tag whose default is the chart appVersion      | `"3.4.1"`                                 |
 | `migration.image.pullPolicy`     | Image pull policy                                                             | `IfNotPresent`                              |
 | `migration.imagePullSecrets`     | Reference to one or more secrets to be used when pulling images               | `[]`                                        |
 
