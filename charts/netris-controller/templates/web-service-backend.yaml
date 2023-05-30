@@ -94,11 +94,11 @@ spec:
               protocol: TCP
           livenessProbe:
             httpGet:
-              path: /api/
+              path: /health/
               port: {{ (index .Values $microservicename).service.name }}
           readinessProbe:
             httpGet:
-              path: /api/
+              path: /health/
               port: {{ (index .Values $microservicename).service.name }}
           resources:
             {{- toYaml .Values.resources | nindent 12 }}
