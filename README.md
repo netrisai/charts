@@ -1,4 +1,4 @@
-# Netris.ai Helm Charts
+# Netris.io Helm Charts
 [![Slack](https://img.shields.io/badge/slack-@netrisai-blue.svg?logo=slack)](https://netrisai.slack.com/)
 [![](https://github.com/netrisai/charts/workflows/Release%20Charts/badge.svg?branch=main)](https://github.com/netrisai/charts/actions)
 [![Artifact HUB](https://img.shields.io/endpoint?url=https://artifacthub.io/badge/repository/netrisai)](https://artifacthub.io/packages/search?repo=netrisai)
