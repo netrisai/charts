@@ -82,15 +82,3 @@ secret-key: {{ (index $secret.data "secret-key") }}
 secret-key: {{ randAlphaNum 40 | b64enc }}
 {{- end }}
 {{- end }}
-
-{{/*
-Generate a grpc-secret secret or use the existing one
-*/}}
-{{- define "grpc.secret" -}}
-{{- $secret := lookup "v1" "Secret" .Release.Namespace (printf "%s-%s" (include "netris-controller.fullname" .) "grpc-secret") -}}
-{{- if $secret }}
-secret-key: {{ (index $secret.data "secret-key") }}
-{{- else }}
-secret-key: {{ randAlphaNum 40 | b64enc }}
-{{- end }}
-{{- end }}

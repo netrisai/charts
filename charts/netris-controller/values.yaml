@@ -52,38 +52,14 @@ netris:
   webPassword: newNet0ps
 
 
-ingress:
-  enabled: true
-  # For Kubernetes >= 1.18 you should specify the ingress-controller via the field ingressClassName
-  # See https://kubernetes.io/blog/2020/04/02/improvements-to-the-ingress-api-in-kubernetes-1.18/#specifying-the-class-of-an-ingress
-  # ingressClassName: nginx
-  # Values can be templated
-  # annotations:
-  #   kubernetes.io/ingress.class: nginx
-  #   kubernetes.io/tls-acme: "true"
-  labels: {}
-  path: /
-
-  # pathType is only for k8s > 1.19
-  pathType: Prefix
-
-  hosts:
-    - chart-example.local
-
-  tls: []
-  #  - secretName: chart-example-tls
-  #    hosts:
-  #      - chart-example.local
-
-
-web-service-backend:
+app:
   replicaCount: 1
 
   image:
-    repository: netrisai/controller-web-service-backend
+    repository: netrisai/controller-web-service
     pullPolicy: IfNotPresent
     # Overrides the image tag whose default is the chart appVersion.
-    tag: "4.0.0-011"
+    tag: "3.0.10-032"
 
   imagePullSecrets: []
 
@@ -92,30 +68,29 @@ web-service-backend:
     port: 80
     name: http
 
+  ingress:
+    enabled: true
+    # For Kubernetes >= 1.18 you should specify the ingress-controller via the field ingressClassName
+    # See https://kubernetes.io/blog/2020/04/02/improvements-to-the-ingress-api-in-kubernetes-1.18/#specifying-the-class-of-an-ingress
+    # ingressClassName: nginx
+    # Values can be templated
+    # annotations:
+    #   kubernetes.io/ingress.class: nginx
+    #   kubernetes.io/tls-acme: "true"
+    labels: {}
+    path: /
 
-  autoscaling:
-    enabled: false
-    minReplicas: 1
-    maxReplicas: 100
-    targetCPUUtilizationPercentage: 80
-    # targetMemoryUtilizationPercentage: 80
+    # pathType is only for k8s > 1.19
+    pathType: Prefix
+
+    hosts:
+      - chart-example.local
 
 
-web-service-frontend:
-  replicaCount: 1
-
-  image:
-    repository: netrisai/controller-web-service-frontend
-    pullPolicy: IfNotPresent
-    # Overrides the image tag whose default is the chart appVersion.
-    tag: "4.0.0-010"
-
-  imagePullSecrets: []
-
-  service:
-    type: ClusterIP
-    port: 80
-    name: http
+    tls: []
+    #  - secretName: chart-example-tls
+    #    hosts:
+    #      - chart-example.local
 
   autoscaling:
     enabled: false
@@ -132,7 +107,7 @@ grpc:
     repository: netrisai/controller-grpc
     pullPolicy: IfNotPresent
     # Overrides the image tag whose default is the chart appVersion.
-    tag: "4.0.0.003"
+    tag: "3.0.10.004"
 
   imagePullSecrets: []
 
@@ -156,7 +131,7 @@ telescope:
     repository: netrisai/controller-telescope
     pullPolicy: IfNotPresent
     # Overrides the image tag whose default is the chart appVersion.
-    tag: "4.0.0.001"
+    tag: "3.0.6-001"
 
   imagePullSecrets: []
 
@@ -224,27 +199,9 @@ equinix-metal-agent:
     repository: netrisai/bare-metal-equinix-metal-agent
     pullPolicy: IfNotPresent
     # Overrides the image tag whose default is the chart appVersion.
-    tag: "0.9.3"
+    tag: "0.5.0"
 
   imagePullSecrets: []
-
-
-phoenixnap-bmc-agent:
-  enabled: true
-  image:
-    repository: netrisai/bare-metal-phoenixnap-bmc-agent
-    pullPolicy: IfNotPresent
-    # Overrides the image tag whose default is the chart appVersion.
-    tag: "0.4.0"
-
-  imagePullSecrets: []
-
-
-migration:
-  image:
-    repository: netrisai/controller-web-service-migration
-    pullPolicy: IfNotPresent
-    tag: "3.4.1"
 
 
 ## Using default values from https://github.com/bitnami/charts/tree/master/bitnami/mariadb/values.yaml
@@ -279,13 +236,6 @@ redis:
 
 ## Using default values from https://github.com/ntppool/charts/tree/main/charts/smtp/values.yaml
 smtp:
-  resources:
-    limits:
-      cpu: 500m
-      memory: 1024Mi
-    requests:
-      cpu: 100m
-      memory: 128Mi
   config:
     # MAILNAME: smtp
     DISABLE_IPV6: "1"
@@ -308,7 +258,6 @@ haproxy:
   config: false                                 # We don't support haproxy default config
   service:
     type: LoadBalancer
-    externalTrafficPolicy: Local
 
 
 ## Using default values from https://github.com/kiwigrid/helm-charts/tree/master/charts/graphite/values.yaml
@@ -405,3 +354,9 @@ graphite:
       [collectd]
       pattern = ^collectd.*
       retentions = 1m:7d,5m:90d,1h:2y
+
+migration:
+  image:
+    repository: netrisai/controller-web-service-migration
+    pullPolicy: IfNotPresent
+    tag: "3.0.10"

@@ -32,8 +32,6 @@ spec:
         {{- toYaml .Values.podSecurityContext | nindent 8 }}
       initContainers:
       - name: init-wait-mariadb
-        securityContext:
-          {{- toYaml .Values.securityContext | nindent 10 }}
         image: alpine:3.11
         command:
           - sh
@@ -45,12 +43,6 @@ spec:
             {{- toYaml .Values.securityContext | nindent 12 }}
           image: "{{ (index .Values $microservicename).image.repository }}:{{ (index .Values $microservicename).image.tag | default .Chart.AppVersion }}"
           imagePullPolicy: {{ (index .Values $microservicename).image.pullPolicy }}
-          env:
-            - name: GRPC_AUTH_KEYS
-              valueFrom:
-                secretKeyRef:
-                  name: {{ printf "%s-%s" (include "netris-controller.fullname" .) "grpc-secret" }}
-                  key: secret-key
           command: ['/app/servicebin', '-c', '/app/config/grpc.conf']
           ports:
             - name: {{ (index .Values $microservicename).service.name }}
@@ -169,13 +161,3 @@ data:
     password={{ .Values.mariadb.auth.password }}
     database={{ .Values.mariadb.auth.database }}
     port={{ .Values.mariadb.primary.service.port }}
----
-apiVersion: v1
-kind: Secret
-metadata:
-  name: {{ printf "%s-%s" (include "netris-controller.fullname" .) "grpc-secret" }}
-  labels:
-  {{- include "netris-controller.labels" . | nindent 4 }}
-type: Opaque
-data:
-{{- ( include "grpc.secret" . ) | indent 2 -}}

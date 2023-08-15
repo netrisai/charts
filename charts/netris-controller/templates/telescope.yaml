@@ -32,16 +32,12 @@ spec:
         {{- toYaml .Values.podSecurityContext | nindent 8 }}
       initContainers:
       - name: init-wait-mariadb
-        securityContext:
-          {{- toYaml .Values.securityContext | nindent 10 }}
         image: alpine:3.11
         command:
           - sh
           - -c
           - for i in $(seq 1 200); do nc -z -w3 {{ printf "%s-%s" (include "netris-controller.fullname" .) "mariadb" }} {{ .Values.mariadb.primary.service.port }} && exit 0 || sleep 3; done; exit 1
       - name: init-wait-grpc
-        securityContext:
-          {{- toYaml .Values.securityContext | nindent 10 }}
         image: alpine:3.11
         command:
           - sh
@@ -53,12 +49,6 @@ spec:
             {{- toYaml .Values.securityContext | nindent 12 }}
           image: "{{ (index .Values $microservicename).image.repository }}:{{ (index .Values $microservicename).image.tag | default .Chart.AppVersion }}"
           imagePullPolicy: {{ (index .Values $microservicename).image.pullPolicy }}
-          env:
-            - name: GRPC_AUTH_KEYS
-              valueFrom:
-                secretKeyRef:
-                  name: {{ printf "%s-%s" (include "netris-controller.fullname" .) "grpc-secret" }}
-                  key: secret-key
           command: ['/app/servicebin', '-c', '/app/config/telescope.conf']
           ports:
             - name: {{ (index .Values $microservicename).service.name }}

@@ -30,16 +30,12 @@ spec:
         {{- toYaml .Values.podSecurityContext | nindent 8 }}
       initContainers:
       - name: init-wait-webapp
-        securityContext:
-          {{- toYaml .Values.securityContext | nindent 10 }}
         image: alpine:3.11
         command:
           - sh
           - -c
-          - for i in $(seq 1 200); do nc -z -w3 {{ printf "%s-%s" (include "netris-controller.fullname" .) "web-service-backend" }} {{ (index .Values "web-service-backend").service.port }} && exit 0 || sleep 3; done; exit 1
+          - for i in $(seq 1 200); do nc -z -w3 {{ printf "%s-%s" (include "netris-controller.fullname" .) "app" }} {{ .Values.app.service.port }} && exit 0 || sleep 3; done; exit 1
       - name: init-wait-websession
-        securityContext:
-          {{- toYaml .Values.securityContext | nindent 10 }}
         image: alpine:3.11
         command:
           - sh
@@ -58,7 +54,7 @@ spec:
             - name: EQUINIX_ADDR
               value: https://api.packet.net
             - name: CONTROLLER_ADDR
-              value: http://{{ printf "%s-%s" (include "netris-controller.fullname" .) "web-service-backend" }}:{{ (index .Values "web-service-backend").service.port }}
+              value: http://{{ printf "%s-%s" (include "netris-controller.fullname" .) "app" }}:{{ .Values.app.service.port }}
             - name: SESSION_PROVIDER_HOST
               value: http://{{ printf "%s-%s" (include "netris-controller.fullname" .) "web-session-generator" }}:{{ (index .Values "web-session-generator").service.port }}
             - name: WEB_SESSION_SECRET

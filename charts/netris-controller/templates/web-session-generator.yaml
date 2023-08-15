@@ -32,8 +32,6 @@ spec:
         {{- toYaml .Values.podSecurityContext | nindent 8 }}
       initContainers:
       - name: init-wait-mariadb
-        securityContext:
-          {{- toYaml .Values.securityContext | nindent 10 }}
         image: alpine:3.11
         command:
           - sh
@@ -138,13 +136,3 @@ spec:
         targetAverageUtilization: {{ (index .Values $microservicename).autoscaling.targetMemoryUtilizationPercentage }}
     {{- end }}
 {{- end }}
----
-apiVersion: v1
-kind: Secret
-metadata:
-  name: {{ printf "%s-%s" (include "netris-controller.fullname" .) "web-session-secret" }}
-  labels:
-  {{- include "netris-controller.labels" . | nindent 4 }}
-type: Opaque
-data:
-{{- ( include "web.session.secret" . ) | indent 2 -}}
