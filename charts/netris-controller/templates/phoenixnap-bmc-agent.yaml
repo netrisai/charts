@@ -1,6 +1,6 @@
 ---
-{{- if (index .Values "equinix-metal-agent").enabled }}
-{{- $microservicename := "equinix-metal-agent" }}
+{{- if (index .Values "phoenixnap-bmc-agent").enabled }}
+{{- $microservicename := "phoenixnap-bmc-agent" }}
 apiVersion: apps/v1
 kind: Deployment
 metadata:
@@ -49,10 +49,10 @@ spec:
           imagePullPolicy: {{ (index .Values $microservicename).image.pullPolicy }}
           command: ['/app/servicebin']
           env:
-            - name: EQUINIX_METAL_AGENT_LOG_LEVEL
+            - name: PHOENIXNAP_AGENT_LOG_LEVEL
               value: info
-            - name: EQUINIX_ADDR
-              value: https://api.packet.net
+            - name: PHOENIXNAP_TOKEN_URL
+              value: https://auth.phoenixnap.com/auth/realms/BMC/protocol/openid-connect/token
             - name: CONTROLLER_ADDR
               value: http://{{ printf "%s-%s" (include "netris-controller.fullname" .) "web-service-backend" }}:{{ (index .Values "web-service-backend").service.port }}
             - name: SESSION_PROVIDER_HOST
