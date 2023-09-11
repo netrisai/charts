@@ -32,8 +32,6 @@ spec:
         {{- toYaml .Values.podSecurityContext | nindent 8 }}
       initContainers:
       - name: init-wait-mariadb
-        securityContext:
-          {{- toYaml .Values.securityContext | nindent 10 }}
         image: alpine:3.11
         command:
           - sh
@@ -96,11 +94,11 @@ spec:
               protocol: TCP
           livenessProbe:
             httpGet:
-              path: /health/
+              path: /api/
               port: {{ (index .Values $microservicename).service.name }}
           readinessProbe:
             httpGet:
-              path: /health/
+              path: /api/
               port: {{ (index .Values $microservicename).service.name }}
           resources:
             {{- toYaml .Values.resources | nindent 12 }}
