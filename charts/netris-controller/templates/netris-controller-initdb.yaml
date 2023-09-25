@@ -804,9 +804,10 @@ data:
     'disabled',\n  `rp_id` bigint(22) NOT NULL DEFAULT 1,\n  `acl_policy` enum('deny','permit')
     NOT NULL DEFAULT 'deny',\n  `switch_fabric` enum('netris', 'equinix_metal', 'dot1q_trunk',
     'phoenixnap_bmc') NOT NULL DEFAULT 'netris',\n  `vlan_range` VARCHAR(100) NOT
-    NULL DEFAULT '1-4094',\n  `meta` JSON NULL DEFAULT '{}',\n  PRIMARY KEY (`id`),\n
-    \ UNIQUE KEY `id_UNIQUE` (`id`),\n  UNIQUE KEY `name_UNIQUE` (`name`)\n) ENGINE=InnoDB
-    DEFAULT CHARSET=utf8;\n/*!40101 SET character_set_client = @saved_cs_client */;\n\n--\n--
+    NULL DEFAULT '1-4094',\n  `vlan_range_auto_assign` varchar(100) NOT NULL DEFAULT
+    '2-4094',\n  `meta` JSON NULL DEFAULT '{}',\n  PRIMARY KEY (`id`),\n  UNIQUE KEY
+    `id_UNIQUE` (`id`),\n  UNIQUE KEY `name_UNIQUE` (`name`)\n) ENGINE=InnoDB DEFAULT
+    CHARSET=utf8;\n/*!40101 SET character_set_client = @saved_cs_client */;\n\n--\n--
     Table structure for table `net_vpn`\n--\n\nDROP TABLE IF EXISTS `net_vpn`;\n/*!40101
     SET @saved_cs_client     = @@character_set_client */;\n/*!40101 SET character_set_client
     = utf8 */;\nCREATE TABLE `net_vpn` (\n  `id` bigint(20) NOT NULL AUTO_INCREMENT,\n
@@ -1604,7 +1605,7 @@ data:
     INSERT INTO `global_settings` VALUES (36,'wireguard_port_range','59000-60999','VPN peers port range','true');
     INSERT INTO `global_settings` VALUES (37,'k8s_lb_check_timeout','2000','K8s Layer 4 load-balancer timeout (ms)','true');
     INSERT INTO `global_settings` VALUES (38,'vpn_measurement_wait_secs','30','Site Mesh measurement module wait interval (sec)','true');
-    INSERT INTO `global_settings` VALUES (39,'migration_version', '3.4.2', 'Database scheme version', 'false');
+    INSERT INTO `global_settings` VALUES (39,'migration_version', '3.4.4', 'Database scheme version', 'false');
     INSERT INTO `global_settings` VALUES (40,'system_asn_range', '4200000000 - 4209999999', 'System ASN range', 'true');
     INSERT INTO `global_settings` VALUES (41,'vpn_asn_range', '4210000000 - 4219999999', 'Site Mesh VPN ASN range', 'true');
     INSERT INTO `global_settings` VALUES (42,'calico_asn_range', '4230000000 - 4239999999', 'Calico ASN range', 'true');
@@ -1652,10 +1653,10 @@ data:
     INSERT INTO `roh_profiles` VALUES (1,'Default','default');
     INSERT INTO `roh_profiles` VALUES (2,'Default + Aggregates','default_agg');
     INSERT INTO `roh_profiles` VALUES (3,'Full table','full_table');
-  sites.sql: "USE {{ .Values.mariadb.auth.database }};\nINSERT INTO `net_pops` (`id`,
-    `name`, `asn`, `physical_instance_asn`, `virtual_instance_asn`, `vpn`, `rp_id`,
-    `acl_policy`, `switch_fabric`, `vlan_range`) \n                VALUES (1, 'Default',
-    65000, 65500, 65501, 'disabled', 1, 'permit', 'dot1q_trunk', '700-900');\n"
+  sites.sql: |
+    USE {{ .Values.mariadb.auth.database }};
+    INSERT INTO `net_pops` (`id`, `name`, `asn`, `physical_instance_asn`, `virtual_instance_asn`, `vpn`, `rp_id`, `acl_policy`, `switch_fabric`, `vlan_range`, `vlan_range_auto_assign`)
+                    VALUES (1, 'Default', 65000, 65500, 65501, 'disabled', 1, 'permit', 'dot1q_trunk', '2-4094', '700-900');
   subnets.sql: |
     USE {{ .Values.mariadb.auth.database }};
     -- allocations (id,parent_id,allocation_id,name,description,tenant_id,ip_version,purpose,readonly,prefix,length,meta)
