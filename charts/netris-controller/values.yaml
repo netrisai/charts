@@ -132,7 +132,7 @@ grpc:
     repository: netrisai/controller-grpc
     pullPolicy: IfNotPresent
     # Overrides the image tag whose default is the chart appVersion.
-    tag: "3.4.4.001"
+    tag: "3.4.4.002"
 
   imagePullSecrets: []
 
@@ -224,7 +224,7 @@ equinix-metal-agent:
     repository: netrisai/bare-metal-equinix-metal-agent
     pullPolicy: IfNotPresent
     # Overrides the image tag whose default is the chart appVersion.
-    tag: "0.9.3"
+    tag: "0.10.0"
 
   imagePullSecrets: []
 
