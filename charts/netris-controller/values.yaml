@@ -83,7 +83,7 @@ web-service-backend:
     repository: netrisai/controller-web-service-backend
     pullPolicy: IfNotPresent
     # Overrides the image tag whose default is the chart appVersion.
-    tag: "3.4.4-006"
+    tag: "4.0.1-003"
 
   imagePullSecrets: []
 
@@ -108,7 +108,7 @@ web-service-frontend:
     repository: netrisai/controller-web-service-frontend
     pullPolicy: IfNotPresent
     # Overrides the image tag whose default is the chart appVersion.
-    tag: "3.4.4-004"
+    tag: "4.0.1-002"
 
   imagePullSecrets: []
 
@@ -132,7 +132,7 @@ grpc:
     repository: netrisai/controller-grpc
     pullPolicy: IfNotPresent
     # Overrides the image tag whose default is the chart appVersion.
-    tag: "3.4.4.002"
+    tag: "4.0.1.001"
 
   imagePullSecrets: []
 
@@ -156,7 +156,7 @@ telescope:
     repository: netrisai/controller-telescope
     pullPolicy: IfNotPresent
     # Overrides the image tag whose default is the chart appVersion.
-    tag: "3.3.0.002"
+    tag: "4.0.0.001"
 
   imagePullSecrets: []
 
@@ -224,7 +224,7 @@ equinix-metal-agent:
     repository: netrisai/bare-metal-equinix-metal-agent
     pullPolicy: IfNotPresent
     # Overrides the image tag whose default is the chart appVersion.
-    tag: "0.10.0"
+    tag: "0.9.3"
 
   imagePullSecrets: []
 
@@ -244,7 +244,7 @@ migration:
   image:
     repository: netrisai/controller-web-service-migration
     pullPolicy: IfNotPresent
-    tag: "3.4.4"
+    tag: "4.0.1"
 
 
 ## Using default values from https://github.com/bitnami/charts/tree/master/bitnami/mariadb/values.yaml
@@ -308,6 +308,7 @@ haproxy:
   config: false                                 # We don't support haproxy default config
   service:
     type: LoadBalancer
+    externalTrafficPolicy: Local
 
 
 ## Using default values from https://github.com/kiwigrid/helm-charts/tree/master/charts/graphite/values.yaml
