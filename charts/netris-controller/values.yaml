@@ -250,6 +250,8 @@ migration:
 ## Using default values from https://github.com/bitnami/charts/tree/master/bitnami/mariadb/values.yaml
 ## Auth from existing secret not supported at the momment
 mariadb:
+  primary:
+    extraFlags: --event_scheduler=ON
   auth:
     database: netris
     username: netris
