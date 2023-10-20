@@ -89,7 +89,7 @@ The following table lists the configurable parameters of the netris-controller c
 | ------------------------------------------------------------------| --------------------------------------------------------------------------------------------------------- | --------------------------------- |
 | `web-service-backend.replicaCount`                                | Number of replicas in web-service-backend deployment                                                      | `1`                               |
 | `web-service-backend.image.repository`                            | Image repository                                                                                          | `netrisai/controller-web-service-backend` |
-| `web-service-backend.image.tag`                                   | Image tag. Overrides the image tag whose default is the chart appVersion                                  | `"3.5.0-012"`                         |
+| `web-service-backend.image.tag`                                   | Image tag. Overrides the image tag whose default is the chart appVersion                                  | `"3.5.0-014"`                         |
 | `web-service-backend.image.pullPolicy`                            | Image pull policy                                                                                         | `IfNotPresent`                    |
 | `web-service-backend.imagePullSecrets`                            | Reference to one or more secrets to be used when pulling images                                           | `[]`                              |
 | `web-service-backend.service.type`                                | Kubernetes service type 	                                                                                | `ClusterIP`                       |
@@ -122,7 +122,7 @@ The following table lists the configurable parameters of the netris-controller c
 | -------------------------------------- | --------------------------------------------------------------------------------------------------------- | -------------------------- |
 | `grpc.replicaCount`                    | Number of replicas in grpc deployment                                                                     | `1`                        |
 | `grpc.image.repository`                | Image repository                                                                                          | `netrisai/controller-grpc` |
-| `grpc.image.tag`                       | Image tag. Overrides the image tag whose default is the chart appVersion                                  | `"3.5.0.013"`              |
+| `grpc.image.tag`                       | Image tag. Overrides the image tag whose default is the chart appVersion                                  | `"3.5.0.014"`              |
 | `grpc.image.pullPolicy`                | Image pull policy                                                                                         | `IfNotPresent`             |
 | `grpc.imagePullSecrets`                | Reference to one or more secrets to be used when pulling images                                           | `[]`                       |
 | `grpc.service.type`                    | Kubernetes service type 	                                                                                 | `ClusterIP`                |
@@ -199,7 +199,7 @@ The following table lists the configurable parameters of the netris-controller c
 | ----------------------------------------------------- | --------------------------------------------------------------------------------------------------------- | -------------------------- |
 | `phoenixnap-bmc-agent.enabled`                         | Enable phoenixnap-bmc-agent deployment                                                                   | `true`                     |
 | `phoenixnap-bmc-agent.image.repository`                | Image repository                                                                                         | `netrisai/bare-metal-phoenixnap-bmc-agent` |
-| `phoenixnap-bmc-agent.image.tag`                       | Image tag. Overrides the image tag whose default is the chart appVersion                                 | `"0.5.1"`                  |
+| `phoenixnap-bmc-agent.image.tag`                       | Image tag. Overrides the image tag whose default is the chart appVersion                                 | `"0.6.0"`                  |
 | `phoenixnap-bmc-agent.image.pullPolicy`                | Image pull policy                                                                                        | `IfNotPresent`             |
 | `phoenixnap-bmc-agent.imagePullSecrets`                | Reference to one or more secrets to be used when pulling images                                          | `[]`                       |
 
