@@ -32,11 +32,13 @@ spec:
         {{- toYaml .Values.podSecurityContext | nindent 8 }}
       initContainers:
       - name: init-wait-mariadb
+        securityContext:
+          {{- toYaml .Values.securityContext | nindent 10 }}
         image: alpine:3.11
         command:
           - sh
           - -c
-          - for i in $(seq 1 200); do nc -z -w3 {{ printf "%s-%s" (include "netris-controller.fullname" .) "mariadb" }} {{ .Values.mariadb.primary.service.port }} && exit 0 || sleep 3; done; exit 1
+          - for i in $(seq 1 200); do nc -z -w3 {{ printf "%s-%s" (include "netris-controller.fullname" .) "mariadb" }} {{ .Values.mariadb.primary.service.ports.mysql }} && exit 0 || sleep 3; done; exit 1
       containers:
         - name: {{ printf "%s-%s" .Chart.Name $microservicename }}
           securityContext:
@@ -166,7 +168,7 @@ data:
     user={{ .Values.mariadb.auth.username }}
     password={{ .Values.mariadb.auth.password }}
     database={{ .Values.mariadb.auth.database }}
-    port={{ .Values.mariadb.primary.service.port }}
+    port={{ .Values.mariadb.primary.service.ports.mysql }}
 ---
 apiVersion: v1
 kind: Secret
