@@ -855,22 +855,22 @@ data:
     `net_peers`;\n/*!40101 SET @saved_cs_client     = @@character_set_client */;\n/*!40101
     SET character_set_client = utf8 */;\nCREATE TABLE `net_peers` (\n  `id` bigint(20)
     unsigned NOT NULL AUTO_INCREMENT,\n  `vpc_id` bigint(20) unsigned NOT NULL,\n
-    \ `name` varchar(255) NOT NULL,\n  `description` varchar(255) DEFAULT NULL,\n
-    \ `neighbor_as` bigint(8) NOT NULL,\n  `local_ip` varchar(255) DEFAULT NULL,\n
-    \ `remote_ip` varchar(255) DEFAULT NULL,\n  `prefix_length` int(6) NOT NULL,\n
-    \ `switch_port_id` bigint(22) unsigned DEFAULT NULL,\n  `bgp_password` varchar(100)
-    NOT NULL DEFAULT '',\n  `prefix_limit` int(11) NOT NULL DEFAULT 0,\n  `prepend_inbound`
-    int(11) NOT NULL DEFAULT 0,\n  `prepend_outbound` int(11) NOT NULL DEFAULT 0,\n
-    \ `prefix_list_inbound` text NOT NULL,\n  `prefix_list_outbound` text NOT NULL,\n
-    \ `local_preference` int(11) unsigned DEFAULT 100,\n  `weight` int(32) unsigned
-    DEFAULT 0,\n  `status` enum('enabled','disabled') NOT NULL DEFAULT 'enabled',\n
-    \ `nexthop_self` enum('enabled','disabled') NOT NULL DEFAULT 'disabled',\n  `default_originate`
-    enum('enabled','disabled') NOT NULL DEFAULT 'disabled',\n  `offloader_interface`
-    varchar(45) DEFAULT NULL,\n  `ip_version` enum('ipv4','ipv6') NOT NULL DEFAULT
-    'ipv4',\n  `rcircuit_id` bigint(22) DEFAULT NULL,\n  `terminate_on_switch` enum('yes','no')
-    NOT NULL DEFAULT 'no',\n  `multihop` int(11) NOT NULL DEFAULT 0,\n  `route_id`
-    bigint(20) unsigned DEFAULT NULL,\n  `site_id` bigint(22) unsigned NOT NULL,\n
-    \ `neighbor_address` varchar(50) DEFAULT NULL,\n  `update_source` varchar(50)
+    \ `name` varchar(255) NOT NULL,\n  `handover_vlan` INT(10) UNSIGNED NOT NULL,\n
+    \ `description` varchar(255) DEFAULT NULL,\n  `neighbor_as` bigint(8) NOT NULL,\n
+    \ `local_ip` varchar(255) DEFAULT NULL,\n  `remote_ip` varchar(255) DEFAULT NULL,\n
+    \ `prefix_length` int(6) NOT NULL,\n  `switch_port_id` bigint(22) unsigned DEFAULT
+    NULL,\n  `bgp_password` varchar(100) NOT NULL DEFAULT '',\n  `prefix_limit` int(11)
+    NOT NULL DEFAULT 0,\n  `prepend_inbound` int(11) NOT NULL DEFAULT 0,\n  `prepend_outbound`
+    int(11) NOT NULL DEFAULT 0,\n  `prefix_list_inbound` text NOT NULL,\n  `prefix_list_outbound`
+    text NOT NULL,\n  `local_preference` int(11) unsigned DEFAULT 100,\n  `weight`
+    int(32) unsigned DEFAULT 0,\n  `status` enum('enabled','disabled') NOT NULL DEFAULT
+    'enabled',\n  `nexthop_self` enum('enabled','disabled') NOT NULL DEFAULT 'disabled',\n
+    \ `default_originate` enum('enabled','disabled') NOT NULL DEFAULT 'disabled',\n
+    \ `offloader_interface` varchar(45) DEFAULT NULL,\n  `ip_version` enum('ipv4','ipv6')
+    NOT NULL DEFAULT 'ipv4',\n  `rcircuit_id` bigint(22) DEFAULT NULL,\n  `terminate_on_switch`
+    enum('yes','no') NOT NULL DEFAULT 'no',\n  `multihop` int(11) NOT NULL DEFAULT
+    0,\n  `route_id` bigint(20) unsigned DEFAULT NULL,\n  `site_id` bigint(22) unsigned
+    NOT NULL,\n  `neighbor_address` varchar(50) DEFAULT NULL,\n  `update_source` varchar(50)
     DEFAULT NULL,\n  `community` varchar(255) DEFAULT NULL,\n  `internal` bigint(20)
     unsigned DEFAULT NULL,\n  `allowas_in` int(11) unsigned NOT NULL DEFAULT 0,\n
     \ `term_switch_id` bigint(20) unsigned DEFAULT NULL,\n  `created_date` timestamp
@@ -882,30 +882,30 @@ data:
     10}' CHECK (json_valid(`timers`)),\n  `meta` longtext CHARACTER SET utf8mb4 COLLATE
     utf8mb4_bin NOT NULL DEFAULT '{}' CHECK (json_valid(`meta`)),\n  PRIMARY KEY (`id`),\n
     \ UNIQUE KEY `id_UNIQUE` (`id`),\n  UNIQUE KEY `name_UNIQUE` (`name`),\n  KEY
-    `vpcid` (`vpc_id`),\n  KEY `net_peers_ibfk_1` (`internal`),\n  CONSTRAINT `net_peers_ibfk_1`
-    FOREIGN KEY (`internal`) REFERENCES `switch` (`switch_id`) ON DELETE CASCADE ON
-    UPDATE CASCADE,\n  CONSTRAINT `net_peers_vpc_ibfk_1` FOREIGN KEY (`vpc_id`) REFERENCES
-    `vpc` (`id`) ON DELETE CASCADE ON UPDATE CASCADE\n) ENGINE=InnoDB DEFAULT CHARSET=utf8;\n/*!40101
-    SET character_set_client = @saved_cs_client */;\n\n--\n-- Table structure for
-    table `net_pops`\n--\n\nDROP TABLE IF EXISTS `net_pops`;\n/*!40101 SET @saved_cs_client
-    \    = @@character_set_client */;\n/*!40101 SET character_set_client = utf8 */;\nCREATE
-    TABLE `net_pops` (\n  `id` bigint(20) unsigned NOT NULL AUTO_INCREMENT,\n  `name`
-    varchar(255) NOT NULL,\n  `asn` int(32) unsigned NOT NULL DEFAULT 65000,\n  `physical_instance_asn`
-    int(32) unsigned NOT NULL DEFAULT 65500,\n  `virtual_instance_asn` int(32) unsigned
-    NOT NULL DEFAULT 65501,\n  `vpn` enum('hub','spoke','dspoke','disabled') DEFAULT
-    'disabled',\n  `rp_id` bigint(22) NOT NULL DEFAULT 1,\n  `acl_policy` enum('deny','permit')
-    NOT NULL DEFAULT 'deny',\n  `switch_fabric` enum('netris', 'equinix_metal', 'dot1q_trunk',
-    'phoenixnap_bmc') NOT NULL DEFAULT 'netris',\n  `vlan_range` VARCHAR(100) NOT
-    NULL DEFAULT '1-4094',\n  `vlan_range_auto_assign` varchar(100) NOT NULL DEFAULT
-    '2-4094',\n  `meta` JSON NULL DEFAULT '{}',\n  PRIMARY KEY (`id`),\n  UNIQUE KEY
-    `id_UNIQUE` (`id`),\n  UNIQUE KEY `name_UNIQUE` (`name`)\n) ENGINE=InnoDB DEFAULT
+    `vpcid` (`vpc_id`),\n  KEY `net_peers_ibfk_1` (`internal`),\n  KEY `handover_vlan`
+    (`handover_vlan`),\n  CONSTRAINT `net_peers_vpc_ibfk_1` FOREIGN KEY (`vpc_id`)
+    REFERENCES `vpc` (`id`) ON DELETE CASCADE ON UPDATE CASCADE\n) ENGINE=InnoDB DEFAULT
     CHARSET=utf8;\n/*!40101 SET character_set_client = @saved_cs_client */;\n\n--\n--
-    Table structure for table `net_vpn`\n--\n\nDROP TABLE IF EXISTS `net_vpn`;\n/*!40101
+    Table structure for table `net_pops`\n--\n\nDROP TABLE IF EXISTS `net_pops`;\n/*!40101
     SET @saved_cs_client     = @@character_set_client */;\n/*!40101 SET character_set_client
-    = utf8 */;\nCREATE TABLE `net_vpn` (\n  `id` bigint(20) NOT NULL AUTO_INCREMENT,\n
-    \ `a_nfv_id` bigint(20) NOT NULL,\n  `b_nfv_id` bigint(20) NOT NULL,\n  `a_bind_port`
-    int(11) NOT NULL,\n  `b_bind_port` int(11) NOT NULL,\n  `a_prv_key` text NOT NULL,\n
-    \ `b_pub_key` text NOT NULL,\n  `preshared_key` text NOT NULL,\n  `status` enum('ok','warning','failed','provisioning','agent_unavailable','standby')
+    = utf8 */;\nCREATE TABLE `net_pops` (\n  `id` bigint(20) unsigned NOT NULL AUTO_INCREMENT,\n
+    \ `name` varchar(255) NOT NULL,\n  `asn` int(32) unsigned NOT NULL DEFAULT 65000,\n
+    \ `physical_instance_asn` int(32) unsigned NOT NULL DEFAULT 65500,\n  `virtual_instance_asn`
+    int(32) unsigned NOT NULL DEFAULT 65501,\n  `vpn` enum('hub','spoke','dspoke','disabled')
+    DEFAULT 'disabled',\n  `rp_id` bigint(22) NOT NULL DEFAULT 1,\n  `acl_policy`
+    enum('deny','permit') NOT NULL DEFAULT 'deny',\n  `switch_fabric` enum('netris',
+    'equinix_metal', 'dot1q_trunk', 'phoenixnap_bmc') NOT NULL DEFAULT 'netris',\n
+    \ `vlan_range` VARCHAR(100) NOT NULL DEFAULT '1-4094',\n  `vlan_range_auto_assign`
+    varchar(100) NOT NULL DEFAULT '2-4094',\n  `meta` JSON NULL DEFAULT '{}',\n  PRIMARY
+    KEY (`id`),\n  UNIQUE KEY `id_UNIQUE` (`id`),\n  UNIQUE KEY `name_UNIQUE` (`name`)\n)
+    ENGINE=InnoDB DEFAULT CHARSET=utf8;\n/*!40101 SET character_set_client = @saved_cs_client
+    */;\n\n--\n-- Table structure for table `net_vpn`\n--\n\nDROP TABLE IF EXISTS
+    `net_vpn`;\n/*!40101 SET @saved_cs_client     = @@character_set_client */;\n/*!40101
+    SET character_set_client = utf8 */;\nCREATE TABLE `net_vpn` (\n  `id` bigint(20)
+    NOT NULL AUTO_INCREMENT,\n  `a_nfv_id` bigint(20) NOT NULL,\n  `b_nfv_id` bigint(20)
+    NOT NULL,\n  `a_bind_port` int(11) NOT NULL,\n  `b_bind_port` int(11) NOT NULL,\n
+    \ `a_prv_key` text NOT NULL,\n  `b_pub_key` text NOT NULL,\n  `preshared_key`
+    text NOT NULL,\n  `status` enum('ok','warning','failed','provisioning','agent_unavailable','standby')
     NOT NULL DEFAULT 'provisioning',\n  `created_date` timestamp /* mariadb-5.3 */
     NOT NULL DEFAULT current_timestamp(),\n  `status_change_date` timestamp /* mariadb-5.3
     */ NULL DEFAULT current_timestamp(),\n  `bgp_uptime` varchar(50) DEFAULT NULL,\n
@@ -1378,10 +1378,10 @@ data:
     DEFAULT CHARSET=utf8mb4;\n\n--\n-- Table structure for table `vxlan_reservation_consumer`\n--\nCREATE
     TABLE `vxlan_reservation_consumer` (\n\t`id` bigint(20) unsigned NOT NULL AUTO_INCREMENT,\n\t`vxlan_reservation_id`
     bigint(20) unsigned NOT NULL,\n\t`consumer_id` bigint(20) unsigned NOT NULL,\n\t`consumer_type`
-    enum('vlan', 'vlan.global', 'vlan.local', 'vpc', 'vnet') NOT NULL DEFAULT 'vlan',\n\t`meta`
-    JSON NOT NULL DEFAULT '{}',\n\tPRIMARY KEY (`id`),\n\tUNIQUE KEY `rsid_cid_ctype`
-    (`vxlan_reservation_id`, `consumer_id`, `consumer_type`),\n\tKEY `rsid_ctype`
-    (`vxlan_reservation_id`, `consumer_type`),\n\tKEY `rsid_cid` (`vxlan_reservation_id`,
+    enum('bgp', 'vlan', 'vlan.global', 'vlan.local', 'vpc', 'vnet') NOT NULL DEFAULT
+    'vlan',\n\t`meta` JSON NOT NULL DEFAULT '{}',\n\tPRIMARY KEY (`id`),\n\tUNIQUE
+    KEY `rsid_cid_ctype` (`vxlan_reservation_id`, `consumer_id`, `consumer_type`),\n\tKEY
+    `rsid_ctype` (`vxlan_reservation_id`, `consumer_type`),\n\tKEY `rsid_cid` (`vxlan_reservation_id`,
     `consumer_id`),\n\tKEY `cid_ctype` (`consumer_id`, `consumer_type`),\n\tKEY `vxlan_reservation_id`
     (`vxlan_reservation_id`),\n\tCONSTRAINT `vxlan_reservation_consumer_ibfk_1` \n\t
     \   FOREIGN KEY (`vxlan_reservation_id`) REFERENCES `vxlan_reservation` (`id`)
@@ -1742,7 +1742,7 @@ data:
     INSERT INTO `global_settings` VALUES (36,'wireguard_port_range','59000-60999','VPN peers port range','true');
     INSERT INTO `global_settings` VALUES (37,'k8s_lb_check_timeout','2000','K8s Layer 4 load-balancer timeout (ms)','true');
     INSERT INTO `global_settings` VALUES (38,'vpn_measurement_wait_secs','30','Site Mesh measurement module wait interval (sec)','true');
-    INSERT INTO `global_settings` VALUES (39,'migration_version', '4.1.0', 'Database scheme version', 'false');
+    INSERT INTO `global_settings` VALUES (39,'migration_version', '4.1.1', 'Database scheme version', 'false');
     INSERT INTO `global_settings` VALUES (40,'system_asn_range', '4200000000 - 4209999999', 'System ASN range', 'true');
     INSERT INTO `global_settings` VALUES (41,'vpn_asn_range', '4210000000 - 4219999999', 'Site Mesh VPN ASN range', 'true');
     INSERT INTO `global_settings` VALUES (42,'calico_asn_range', '4230000000 - 4239999999', 'Calico ASN range', 'true');
@@ -1875,10 +1875,10 @@ data:
   08-x-bgp.sql: |
     USE {{ .Values.mariadb.auth.database }};
     -- bgp peers
-    INSERT INTO `net_peers` VALUES (1,1,'peer0-1-sg-ipv4','System generated peer for connecting softgate nodes',65000,NULL,NULL,0,NULL,'',0,0,0,'','',500,0,'enabled','disabled','disabled',NULL,'ipv4',NULL,'no',0,NULL,1,NULL,NULL,NULL,1,0,1,NULL,NULL,NULL,NULL,'disabled','{\"hello\":3, \"hold\": 10}','{}');
-    INSERT INTO `net_peers` VALUES (2,1,'peer0-1-sg-ipv6','System generated peer for connecting softgate nodes',65000,NULL,NULL,0,NULL,'',0,0,0,'','',500,0,'enabled','disabled','disabled',NULL,'ipv6',NULL,'no',0,NULL,1,NULL,NULL,NULL,1,0,1,NULL,NULL,NULL,NULL,'disabled','{\"hello\":3, \"hold\": 10}','{}');
-    INSERT INTO `net_peers` VALUES (3,1,'peer0-2-sg-ipv4','System generated peer for connecting softgate nodes',65000,NULL,NULL,0,NULL,'',0,0,0,'','',500,0,'enabled','disabled','disabled',NULL,'ipv4',NULL,'no',0,NULL,1,NULL,NULL,NULL,2,0,2,NULL,NULL,NULL,NULL,'disabled','{\"hello\":3, \"hold\": 10}','{}');
-    INSERT INTO `net_peers` VALUES (4,1,'peer0-2-sg-ipv6','System generated peer for connecting softgate nodes',65000,NULL,NULL,0,NULL,'',0,0,0,'','',500,0,'enabled','disabled','disabled',NULL,'ipv6',NULL,'no',0,NULL,1,NULL,NULL,NULL,2,0,2,NULL,NULL,NULL,NULL,'disabled','{\"hello\":3, \"hold\": 10}','{}');
+    INSERT INTO `net_peers` VALUES (1,1,'intra-1-ipv4',0,'System generated peer for connecting softgate nodes',65000,NULL,NULL,0,NULL,'',0,0,0,'','',500,0,'enabled','disabled','disabled',NULL,'ipv4',NULL,'no',0,NULL,1,NULL,NULL,NULL,1,0,1,NULL,NULL,NULL,NULL,'disabled','{\"hello\":3, \"hold\": 10}','{}');
+    INSERT INTO `net_peers` VALUES (2,1,'intra-1-ipv6',0,'System generated peer for connecting softgate nodes',65000,NULL,NULL,0,NULL,'',0,0,0,'','',500,0,'enabled','disabled','disabled',NULL,'ipv6',NULL,'no',0,NULL,1,NULL,NULL,NULL,1,0,1,NULL,NULL,NULL,NULL,'disabled','{\"hello\":3, \"hold\": 10}','{}');
+    INSERT INTO `net_peers` VALUES (3,1,'intra-2-ipv4',0,'System generated peer for connecting softgate nodes',65000,NULL,NULL,0,NULL,'',0,0,0,'','',500,0,'enabled','disabled','disabled',NULL,'ipv4',NULL,'no',0,NULL,1,NULL,NULL,NULL,1,0,2,NULL,NULL,NULL,NULL,'disabled','{\"hello\":3, \"hold\": 10}','{}');
+    INSERT INTO `net_peers` VALUES (4,1,'intra-2-ipv6',0,'System generated peer for connecting softgate nodes',65000,NULL,NULL,0,NULL,'',0,0,0,'','',500,0,'enabled','disabled','disabled',NULL,'ipv6',NULL,'no',0,NULL,1,NULL,NULL,NULL,1,0,2,NULL,NULL,NULL,NULL,'disabled','{\"hello\":3, \"hold\": 10}','{}');
 
     -- vlan-reservations
     INSERT INTO `vlan_reservation` VALUES (1,900,1);
