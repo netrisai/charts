@@ -83,7 +83,7 @@ web-service-backend:
     repository: netrisai/controller-web-service-backend
     pullPolicy: IfNotPresent
     # Overrides the image tag whose default is the chart appVersion.
-    tag: "4.1.1-002"
+    tag: "4.1.1-006"
 
   imagePullSecrets: []
 
@@ -108,7 +108,7 @@ web-service-frontend:
     repository: netrisai/controller-web-service-frontend
     pullPolicy: IfNotPresent
     # Overrides the image tag whose default is the chart appVersion.
-    tag: "4.1.1-001"
+    tag: "4.1.1-002"
 
   imagePullSecrets: []
 
@@ -132,7 +132,7 @@ grpc:
     repository: netrisai/controller-grpc
     pullPolicy: IfNotPresent
     # Overrides the image tag whose default is the chart appVersion.
-    tag: "4.1.1.002"
+    tag: "4.1.1.003"
 
   imagePullSecrets: []
 
@@ -224,7 +224,7 @@ equinix-metal-agent:
     repository: netrisai/bare-metal-equinix-metal-agent
     pullPolicy: IfNotPresent
     # Overrides the image tag whose default is the chart appVersion.
-    tag: "0.9.3"
+    tag: "0.11.0"
 
   imagePullSecrets: []
 
@@ -235,7 +235,7 @@ phoenixnap-bmc-agent:
     repository: netrisai/bare-metal-phoenixnap-bmc-agent
     pullPolicy: IfNotPresent
     # Overrides the image tag whose default is the chart appVersion.
-    tag: "0.6.0"
+    tag: "0.6.1"
 
   imagePullSecrets: []
 
