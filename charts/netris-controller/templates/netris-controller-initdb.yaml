@@ -896,9 +896,8 @@ data:
     enum('deny','permit') NOT NULL DEFAULT 'deny',\n  `switch_fabric` enum('netris',
     'equinix_metal', 'dot1q_trunk', 'phoenixnap_bmc') NOT NULL DEFAULT 'netris',\n
     \ `vlan_range` VARCHAR(100) NOT NULL DEFAULT '1-4094',\n  `vlan_range_auto_assign`
-    varchar(100) NOT NULL DEFAULT '2-4094',\n  `vlan_range_sys_reserved` varchar(100)
-    NOT NULL DEFAULT '3600-4094',\n  `meta` JSON NULL DEFAULT '{}',\n  PRIMARY KEY
-    (`id`),\n  UNIQUE KEY `id_UNIQUE` (`id`),\n  UNIQUE KEY `name_UNIQUE` (`name`)\n)
+    varchar(100) NOT NULL DEFAULT '2-4094',\n  `meta` JSON NULL DEFAULT '{}',\n  PRIMARY
+    KEY (`id`),\n  UNIQUE KEY `id_UNIQUE` (`id`),\n  UNIQUE KEY `name_UNIQUE` (`name`)\n)
     ENGINE=InnoDB DEFAULT CHARSET=utf8;\n/*!40101 SET character_set_client = @saved_cs_client
     */;\n\n--\n-- Table structure for table `net_vpn`\n--\n\nDROP TABLE IF EXISTS
     `net_vpn`;\n/*!40101 SET @saved_cs_client     = @@character_set_client */;\n/*!40101
@@ -1743,7 +1742,7 @@ data:
     INSERT INTO `global_settings` VALUES (36,'wireguard_port_range','59000-60999','VPN peers port range','true');
     INSERT INTO `global_settings` VALUES (37,'k8s_lb_check_timeout','2000','K8s Layer 4 load-balancer timeout (ms)','true');
     INSERT INTO `global_settings` VALUES (38,'vpn_measurement_wait_secs','30','Site Mesh measurement module wait interval (sec)','true');
-    INSERT INTO `global_settings` VALUES (39,'migration_version', '4.2.0', 'Database scheme version', 'false');
+    INSERT INTO `global_settings` VALUES (39,'migration_version', '4.1.1', 'Database scheme version', 'false');
     INSERT INTO `global_settings` VALUES (40,'system_asn_range', '4200000000 - 4209999999', 'System ASN range', 'true');
     INSERT INTO `global_settings` VALUES (41,'vpn_asn_range', '4210000000 - 4219999999', 'Site Mesh VPN ASN range', 'true');
     INSERT INTO `global_settings` VALUES (42,'calico_asn_range', '4230000000 - 4239999999', 'Calico ASN range', 'true');
