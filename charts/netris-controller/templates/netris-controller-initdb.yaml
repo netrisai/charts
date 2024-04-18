@@ -896,8 +896,9 @@ data:
     enum('deny','permit') NOT NULL DEFAULT 'deny',\n  `switch_fabric` enum('netris',
     'equinix_metal', 'dot1q_trunk', 'phoenixnap_bmc') NOT NULL DEFAULT 'netris',\n
     \ `vlan_range` VARCHAR(100) NOT NULL DEFAULT '1-4094',\n  `vlan_range_auto_assign`
-    varchar(100) NOT NULL DEFAULT '2-4094',\n  `meta` JSON NULL DEFAULT '{}',\n  PRIMARY
-    KEY (`id`),\n  UNIQUE KEY `id_UNIQUE` (`id`),\n  UNIQUE KEY `name_UNIQUE` (`name`)\n)
+    varchar(100) NOT NULL DEFAULT '2-4094',\n  `vlan_range_sys_reserved` varchar(100)
+    NOT NULL DEFAULT '3600-4094',\n  `meta` JSON NULL DEFAULT '{}',\n  PRIMARY KEY
+    (`id`),\n  UNIQUE KEY `id_UNIQUE` (`id`),\n  UNIQUE KEY `name_UNIQUE` (`name`)\n)
     ENGINE=InnoDB DEFAULT CHARSET=utf8;\n/*!40101 SET character_set_client = @saved_cs_client
     */;\n\n--\n-- Table structure for table `net_vpn`\n--\n\nDROP TABLE IF EXISTS
     `net_vpn`;\n/*!40101 SET @saved_cs_client     = @@character_set_client */;\n/*!40101
@@ -973,21 +974,22 @@ data:
     \ `port_extension` bigint(20) unsigned NOT NULL DEFAULT 0,\n  `parent_port` bigint(20)
     unsigned NOT NULL DEFAULT 0,\n  `admin_down` enum('yes','no') DEFAULT 'no',\n
     \ `autoneg` enum('none','on','off') DEFAULT 'none',\n  `duplex` enum('full','half','none')
-    DEFAULT 'none',\n  `breakout` enum('off','manual','4x10','4x25','4x100') DEFAULT
-    'off',\n  `created_date` timestamp NOT NULL DEFAULT current_timestamp() ON UPDATE
-    current_timestamp(),\n  `modified_date` timestamp NULL DEFAULT current_timestamp()
-    ON UPDATE current_timestamp(),\n  UNIQUE KEY `port_id_UNIQUE` (`port_id`),\n  KEY
-    `port_switch_id_IDX` (`switch_id`) USING BTREE\n) ENGINE=InnoDB DEFAULT CHARSET=latin1;\n/*!40101
-    SET character_set_client = @saved_cs_client */;\n\n--\n-- Table structure for
-    table `port_extensions`\n--\n\nDROP TABLE IF EXISTS `port_extensions`;\n/*!40101
-    SET @saved_cs_client     = @@character_set_client */;\n/*!40101 SET character_set_client
-    = utf8 */;\nCREATE TABLE `port_extensions` (\n  `id` bigint(20) unsigned NOT NULL
-    AUTO_INCREMENT,\n  `name` varchar(255) DEFAULT NULL,\n  `vlan_from` smallint(5)
-    unsigned DEFAULT 0,\n  `vlan_to` smallint(5) unsigned DEFAULT 0,\n  `type` enum('hp_blade')
-    NOT NULL DEFAULT 'hp_blade',\n  UNIQUE KEY `id` (`id`)\n) ENGINE=InnoDB DEFAULT
-    CHARSET=latin1;\n/*!40101 SET character_set_client = @saved_cs_client */;\n\n--\n--
-    Table structure for table `port_reservation`\n--\n\nDROP TABLE IF EXISTS `port_reservation`;\n/*!40101
-    SET @saved_cs_client     = @@character_set_client */;\n/*!40101 SET character_set_client
+    DEFAULT 'none',\n  `breakout` enum('off', 'disabled', '4x10', '4x25', '2x50',
+    '4x50', '2x100', '4x100', '2x200', '4x200', '2x400') DEFAULT 'off',\n  `created_date`
+    timestamp NOT NULL DEFAULT current_timestamp() ON UPDATE current_timestamp(),\n
+    \ `modified_date` timestamp NULL DEFAULT current_timestamp() ON UPDATE current_timestamp(),\n
+    \ UNIQUE KEY `port_id_UNIQUE` (`port_id`),\n  KEY `port_switch_id_IDX` (`switch_id`)
+    USING BTREE\n) ENGINE=InnoDB DEFAULT CHARSET=latin1;\n/*!40101 SET character_set_client
+    = @saved_cs_client */;\n\n--\n-- Table structure for table `port_extensions`\n--\n\nDROP
+    TABLE IF EXISTS `port_extensions`;\n/*!40101 SET @saved_cs_client     = @@character_set_client
+    */;\n/*!40101 SET character_set_client = utf8 */;\nCREATE TABLE `port_extensions`
+    (\n  `id` bigint(20) unsigned NOT NULL AUTO_INCREMENT,\n  `name` varchar(255)
+    DEFAULT NULL,\n  `vlan_from` smallint(5) unsigned DEFAULT 0,\n  `vlan_to` smallint(5)
+    unsigned DEFAULT 0,\n  `type` enum('hp_blade') NOT NULL DEFAULT 'hp_blade',\n
+    \ UNIQUE KEY `id` (`id`)\n) ENGINE=InnoDB DEFAULT CHARSET=latin1;\n/*!40101 SET
+    character_set_client = @saved_cs_client */;\n\n--\n-- Table structure for table
+    `port_reservation`\n--\n\nDROP TABLE IF EXISTS `port_reservation`;\n/*!40101 SET
+    @saved_cs_client     = @@character_set_client */;\n/*!40101 SET character_set_client
     = utf8 */;\nCREATE TABLE `port_reservation` (\n  `id`            bigint(20) unsigned
     NOT NULL AUTO_INCREMENT,\n  `port_id`       bigint(20) NOT NULL,\n  PRIMARY KEY
     (`id`),\n  UNIQUE KEY `port_id_unique` (`port_id`)\n) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;\n\n/*!40101
@@ -1280,29 +1282,29 @@ data:
     DEFAULT 0,\n  `uptime` varchar(255) CHARACTER SET latin1 NOT NULL DEFAULT '',\n
     \ `sync_acl` enum('ok','ongoing','failed') CHARACTER SET latin1 NOT NULL DEFAULT
     'ok',\n  `type` enum('switch','proxmox','controller','offloader','equinix_metal_server',
-    'phoenixnap_bmc_server') CHARACTER SET latin1 NOT NULL DEFAULT 'switch',\n  `rangecut`
-    int(10) unsigned NOT NULL DEFAULT 0,\n  `cumulus_version` varchar(100) CHARACTER
-    SET latin1 DEFAULT NULL,\n  `proxmox_version` varchar(100) CHARACTER SET latin1
-    DEFAULT NULL,\n  `conductor_version` varchar(100) CHARACTER SET latin1 DEFAULT
-    NULL,\n  `platform` varchar(255) CHARACTER SET latin1 DEFAULT NULL,\n  `ntp` varchar(255)
-    CHARACTER SET latin1 DEFAULT NULL,\n  `dns` varchar(255) CHARACTER SET latin1
-    DEFAULT NULL,\n  `mac_address` varchar(255) DEFAULT NULL,\n  `ztp` int(10) unsigned
-    NOT NULL DEFAULT 0,\n  `nos` varchar(45) DEFAULT NULL,\n  `timezone` varchar(255)
-    CHARACTER SET latin1 DEFAULT NULL,\n  `number_of_ports` smallint(5) unsigned DEFAULT
-    NULL,\n  `owner_tenant_id` bigint(20) unsigned NOT NULL,\n  `mac_addr_ubit` int(10)
-    unsigned NOT NULL DEFAULT 0,\n  `meta` JSON NULL DEFAULT '{}',\n  `created_date`
-    timestamp NOT NULL DEFAULT current_timestamp(),\n  `modified_date` timestamp NOT
-    NULL DEFAULT current_timestamp() ON UPDATE current_timestamp(),\n  PRIMARY KEY
-    (`switch_id`)\n) ENGINE=InnoDB DEFAULT CHARSET=utf8;\n/*!40101 SET character_set_client
-    = @saved_cs_client */;\n\n--\n-- Table structure for table `topology`\n--\n\nDROP
-    TABLE IF EXISTS `topology`;\n/*!40101 SET @saved_cs_client     = @@character_set_client
-    */;\n/*!40101 SET character_set_client = utf8 */;\nCREATE TABLE `topology` (\n
-    \ `id` bigint(20) unsigned NOT NULL AUTO_INCREMENT,\n  `user_id` bigint(22) NOT
-    NULL,\n  `site_id` bigint(22) NOT NULL,\n  `positions` text DEFAULT NULL,\n  `options`
-    text DEFAULT NULL,\n  PRIMARY KEY (`id`)\n) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;\n/*!40101
-    SET character_set_client = @saved_cs_client */;\n\n--\n-- Table structure for
-    table `topology_link`\n--\n\nDROP TABLE IF EXISTS `topology_link`;\n/*!40101 SET
-    @saved_cs_client     = @@character_set_client */;\n/*!40101 SET character_set_client
+    'phoenixnap_bmc_server', 'server') CHARACTER SET latin1 NOT NULL DEFAULT 'switch',\n
+    \ `rangecut` int(10) unsigned NOT NULL DEFAULT 0,\n  `cumulus_version` varchar(100)
+    CHARACTER SET latin1 DEFAULT NULL,\n  `proxmox_version` varchar(100) CHARACTER
+    SET latin1 DEFAULT NULL,\n  `conductor_version` varchar(100) CHARACTER SET latin1
+    DEFAULT NULL,\n  `platform` varchar(255) CHARACTER SET latin1 DEFAULT NULL,\n
+    \ `ntp` varchar(255) CHARACTER SET latin1 DEFAULT NULL,\n  `dns` varchar(255)
+    CHARACTER SET latin1 DEFAULT NULL,\n  `mac_address` varchar(255) DEFAULT NULL,\n
+    \ `ztp` int(10) unsigned NOT NULL DEFAULT 0,\n  `nos` varchar(45) DEFAULT NULL,\n
+    \ `timezone` varchar(255) CHARACTER SET latin1 DEFAULT NULL,\n  `number_of_ports`
+    smallint(5) unsigned DEFAULT NULL,\n  `owner_tenant_id` bigint(20) unsigned NOT
+    NULL,\n  `mac_addr_ubit` int(10) unsigned NOT NULL DEFAULT 0,\n  `meta` JSON NULL
+    DEFAULT '{}',\n  `created_date` timestamp NOT NULL DEFAULT current_timestamp(),\n
+    \ `modified_date` timestamp NOT NULL DEFAULT current_timestamp() ON UPDATE current_timestamp(),\n
+    \ PRIMARY KEY (`switch_id`)\n) ENGINE=InnoDB DEFAULT CHARSET=utf8;\n/*!40101 SET
+    character_set_client = @saved_cs_client */;\n\n--\n-- Table structure for table
+    `topology`\n--\n\nDROP TABLE IF EXISTS `topology`;\n/*!40101 SET @saved_cs_client
+    \    = @@character_set_client */;\n/*!40101 SET character_set_client = utf8 */;\nCREATE
+    TABLE `topology` (\n  `id` bigint(20) unsigned NOT NULL AUTO_INCREMENT,\n  `user_id`
+    bigint(22) NOT NULL,\n  `site_id` bigint(22) NOT NULL,\n  `positions` text DEFAULT
+    NULL,\n  `options` text DEFAULT NULL,\n  PRIMARY KEY (`id`)\n) ENGINE=InnoDB DEFAULT
+    CHARSET=utf8mb4;\n/*!40101 SET character_set_client = @saved_cs_client */;\n\n--\n--
+    Table structure for table `topology_link`\n--\n\nDROP TABLE IF EXISTS `topology_link`;\n/*!40101
+    SET @saved_cs_client     = @@character_set_client */;\n/*!40101 SET character_set_client
     = utf8 */;\nCREATE TABLE `topology_link` (\n  `id` bigint(20) unsigned NOT NULL
     AUTO_INCREMENT,\n  `origin` bigint(20) unsigned DEFAULT NULL,\n  `dest` bigint(20)
     unsigned DEFAULT NULL,\n  PRIMARY KEY (`id`)\n) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;\n/*!40101
@@ -1742,7 +1744,7 @@ data:
     INSERT INTO `global_settings` VALUES (36,'wireguard_port_range','59000-60999','VPN peers port range','true');
     INSERT INTO `global_settings` VALUES (37,'k8s_lb_check_timeout','2000','K8s Layer 4 load-balancer timeout (ms)','true');
     INSERT INTO `global_settings` VALUES (38,'vpn_measurement_wait_secs','30','Site Mesh measurement module wait interval (sec)','true');
-    INSERT INTO `global_settings` VALUES (39,'migration_version', '4.1.1', 'Database scheme version', 'false');
+    INSERT INTO `global_settings` VALUES (39,'migration_version', '4.3.0', 'Database scheme version', 'false');
     INSERT INTO `global_settings` VALUES (40,'system_asn_range', '4200000000 - 4209999999', 'System ASN range', 'true');
     INSERT INTO `global_settings` VALUES (41,'vpn_asn_range', '4210000000 - 4219999999', 'Site Mesh VPN ASN range', 'true');
     INSERT INTO `global_settings` VALUES (42,'calico_asn_range', '4230000000 - 4239999999', 'Calico ASN range', 'true');
@@ -1754,7 +1756,8 @@ data:
     INSERT INTO `currency` VALUES (4,'BGN',0.511,'2016-11-26 05:17:49');
   04-whitelist.sql: |
     USE {{ .Values.mariadb.auth.database }};
-    INSERT INTO `login_whitelists` VALUES (1,'0.0.0.0',0,'ANY');
+    INSERT INTO `login_whitelists` VALUES (1,'0.0.0.0',0,'ANY_IPv4');
+    INSERT INTO `login_whitelists` VALUES (2,'::',0,'ANY_IPv6');
   05-auth_schemes.sql: |+
     USE {{ .Values.mariadb.auth.database }};
     INSERT INTO `auth_schemes` VALUES (1,'local','conductor','','active','yes');
@@ -1798,6 +1801,7 @@ data:
     INSERT INTO `nos_list` VALUES (1,'Cumulus Linux','cumulus_linux');
     INSERT INTO `nos_list` VALUES (2,'SONiC','sonic');
     INSERT INTO `nos_list` VALUES (3,'Ubuntu SwitchDev','ubuntu_switch_dev');
+    INSERT INTO `nos_list` VALUES (4,'Cumulus NVUE','cumulus_nvue');
   06-roh_profiles.sql: |
     USE {{ .Values.mariadb.auth.database }};
     INSERT INTO `roh_profiles` VALUES (1,'Default','default');
