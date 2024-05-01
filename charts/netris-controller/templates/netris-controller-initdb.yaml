@@ -594,13 +594,13 @@ data:
     NULL AUTO_INCREMENT,\n  `name` varchar(255) NOT NULL,\n  `description` varchar(255)
     DEFAULT NULL,\n  `ipv4_ssh` text DEFAULT NULL,\n  `ipv6_ssh` text DEFAULT NULL,\n
     \ `timezone` varchar(255) DEFAULT NULL,\n  `ntp_servers` text DEFAULT NULL,\n
-    \ `dns_servers` text DEFAULT NULL,\n  `meta` JSON NOT NULL DEFAULT '{}',\n  `created_date`
-    timestamp /* mariadb-5.3 */ NULL DEFAULT current_timestamp(),\n  `modified_date`
-    timestamp /* mariadb-5.3 */ NULL DEFAULT current_timestamp() ON UPDATE current_timestamp(),\n
-    \ PRIMARY KEY (`id`),\n  UNIQUE KEY `inv_prof_name_uniq` (`name`)\n) ENGINE=InnoDB
-    DEFAULT CHARSET=utf8mb4;\n/*!40101 SET character_set_client = @saved_cs_client
-    */;\n\n--\n-- Table structure for table `ip`\n--\n\nDROP TABLE IF EXISTS `ip`;\n/*!40101
-    SET @saved_cs_client     = @@character_set_client */;\n/*!40101 SET character_set_client
+    \ `dns_servers` text DEFAULT NULL,\n  `created_date` timestamp /* mariadb-5.3
+    */ NULL DEFAULT current_timestamp(),\n  `modified_date` timestamp /* mariadb-5.3
+    */ NULL DEFAULT current_timestamp() ON UPDATE current_timestamp(),\n  PRIMARY
+    KEY (`id`),\n  UNIQUE KEY `inv_prof_name_uniq` (`name`)\n) ENGINE=InnoDB DEFAULT
+    CHARSET=utf8mb4;\n/*!40101 SET character_set_client = @saved_cs_client */;\n\n--\n--
+    Table structure for table `ip`\n--\n\nDROP TABLE IF EXISTS `ip`;\n/*!40101 SET
+    @saved_cs_client     = @@character_set_client */;\n/*!40101 SET character_set_client
     = utf8 */;\nCREATE TABLE `ip` (\n  `id` bigint(20) unsigned NOT NULL AUTO_INCREMENT,\n
     \ `parent_id` bigint(20) NOT NULL DEFAULT 0,\n  `tenant_id` bigint(20) unsigned
     NOT NULL,\n  `name` varchar(255) DEFAULT NULL,\n  `description` text DEFAULT NULL,\n
@@ -664,117 +664,116 @@ data:
     unsigned NOT NULL,\n  `consumer_id` bigint(20) unsigned DEFAULT NULL,\n  `consumer_type`
     enum('l4lb','vnet','roh','sys','hw','nat') DEFAULT NULL,\n  `meta` longtext CHARACTER
     SET utf8mb4 COLLATE utf8mb4_bin DEFAULT NULL CHECK (json_valid(`meta`)),\n  PRIMARY
-    KEY (`id`),\n  KEY `consumer_id_idx` (`consumer_id`),\n  KEY `consumer_type_idx`
-    (`consumer_type`),\n  KEY `consumer_id_type_idx` (`consumer_id`, `consumer_type`),\n
-    \ KEY `pairs_idx` (`host_id`,`consumer_id`) USING BTREE\n) ENGINE=InnoDB DEFAULT
-    CHARSET=utf8mb4;\n/*!40101 SET character_set_client = @saved_cs_client */;\n\n--\n--
-    Table structure for table `ip_subnet`\n--\n\nDROP TABLE IF EXISTS `ip_subnet`;\n/*!40101
-    SET @saved_cs_client     = @@character_set_client */;\n/*!40101 SET character_set_client
-    = utf8 */;\nCREATE TABLE `ip_subnet` (\n  `id` bigint(20) unsigned NOT NULL AUTO_INCREMENT,\n
-    \ `parent_id` bigint(20) NOT NULL DEFAULT 0,\n  `allocation_id` bigint(20) unsigned
-    NOT NULL DEFAULT 0,\n  `name` varchar(255) DEFAULT '',\n  `description` text DEFAULT
-    NULL,\n  `tenant_id` bigint(20) unsigned NOT NULL,\n  `ip_version` enum('ipv4','ipv6')
-    NOT NULL DEFAULT 'ipv4',\n  `purpose` enum('common','load-balancer','loopback','mgmt','nat','bgp','inactive')
-    NOT NULL DEFAULT 'common',\n  `readonly` enum('yes','no') NOT NULL DEFAULT 'no',\n
-    \ `prefix` varchar(255) NOT NULL,\n  `length` int(10) unsigned NOT NULL,\n  `meta`
-    JSON NULL DEFAULT '{}',\n  PRIMARY KEY (`id`),\n  KEY `parent_idx` (`parent_id`),\n
-    \ KEY `allocation_idx` (`allocation_id`),\n  KEY `tenant_idx` (`tenant_id`),\n
-    \ KEY `purposex` (`purpose`),\n  KEY `ipv_idx` (`ip_version`),\n  KEY `prefix_idx`
-    (`prefix`),\n  KEY `length_idx` (`length`),\n  CONSTRAINT `allocation_id` FOREIGN
-    KEY (`allocation_id`) REFERENCES `ip_allocation` (`id`) ON DELETE CASCADE ON UPDATE
-    CASCADE\n) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;\n/*!40101 SET character_set_client
-    = @saved_cs_client */;\n\n--\n-- Table structure for table `ips_to_l4_lb`\n--\n\nDROP
-    TABLE IF EXISTS `ips_to_l4_lb`;\n/*!40101 SET @saved_cs_client     = @@character_set_client
-    */;\n/*!40101 SET character_set_client = utf8 */;\nCREATE TABLE `ips_to_l4_lb`
-    (\n  `id` BIGINT(20) UNSIGNED NOT NULL AUTO_INCREMENT,\n  `ip_id` BIGINT(20) UNSIGNED
-    NOT NULL,\n  `l4_lb_id` BIGINT(20) UNSIGNED NOT NULL,\n  PRIMARY KEY (`id`),\n
-    \ KEY `l4_load_balancer_ips` (`ip_id`),\n  KEY `l4_load_balancer` (`l4_lb_id`),\n
-    \ CONSTRAINT `l4_load_balancer` FOREIGN KEY (`l4_lb_id`) REFERENCES `l4_load_balancer`
-    (`id`) ON DELETE CASCADE ON UPDATE CASCADE,\n  CONSTRAINT `l4_load_balancer_ips`
-    FOREIGN KEY (`ip_id`) REFERENCES `l4_load_balancer_ips` (`id`) ON DELETE CASCADE
-    ON UPDATE CASCADE\n) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;\n/*!40101 SET character_set_client
-    = @saved_cs_client */;\n\n--\n-- Table structure for table `k8s_api`\n--\n\nDROP
-    TABLE IF EXISTS `k8s_api`;\n/*!40101 SET @saved_cs_client     = @@character_set_client
-    */;\n/*!40101 SET character_set_client = utf8 */;\nCREATE TABLE `k8s_api` (\n
-    \ `id` bigint(22) NOT NULL AUTO_INCREMENT,\n  `url` varchar(255) NOT NULL,\n  `status`
-    enum('ok','failed') NOT NULL DEFAULT 'failed',\n  `heartbeat` timestamp /* mariadb-5.3
-    */ NOT NULL DEFAULT current_timestamp(),\n  PRIMARY KEY (`id`)\n) ENGINE=InnoDB
+    KEY (`id`),\n  KEY `pairs_idx` (`host_id`,`consumer_id`) USING BTREE\n) ENGINE=InnoDB
     DEFAULT CHARSET=utf8mb4;\n/*!40101 SET character_set_client = @saved_cs_client
-    */;\n\n--\n-- Table structure for table `k8s_node`\n--\n\nDROP TABLE IF EXISTS
-    `k8s_node`;\n/*!40101 SET @saved_cs_client     = @@character_set_client */;\n/*!40101
-    SET character_set_client = utf8 */;\nCREATE TABLE `k8s_node` (\n  `id` bigint(22)
-    NOT NULL AUTO_INCREMENT,\n  `uid` varchar(45) DEFAULT NULL,\n  `name` varchar(45)
-    NOT NULL,\n  `ip` varchar(45) NOT NULL,\n  `role` varchar(100) DEFAULT NULL,\n
-    \ `age` varchar(45) DEFAULT NULL,\n  `version` varchar(45) DEFAULT NULL,\n  PRIMARY
-    KEY (`id`)\n) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;\n/*!40101 SET character_set_client
-    = @saved_cs_client */;\n\n--\n-- Table structure for table `k8s_node_to_ebgp`\n--\n\nDROP
-    TABLE IF EXISTS `k8s_node_to_ebgp`;\n/*!40101 SET @saved_cs_client     = @@character_set_client
-    */;\n/*!40101 SET character_set_client = utf8 */;\nCREATE TABLE `k8s_node_to_ebgp`
-    (\n  `id` bigint(22) NOT NULL AUTO_INCREMENT,\n  `node_id` bigint(22) NOT NULL,\n
-    \ `netpeer_id` bigint(22) unsigned NOT NULL,\n  `bgp_error_msg` varchar(255) DEFAULT
-    NULL,\n  PRIMARY KEY (`id`),\n  KEY `fk_node_idx` (`node_id`),\n  CONSTRAINT `fk_node`
-    FOREIGN KEY (`node_id`) REFERENCES `k8s_node` (`id`) ON DELETE CASCADE ON UPDATE
-    CASCADE\n) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;\n/*!40101 SET character_set_client
-    = @saved_cs_client */;\n\n--\n-- Table structure for table `k8s_service`\n--\n\nDROP
-    TABLE IF EXISTS `k8s_service`;\n/*!40101 SET @saved_cs_client     = @@character_set_client
-    */;\n/*!40101 SET character_set_client = utf8 */;\nCREATE TABLE `k8s_service`
-    (\n  `id` bigint(22) NOT NULL AUTO_INCREMENT,\n  `name` varchar(100) NOT NULL,\n
-    \ `state` enum('enabled','disabled') NOT NULL DEFAULT 'enabled',\n  `kubeconfig`
-    text DEFAULT NULL,\n  `cluster_info` text DEFAULT NULL,\n  `tenant_id` bigint(22)
-    NOT NULL,\n  `site_id` bigint(22) NOT NULL,\n  `circuit_id` bigint(22) unsigned
-    NOT NULL,\n  `created_date` timestamp /* mariadb-5.3 */ NOT NULL DEFAULT current_timestamp(),\n
-    \ `modified_date` timestamp /* mariadb-5.3 */ NOT NULL DEFAULT current_timestamp()
-    ON UPDATE current_timestamp(),\n  PRIMARY KEY (`id`),\n  UNIQUE KEY `name_UNIQUE`
-    (`name`)\n) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;\n/*!40101 SET character_set_client
-    = @saved_cs_client */;\n\n--\n-- Table structure for table `k8s_to_api`\n--\n\nDROP
-    TABLE IF EXISTS `k8s_to_api`;\n/*!40101 SET @saved_cs_client     = @@character_set_client
-    */;\n/*!40101 SET character_set_client = utf8 */;\nCREATE TABLE `k8s_to_api` (\n
-    \ `id` bigint(22) NOT NULL AUTO_INCREMENT,\n  `k8s_service_id` bigint(22) NOT
-    NULL,\n  `k8s_api_id` bigint(22) NOT NULL,\n  PRIMARY KEY (`id`),\n  KEY `fk_k8_idx`
-    (`k8s_service_id`),\n  KEY `fk_k8api_idx` (`k8s_api_id`),\n  CONSTRAINT `fk_k8`
-    FOREIGN KEY (`k8s_service_id`) REFERENCES `k8s_service` (`id`) ON DELETE CASCADE
-    ON UPDATE CASCADE,\n  CONSTRAINT `fk_k8api` FOREIGN KEY (`k8s_api_id`) REFERENCES
-    `k8s_api` (`id`) ON DELETE CASCADE ON UPDATE CASCADE\n) ENGINE=InnoDB DEFAULT
-    CHARSET=utf8mb4;\n/*!40101 SET character_set_client = @saved_cs_client */;\n\n--\n--
-    Table structure for table `k8s_to_lb4`\n--\n\nDROP TABLE IF EXISTS `k8s_to_lb4`;\n/*!40101
+    */;\n\n--\n-- Table structure for table `ip_subnet`\n--\n\nDROP TABLE IF EXISTS
+    `ip_subnet`;\n/*!40101 SET @saved_cs_client     = @@character_set_client */;\n/*!40101
+    SET character_set_client = utf8 */;\nCREATE TABLE `ip_subnet` (\n  `id` bigint(20)
+    unsigned NOT NULL AUTO_INCREMENT,\n  `parent_id` bigint(20) NOT NULL DEFAULT 0,\n
+    \ `allocation_id` bigint(20) unsigned NOT NULL DEFAULT 0,\n  `name` varchar(255)
+    DEFAULT '',\n  `description` text DEFAULT NULL,\n  `tenant_id` bigint(20) unsigned
+    NOT NULL,\n  `ip_version` enum('ipv4','ipv6') NOT NULL DEFAULT 'ipv4',\n  `purpose`
+    enum('common','load-balancer','loopback','mgmt','nat','bgp','inactive') NOT NULL
+    DEFAULT 'common',\n  `readonly` enum('yes','no') NOT NULL DEFAULT 'no',\n  `prefix`
+    varchar(255) NOT NULL,\n  `length` int(10) unsigned NOT NULL,\n  `meta` JSON NULL
+    DEFAULT '{}',\n  PRIMARY KEY (`id`),\n  KEY `parent_idx` (`parent_id`),\n  KEY
+    `allocation_idx` (`allocation_id`),\n  KEY `tenant_idx` (`tenant_id`),\n  KEY
+    `purposex` (`purpose`),\n  KEY `ipv_idx` (`ip_version`),\n  KEY `prefix_idx` (`prefix`),\n
+    \ KEY `length_idx` (`length`),\n  CONSTRAINT `allocation_id` FOREIGN KEY (`allocation_id`)
+    REFERENCES `ip_allocation` (`id`) ON DELETE CASCADE ON UPDATE CASCADE\n) ENGINE=InnoDB
+    DEFAULT CHARSET=utf8mb4;\n/*!40101 SET character_set_client = @saved_cs_client
+    */;\n\n--\n-- Table structure for table `ips_to_l4_lb`\n--\n\nDROP TABLE IF EXISTS
+    `ips_to_l4_lb`;\n/*!40101 SET @saved_cs_client     = @@character_set_client */;\n/*!40101
+    SET character_set_client = utf8 */;\nCREATE TABLE `ips_to_l4_lb` (\n  `id` BIGINT(20)
+    UNSIGNED NOT NULL AUTO_INCREMENT,\n  `ip_id` BIGINT(20) UNSIGNED NOT NULL,\n  `l4_lb_id`
+    BIGINT(20) UNSIGNED NOT NULL,\n  PRIMARY KEY (`id`),\n  KEY `l4_load_balancer_ips`
+    (`ip_id`),\n  KEY `l4_load_balancer` (`l4_lb_id`),\n  CONSTRAINT `l4_load_balancer`
+    FOREIGN KEY (`l4_lb_id`) REFERENCES `l4_load_balancer` (`id`) ON DELETE CASCADE
+    ON UPDATE CASCADE,\n  CONSTRAINT `l4_load_balancer_ips` FOREIGN KEY (`ip_id`)
+    REFERENCES `l4_load_balancer_ips` (`id`) ON DELETE CASCADE ON UPDATE CASCADE\n)
+    ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;\n/*!40101 SET character_set_client = @saved_cs_client
+    */;\n\n--\n-- Table structure for table `k8s_api`\n--\n\nDROP TABLE IF EXISTS
+    `k8s_api`;\n/*!40101 SET @saved_cs_client     = @@character_set_client */;\n/*!40101
+    SET character_set_client = utf8 */;\nCREATE TABLE `k8s_api` (\n  `id` bigint(22)
+    NOT NULL AUTO_INCREMENT,\n  `url` varchar(255) NOT NULL,\n  `status` enum('ok','failed')
+    NOT NULL DEFAULT 'failed',\n  `heartbeat` timestamp /* mariadb-5.3 */ NOT NULL
+    DEFAULT current_timestamp(),\n  PRIMARY KEY (`id`)\n) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;\n/*!40101
+    SET character_set_client = @saved_cs_client */;\n\n--\n-- Table structure for
+    table `k8s_node`\n--\n\nDROP TABLE IF EXISTS `k8s_node`;\n/*!40101 SET @saved_cs_client
+    \    = @@character_set_client */;\n/*!40101 SET character_set_client = utf8 */;\nCREATE
+    TABLE `k8s_node` (\n  `id` bigint(22) NOT NULL AUTO_INCREMENT,\n  `uid` varchar(45)
+    DEFAULT NULL,\n  `name` varchar(45) NOT NULL,\n  `ip` varchar(45) NOT NULL,\n
+    \ `role` varchar(100) DEFAULT NULL,\n  `age` varchar(45) DEFAULT NULL,\n  `version`
+    varchar(45) DEFAULT NULL,\n  PRIMARY KEY (`id`)\n) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;\n/*!40101
+    SET character_set_client = @saved_cs_client */;\n\n--\n-- Table structure for
+    table `k8s_node_to_ebgp`\n--\n\nDROP TABLE IF EXISTS `k8s_node_to_ebgp`;\n/*!40101
     SET @saved_cs_client     = @@character_set_client */;\n/*!40101 SET character_set_client
-    = utf8 */;\nCREATE TABLE `k8s_to_lb4` (\n  `id` bigint(22) NOT NULL AUTO_INCREMENT,\n
-    \ `k8s_id` bigint(22) NOT NULL,\n  `lb4_id` int(11) NOT NULL,\n  `uid` varchar(100)
-    NOT NULL,\n  `service_name` varchar(255) DEFAULT NULL,\n  `namespace` varchar(255)
-    NOT NULL,\n  `api_error_msg` varchar(255) DEFAULT NULL,\n  PRIMARY KEY (`id`),\n
-    \ UNIQUE KEY `unique_uid` (`uid`),\n  KEY `fk_k8_idx` (`k8s_id`),\n  KEY `fk_l4lb_idx`
-    (`lb4_id`),\n  CONSTRAINT `fkk_k8` FOREIGN KEY (`k8s_id`) REFERENCES `k8s_service`
+    = utf8 */;\nCREATE TABLE `k8s_node_to_ebgp` (\n  `id` bigint(22) NOT NULL AUTO_INCREMENT,\n
+    \ `node_id` bigint(22) NOT NULL,\n  `netpeer_id` bigint(22) unsigned NOT NULL,\n
+    \ `bgp_error_msg` varchar(255) DEFAULT NULL,\n  PRIMARY KEY (`id`),\n  KEY `fk_node_idx`
+    (`node_id`),\n  CONSTRAINT `fk_node` FOREIGN KEY (`node_id`) REFERENCES `k8s_node`
     (`id`) ON DELETE CASCADE ON UPDATE CASCADE\n) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;\n/*!40101
     SET character_set_client = @saved_cs_client */;\n\n--\n-- Table structure for
-    table `k8s_to_node`\n--\n\nDROP TABLE IF EXISTS `k8s_to_node`;\n/*!40101 SET @saved_cs_client
+    table `k8s_service`\n--\n\nDROP TABLE IF EXISTS `k8s_service`;\n/*!40101 SET @saved_cs_client
     \    = @@character_set_client */;\n/*!40101 SET character_set_client = utf8 */;\nCREATE
-    TABLE `k8s_to_node` (\n  `id` bigint(22) NOT NULL AUTO_INCREMENT,\n  `k8s_service_id`
-    bigint(22) NOT NULL,\n  `k8s_node_id` bigint(22) NOT NULL,\n  PRIMARY KEY (`id`),\n
-    \ KEY `fk_ks_idx` (`k8s_service_id`),\n  KEY `fk_k8node_idx` (`k8s_node_id`),\n
-    \ CONSTRAINT `fk_k8node` FOREIGN KEY (`k8s_node_id`) REFERENCES `k8s_node` (`id`)
-    ON DELETE CASCADE ON UPDATE CASCADE,\n  CONSTRAINT `fk_ks` FOREIGN KEY (`k8s_service_id`)
-    REFERENCES `k8s_service` (`id`) ON DELETE CASCADE ON UPDATE CASCADE\n) ENGINE=InnoDB
+    TABLE `k8s_service` (\n  `id` bigint(22) NOT NULL AUTO_INCREMENT,\n  `name` varchar(100)
+    NOT NULL,\n  `state` enum('enabled','disabled') NOT NULL DEFAULT 'enabled',\n
+    \ `kubeconfig` text DEFAULT NULL,\n  `cluster_info` text DEFAULT NULL,\n  `tenant_id`
+    bigint(22) NOT NULL,\n  `site_id` bigint(22) NOT NULL,\n  `circuit_id` bigint(22)
+    unsigned NOT NULL,\n  `created_date` timestamp /* mariadb-5.3 */ NOT NULL DEFAULT
+    current_timestamp(),\n  `modified_date` timestamp /* mariadb-5.3 */ NOT NULL DEFAULT
+    current_timestamp() ON UPDATE current_timestamp(),\n  PRIMARY KEY (`id`),\n  UNIQUE
+    KEY `name_UNIQUE` (`name`)\n) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;\n/*!40101
+    SET character_set_client = @saved_cs_client */;\n\n--\n-- Table structure for
+    table `k8s_to_api`\n--\n\nDROP TABLE IF EXISTS `k8s_to_api`;\n/*!40101 SET @saved_cs_client
+    \    = @@character_set_client */;\n/*!40101 SET character_set_client = utf8 */;\nCREATE
+    TABLE `k8s_to_api` (\n  `id` bigint(22) NOT NULL AUTO_INCREMENT,\n  `k8s_service_id`
+    bigint(22) NOT NULL,\n  `k8s_api_id` bigint(22) NOT NULL,\n  PRIMARY KEY (`id`),\n
+    \ KEY `fk_k8_idx` (`k8s_service_id`),\n  KEY `fk_k8api_idx` (`k8s_api_id`),\n
+    \ CONSTRAINT `fk_k8` FOREIGN KEY (`k8s_service_id`) REFERENCES `k8s_service` (`id`)
+    ON DELETE CASCADE ON UPDATE CASCADE,\n  CONSTRAINT `fk_k8api` FOREIGN KEY (`k8s_api_id`)
+    REFERENCES `k8s_api` (`id`) ON DELETE CASCADE ON UPDATE CASCADE\n) ENGINE=InnoDB
     DEFAULT CHARSET=utf8mb4;\n/*!40101 SET character_set_client = @saved_cs_client
-    */;\n\n--\n-- Table structure for table `l4_load_balancer`\n--\n\nDROP TABLE IF
-    EXISTS `l4_load_balancer`;\n/*!40101 SET @saved_cs_client     = @@character_set_client
-    */;\n/*!40101 SET character_set_client = utf8 */;\nCREATE TABLE `l4_load_balancer`
-    (\n  `id` BIGINT(20) UNSIGNED NOT NULL AUTO_INCREMENT,\n  `name` varchar(255)
-    DEFAULT NULL,\n  `tenant` BIGINT(20) UNSIGNED NOT NULL,\n  `site` BIGINT(20) UNSIGNED
-    NOT NULL,\n  `protocol` enum('TCP','UDP') DEFAULT 'TCP',\n  `status` enum('enable','disable')
-    DEFAULT 'enable',\n  `provisioning` enum('yes','no') NOT NULL DEFAULT 'yes',\n
-    \ `automatic` enum('true','false') DEFAULT 'false',\n  `healthcheck` text DEFAULT
-    NULL,\n  `internal` int(10) DEFAULT 0,\n  `kubenet_info` text DEFAULT NULL,\n
-    \ `created_date` timestamp /* mariadb-5.3 */ NOT NULL DEFAULT current_timestamp(),\n
-    \ `modified_date` timestamp /* mariadb-5.3 */ NOT NULL DEFAULT current_timestamp()
-    ON UPDATE current_timestamp(),\n  PRIMARY KEY (`id`)\n) ENGINE=InnoDB DEFAULT
-    CHARSET=utf8mb4;\n/*!40101 SET character_set_client = @saved_cs_client */;\n\n--\n--
-    Table structure for table `l4_load_balancer_ips`\n--\n\nDROP TABLE IF EXISTS `l4_load_balancer_ips`;\n/*!40101
-    SET @saved_cs_client     = @@character_set_client */;\n/*!40101 SET character_set_client
-    = utf8 */;\nCREATE TABLE `l4_load_balancer_ips` (\n  `id` BIGINT(20) UNSIGNED
-    NOT NULL AUTO_INCREMENT,\n  `ip` varchar(45) DEFAULT NULL,\n  `port` int(10) NOT
-    NULL,\n  `maintenance` enum('true','false') DEFAULT 'false',\n  `status` enum('ok','failed','maintenance','loading','unknown')
-    DEFAULT 'loading',\n  `response` varchar(255) DEFAULT NULL,\n  PRIMARY KEY (`id`)\n)
+    */;\n\n--\n-- Table structure for table `k8s_to_lb4`\n--\n\nDROP TABLE IF EXISTS
+    `k8s_to_lb4`;\n/*!40101 SET @saved_cs_client     = @@character_set_client */;\n/*!40101
+    SET character_set_client = utf8 */;\nCREATE TABLE `k8s_to_lb4` (\n  `id` bigint(22)
+    NOT NULL AUTO_INCREMENT,\n  `k8s_id` bigint(22) NOT NULL,\n  `lb4_id` int(11)
+    NOT NULL,\n  `uid` varchar(100) NOT NULL,\n  `service_name` varchar(255) DEFAULT
+    NULL,\n  `namespace` varchar(255) NOT NULL,\n  `api_error_msg` varchar(255) DEFAULT
+    NULL,\n  PRIMARY KEY (`id`),\n  UNIQUE KEY `unique_uid` (`uid`),\n  KEY `fk_k8_idx`
+    (`k8s_id`),\n  KEY `fk_l4lb_idx` (`lb4_id`),\n  CONSTRAINT `fkk_k8` FOREIGN KEY
+    (`k8s_id`) REFERENCES `k8s_service` (`id`) ON DELETE CASCADE ON UPDATE CASCADE\n)
     ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;\n/*!40101 SET character_set_client = @saved_cs_client
+    */;\n\n--\n-- Table structure for table `k8s_to_node`\n--\n\nDROP TABLE IF EXISTS
+    `k8s_to_node`;\n/*!40101 SET @saved_cs_client     = @@character_set_client */;\n/*!40101
+    SET character_set_client = utf8 */;\nCREATE TABLE `k8s_to_node` (\n  `id` bigint(22)
+    NOT NULL AUTO_INCREMENT,\n  `k8s_service_id` bigint(22) NOT NULL,\n  `k8s_node_id`
+    bigint(22) NOT NULL,\n  PRIMARY KEY (`id`),\n  KEY `fk_ks_idx` (`k8s_service_id`),\n
+    \ KEY `fk_k8node_idx` (`k8s_node_id`),\n  CONSTRAINT `fk_k8node` FOREIGN KEY (`k8s_node_id`)
+    REFERENCES `k8s_node` (`id`) ON DELETE CASCADE ON UPDATE CASCADE,\n  CONSTRAINT
+    `fk_ks` FOREIGN KEY (`k8s_service_id`) REFERENCES `k8s_service` (`id`) ON DELETE
+    CASCADE ON UPDATE CASCADE\n) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;\n/*!40101
+    SET character_set_client = @saved_cs_client */;\n\n--\n-- Table structure for
+    table `l4_load_balancer`\n--\n\nDROP TABLE IF EXISTS `l4_load_balancer`;\n/*!40101
+    SET @saved_cs_client     = @@character_set_client */;\n/*!40101 SET character_set_client
+    = utf8 */;\nCREATE TABLE `l4_load_balancer` (\n  `id` BIGINT(20) UNSIGNED NOT
+    NULL AUTO_INCREMENT,\n  `name` varchar(255) DEFAULT NULL,\n  `tenant` BIGINT(20)
+    UNSIGNED NOT NULL,\n  `site` BIGINT(20) UNSIGNED NOT NULL,\n  `protocol` enum('TCP','UDP')
+    DEFAULT 'TCP',\n  `status` enum('enable','disable') DEFAULT 'enable',\n  `provisioning`
+    enum('yes','no') NOT NULL DEFAULT 'yes',\n  `automatic` enum('true','false') DEFAULT
+    'false',\n  `healthcheck` text DEFAULT NULL,\n  `internal` int(10) DEFAULT 0,\n
+    \ `kubenet_info` text DEFAULT NULL,\n  `created_date` timestamp /* mariadb-5.3
+    */ NOT NULL DEFAULT current_timestamp(),\n  `modified_date` timestamp /* mariadb-5.3
+    */ NOT NULL DEFAULT current_timestamp() ON UPDATE current_timestamp(),\n  PRIMARY
+    KEY (`id`)\n) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;\n/*!40101 SET character_set_client
+    = @saved_cs_client */;\n\n--\n-- Table structure for table `l4_load_balancer_ips`\n--\n\nDROP
+    TABLE IF EXISTS `l4_load_balancer_ips`;\n/*!40101 SET @saved_cs_client     = @@character_set_client
+    */;\n/*!40101 SET character_set_client = utf8 */;\nCREATE TABLE `l4_load_balancer_ips`
+    (\n  `id` BIGINT(20) UNSIGNED NOT NULL AUTO_INCREMENT,\n  `ip` varchar(45) DEFAULT
+    NULL,\n  `port` int(10) NOT NULL,\n  `maintenance` enum('true','false') DEFAULT
+    'false',\n  `status` enum('ok','failed','maintenance','loading','unknown') DEFAULT
+    'loading',\n  `response` varchar(255) DEFAULT NULL,\n  PRIMARY KEY (`id`)\n) ENGINE=InnoDB
+    DEFAULT CHARSET=utf8mb4;\n/*!40101 SET character_set_client = @saved_cs_client
     */;\n\n--\n-- Table structure for table `lb_check`\n--\n\nDROP TABLE IF EXISTS
     `lb_check`;\n/*!40101 SET @saved_cs_client     = @@character_set_client */;\n/*!40101
     SET character_set_client = utf8 */;\nCREATE TABLE `lb_check` (\n  `id` bigint(20)
@@ -975,22 +974,21 @@ data:
     \ `port_extension` bigint(20) unsigned NOT NULL DEFAULT 0,\n  `parent_port` bigint(20)
     unsigned NOT NULL DEFAULT 0,\n  `admin_down` enum('yes','no') DEFAULT 'no',\n
     \ `autoneg` enum('none','on','off') DEFAULT 'none',\n  `duplex` enum('full','half','none')
-    DEFAULT 'none',\n  `breakout` enum('off', 'disabled', '4x10', '4x25', '2x50',
-    '4x50', '2x100', '4x100', '2x200', '4x200', '2x400') DEFAULT 'off',\n  `created_date`
-    timestamp NOT NULL DEFAULT current_timestamp() ON UPDATE current_timestamp(),\n
-    \ `modified_date` timestamp NULL DEFAULT current_timestamp() ON UPDATE current_timestamp(),\n
-    \ UNIQUE KEY `port_id_UNIQUE` (`port_id`),\n  KEY `port_switch_id_IDX` (`switch_id`)
-    USING BTREE\n) ENGINE=InnoDB DEFAULT CHARSET=latin1;\n/*!40101 SET character_set_client
-    = @saved_cs_client */;\n\n--\n-- Table structure for table `port_extensions`\n--\n\nDROP
-    TABLE IF EXISTS `port_extensions`;\n/*!40101 SET @saved_cs_client     = @@character_set_client
-    */;\n/*!40101 SET character_set_client = utf8 */;\nCREATE TABLE `port_extensions`
-    (\n  `id` bigint(20) unsigned NOT NULL AUTO_INCREMENT,\n  `name` varchar(255)
-    DEFAULT NULL,\n  `vlan_from` smallint(5) unsigned DEFAULT 0,\n  `vlan_to` smallint(5)
-    unsigned DEFAULT 0,\n  `type` enum('hp_blade') NOT NULL DEFAULT 'hp_blade',\n
-    \ UNIQUE KEY `id` (`id`)\n) ENGINE=InnoDB DEFAULT CHARSET=latin1;\n/*!40101 SET
-    character_set_client = @saved_cs_client */;\n\n--\n-- Table structure for table
-    `port_reservation`\n--\n\nDROP TABLE IF EXISTS `port_reservation`;\n/*!40101 SET
-    @saved_cs_client     = @@character_set_client */;\n/*!40101 SET character_set_client
+    DEFAULT 'none',\n  `breakout` enum('off','manual','4x10','4x25','4x100') DEFAULT
+    'off',\n  `created_date` timestamp NOT NULL DEFAULT current_timestamp() ON UPDATE
+    current_timestamp(),\n  `modified_date` timestamp NULL DEFAULT current_timestamp()
+    ON UPDATE current_timestamp(),\n  UNIQUE KEY `port_id_UNIQUE` (`port_id`),\n  KEY
+    `port_switch_id_IDX` (`switch_id`) USING BTREE\n) ENGINE=InnoDB DEFAULT CHARSET=latin1;\n/*!40101
+    SET character_set_client = @saved_cs_client */;\n\n--\n-- Table structure for
+    table `port_extensions`\n--\n\nDROP TABLE IF EXISTS `port_extensions`;\n/*!40101
+    SET @saved_cs_client     = @@character_set_client */;\n/*!40101 SET character_set_client
+    = utf8 */;\nCREATE TABLE `port_extensions` (\n  `id` bigint(20) unsigned NOT NULL
+    AUTO_INCREMENT,\n  `name` varchar(255) DEFAULT NULL,\n  `vlan_from` smallint(5)
+    unsigned DEFAULT 0,\n  `vlan_to` smallint(5) unsigned DEFAULT 0,\n  `type` enum('hp_blade')
+    NOT NULL DEFAULT 'hp_blade',\n  UNIQUE KEY `id` (`id`)\n) ENGINE=InnoDB DEFAULT
+    CHARSET=latin1;\n/*!40101 SET character_set_client = @saved_cs_client */;\n\n--\n--
+    Table structure for table `port_reservation`\n--\n\nDROP TABLE IF EXISTS `port_reservation`;\n/*!40101
+    SET @saved_cs_client     = @@character_set_client */;\n/*!40101 SET character_set_client
     = utf8 */;\nCREATE TABLE `port_reservation` (\n  `id`            bigint(20) unsigned
     NOT NULL AUTO_INCREMENT,\n  `port_id`       bigint(20) NOT NULL,\n  PRIMARY KEY
     (`id`),\n  UNIQUE KEY `port_id_unique` (`port_id`)\n) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;\n\n/*!40101
@@ -1283,29 +1281,29 @@ data:
     DEFAULT 0,\n  `uptime` varchar(255) CHARACTER SET latin1 NOT NULL DEFAULT '',\n
     \ `sync_acl` enum('ok','ongoing','failed') CHARACTER SET latin1 NOT NULL DEFAULT
     'ok',\n  `type` enum('switch','proxmox','controller','offloader','equinix_metal_server',
-    'phoenixnap_bmc_server', 'server') CHARACTER SET latin1 NOT NULL DEFAULT 'switch',\n
-    \ `rangecut` int(10) unsigned NOT NULL DEFAULT 0,\n  `cumulus_version` varchar(100)
-    CHARACTER SET latin1 DEFAULT NULL,\n  `proxmox_version` varchar(100) CHARACTER
-    SET latin1 DEFAULT NULL,\n  `conductor_version` varchar(100) CHARACTER SET latin1
-    DEFAULT NULL,\n  `platform` varchar(255) CHARACTER SET latin1 DEFAULT NULL,\n
-    \ `ntp` varchar(255) CHARACTER SET latin1 DEFAULT NULL,\n  `dns` varchar(255)
-    CHARACTER SET latin1 DEFAULT NULL,\n  `mac_address` varchar(255) DEFAULT NULL,\n
-    \ `ztp` int(10) unsigned NOT NULL DEFAULT 0,\n  `nos` varchar(45) DEFAULT NULL,\n
-    \ `timezone` varchar(255) CHARACTER SET latin1 DEFAULT NULL,\n  `number_of_ports`
-    smallint(5) unsigned DEFAULT NULL,\n  `owner_tenant_id` bigint(20) unsigned NOT
-    NULL,\n  `mac_addr_ubit` int(10) unsigned NOT NULL DEFAULT 0,\n  `meta` JSON NULL
-    DEFAULT '{}',\n  `created_date` timestamp NOT NULL DEFAULT current_timestamp(),\n
-    \ `modified_date` timestamp NOT NULL DEFAULT current_timestamp() ON UPDATE current_timestamp(),\n
-    \ PRIMARY KEY (`switch_id`)\n) ENGINE=InnoDB DEFAULT CHARSET=utf8;\n/*!40101 SET
-    character_set_client = @saved_cs_client */;\n\n--\n-- Table structure for table
-    `topology`\n--\n\nDROP TABLE IF EXISTS `topology`;\n/*!40101 SET @saved_cs_client
-    \    = @@character_set_client */;\n/*!40101 SET character_set_client = utf8 */;\nCREATE
-    TABLE `topology` (\n  `id` bigint(20) unsigned NOT NULL AUTO_INCREMENT,\n  `user_id`
-    bigint(22) NOT NULL,\n  `site_id` bigint(22) NOT NULL,\n  `positions` text DEFAULT
-    NULL,\n  `options` text DEFAULT NULL,\n  PRIMARY KEY (`id`)\n) ENGINE=InnoDB DEFAULT
-    CHARSET=utf8mb4;\n/*!40101 SET character_set_client = @saved_cs_client */;\n\n--\n--
-    Table structure for table `topology_link`\n--\n\nDROP TABLE IF EXISTS `topology_link`;\n/*!40101
-    SET @saved_cs_client     = @@character_set_client */;\n/*!40101 SET character_set_client
+    'phoenixnap_bmc_server') CHARACTER SET latin1 NOT NULL DEFAULT 'switch',\n  `rangecut`
+    int(10) unsigned NOT NULL DEFAULT 0,\n  `cumulus_version` varchar(100) CHARACTER
+    SET latin1 DEFAULT NULL,\n  `proxmox_version` varchar(100) CHARACTER SET latin1
+    DEFAULT NULL,\n  `conductor_version` varchar(100) CHARACTER SET latin1 DEFAULT
+    NULL,\n  `platform` varchar(255) CHARACTER SET latin1 DEFAULT NULL,\n  `ntp` varchar(255)
+    CHARACTER SET latin1 DEFAULT NULL,\n  `dns` varchar(255) CHARACTER SET latin1
+    DEFAULT NULL,\n  `mac_address` varchar(255) DEFAULT NULL,\n  `ztp` int(10) unsigned
+    NOT NULL DEFAULT 0,\n  `nos` varchar(45) DEFAULT NULL,\n  `timezone` varchar(255)
+    CHARACTER SET latin1 DEFAULT NULL,\n  `number_of_ports` smallint(5) unsigned DEFAULT
+    NULL,\n  `owner_tenant_id` bigint(20) unsigned NOT NULL,\n  `mac_addr_ubit` int(10)
+    unsigned NOT NULL DEFAULT 0,\n  `meta` JSON NULL DEFAULT '{}',\n  `created_date`
+    timestamp NOT NULL DEFAULT current_timestamp(),\n  `modified_date` timestamp NOT
+    NULL DEFAULT current_timestamp() ON UPDATE current_timestamp(),\n  PRIMARY KEY
+    (`switch_id`)\n) ENGINE=InnoDB DEFAULT CHARSET=utf8;\n/*!40101 SET character_set_client
+    = @saved_cs_client */;\n\n--\n-- Table structure for table `topology`\n--\n\nDROP
+    TABLE IF EXISTS `topology`;\n/*!40101 SET @saved_cs_client     = @@character_set_client
+    */;\n/*!40101 SET character_set_client = utf8 */;\nCREATE TABLE `topology` (\n
+    \ `id` bigint(20) unsigned NOT NULL AUTO_INCREMENT,\n  `user_id` bigint(22) NOT
+    NULL,\n  `site_id` bigint(22) NOT NULL,\n  `positions` text DEFAULT NULL,\n  `options`
+    text DEFAULT NULL,\n  PRIMARY KEY (`id`)\n) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;\n/*!40101
+    SET character_set_client = @saved_cs_client */;\n\n--\n-- Table structure for
+    table `topology_link`\n--\n\nDROP TABLE IF EXISTS `topology_link`;\n/*!40101 SET
+    @saved_cs_client     = @@character_set_client */;\n/*!40101 SET character_set_client
     = utf8 */;\nCREATE TABLE `topology_link` (\n  `id` bigint(20) unsigned NOT NULL
     AUTO_INCREMENT,\n  `origin` bigint(20) unsigned DEFAULT NULL,\n  `dest` bigint(20)
     unsigned DEFAULT NULL,\n  PRIMARY KEY (`id`)\n) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;\n/*!40101
@@ -1745,7 +1743,7 @@ data:
     INSERT INTO `global_settings` VALUES (36,'wireguard_port_range','59000-60999','VPN peers port range','true');
     INSERT INTO `global_settings` VALUES (37,'k8s_lb_check_timeout','2000','K8s Layer 4 load-balancer timeout (ms)','true');
     INSERT INTO `global_settings` VALUES (38,'vpn_measurement_wait_secs','30','Site Mesh measurement module wait interval (sec)','true');
-    INSERT INTO `global_settings` VALUES (39,'migration_version', '4.3.0', 'Database scheme version', 'false');
+    INSERT INTO `global_settings` VALUES (39,'migration_version', '4.2.0', 'Database scheme version', 'false');
     INSERT INTO `global_settings` VALUES (40,'system_asn_range', '4200000000 - 4209999999', 'System ASN range', 'true');
     INSERT INTO `global_settings` VALUES (41,'vpn_asn_range', '4210000000 - 4219999999', 'Site Mesh VPN ASN range', 'true');
     INSERT INTO `global_settings` VALUES (42,'calico_asn_range', '4230000000 - 4239999999', 'Calico ASN range', 'true');
@@ -1757,8 +1755,7 @@ data:
     INSERT INTO `currency` VALUES (4,'BGN',0.511,'2016-11-26 05:17:49');
   04-whitelist.sql: |
     USE {{ .Values.mariadb.auth.database }};
-    INSERT INTO `login_whitelists` VALUES (1,'0.0.0.0',0,'ANY_IPv4');
-    INSERT INTO `login_whitelists` VALUES (2,'::',0,'ANY_IPv6');
+    INSERT INTO `login_whitelists` VALUES (1,'0.0.0.0',0,'ANY');
   05-auth_schemes.sql: |+
     USE {{ .Values.mariadb.auth.database }};
     INSERT INTO `auth_schemes` VALUES (1,'local','conductor','','active','yes');
@@ -1802,7 +1799,6 @@ data:
     INSERT INTO `nos_list` VALUES (1,'Cumulus Linux','cumulus_linux');
     INSERT INTO `nos_list` VALUES (2,'SONiC','sonic');
     INSERT INTO `nos_list` VALUES (3,'Ubuntu SwitchDev','ubuntu_switch_dev');
-    INSERT INTO `nos_list` VALUES (4,'Cumulus NVUE','cumulus_nvue');
   06-roh_profiles.sql: |
     USE {{ .Values.mariadb.auth.database }};
     INSERT INTO `roh_profiles` VALUES (1,'Default','default');
@@ -1810,7 +1806,7 @@ data:
     INSERT INTO `roh_profiles` VALUES (3,'Full table','full_table');
   07-inventory_profiles.sql: |
     USE {{ .Values.mariadb.auth.database }};
-    INSERT INTO `inventory_profiles` VALUES (1,'default-inventory-profile','Default inventory profile','0.0.0.0/0','','{\"offset\":\"-08:00\",\"label\":\"(GMT-08:00) Pacific Time\",\"tzCode\":\"America/Los_Angeles\"}','pool.ntp.org','1.1.1.1,8.8.8.8','{}',NULL,NULL);
+    INSERT INTO `inventory_profiles` VALUES (1,'default-inventory-profile','Default inventory profile','0.0.0.0/0','','{\"offset\":\"-08:00\",\"label\":\"(GMT-08:00) Pacific Time\",\"tzCode\":\"America/Los_Angeles\"}','pool.ntp.org','1.1.1.1,8.8.8.8',NULL,NULL);
   07-subnets.sql: |
     USE {{ .Values.mariadb.auth.database }};
     -- allocations (id, vpc_id, parent_id,allocation_id,name,description,tenant_id,ip_version,purpose,readonly,prefix,length,meta)
