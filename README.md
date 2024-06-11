@@ -15,4 +15,4 @@ Once Helm is set up properly, add the repo as follows:
 helm repo add netrisai https://netrisai.github.io/charts
 ```
 
-You can then run `helm search repo netrisai` to see the charts.
+You can then run `helm search repo netrisai` to see the charts
