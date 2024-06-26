@@ -971,7 +971,7 @@ data:
     NOT NULL DEFAULT 0,\n  `status` varchar(255) DEFAULT NULL,\n  `speed` varchar(255)
     DEFAULT NULL,\n  `speed_desired` enum('1000','10000','25000','40000','50000','100000','200000','400000','auto')
     NOT NULL DEFAULT 'auto',\n  `transceiver` varchar(255) DEFAULT NULL,\n  `mtu`
-    int(10) NOT NULL DEFAULT 9000,\n  `lacp` enum('on','off') NOT NULL DEFAULT 'off',\n
+    int(10) NOT NULL DEFAULT 9216,\n  `lacp` enum('on','off') NOT NULL DEFAULT 'off',\n
     \ `port_extension` bigint(20) unsigned NOT NULL DEFAULT 0,\n  `parent_port` bigint(20)
     unsigned NOT NULL DEFAULT 0,\n  `admin_down` enum('yes','no') DEFAULT 'no',\n
     \ `autoneg` enum('none','on','off') DEFAULT 'none',\n  `duplex` enum('full','half','none')
