@@ -14,15 +14,15 @@ data:
     Table structure for table `users`\n--\n\nDROP TABLE IF EXISTS `users`;\n/*!40101
     SET @saved_cs_client     = @@character_set_client */;\n/*!40101 SET character_set_client
     = utf8 */;\nCREATE TABLE `users` (\n  `id` bigint(20) unsigned NOT NULL AUTO_INCREMENT,\n
-    \ `login` varchar(50) NOT NULL,\n  `password` varchar(255) DEFAULT NULL,\n  `name`
-    varchar(255) DEFAULT NULL,\n  `email` varchar(255) DEFAULT NULL,\n  `email_cc`
-    varchar(255) DEFAULT NULL,\n  `role_id` bigint(20) unsigned DEFAULT NULL,\n  `master`
-    int(11) NOT NULL DEFAULT 0,\n  `phone` varchar(255) DEFAULT NULL,\n  `position`
-    varchar(255) DEFAULT NULL,\n  `company` varchar(255) DEFAULT NULL,\n  `ims` varchar(255)
-    DEFAULT NULL,\n  `perm_id` bigint(20) unsigned DEFAULT NULL,\n  `auth_scheme_id`
-    bigint(20) NOT NULL DEFAULT 1,\n  `email_notification` enum('enabled','disabled')
-    NOT NULL DEFAULT 'enabled',\n  `options` text NOT NULL DEFAULT '{}',\n  `notification_subscription`
-    varchar(512) NOT NULL DEFAULT '{\"approvals\":\"true\",\"telescope\":\"true\"}',\n
+    \ `login` varchar(50) NOT NULL,\n  `password` varchar(255) DEFAULT NULL,\n  `salt`
+    varchar(255) DEFAULT NULL,\n  `name` varchar(255) DEFAULT NULL,\n  `email` varchar(255)
+    DEFAULT NULL,\n  `email_cc` varchar(255) DEFAULT NULL,\n  `role_id` bigint(20)
+    unsigned DEFAULT NULL,\n  `master` int(11) NOT NULL DEFAULT 0,\n  `phone` varchar(255)
+    DEFAULT NULL,\n  `position` varchar(255) DEFAULT NULL,\n  `company` varchar(255)
+    DEFAULT NULL,\n  `ims` varchar(255) DEFAULT NULL,\n  `perm_id` bigint(20) unsigned
+    DEFAULT NULL,\n  `auth_scheme_id` bigint(20) NOT NULL DEFAULT 1,\n  `email_notification`
+    enum('enabled','disabled') NOT NULL DEFAULT 'enabled',\n  `options` text NOT NULL
+    DEFAULT '{}',\n  `notification_subscription` varchar(512) NOT NULL DEFAULT '{\"approvals\":\"true\",\"telescope\":\"true\"}',\n
     \ `create_date` timestamp NOT NULL DEFAULT current_timestamp(),\n  `modified_date`
     timestamp NULL DEFAULT current_timestamp() ON UPDATE current_timestamp(),\n  PRIMARY
     KEY (`id`),\n  UNIQUE KEY `login` (`login`),\n  KEY `role_id` (`role_id`)\n) ENGINE=InnoDB
@@ -1734,8 +1734,8 @@ data:
     INSERT INTO `tenants` VALUES (2,'DevOps',0,0,0,0,0,'region',1,10,0,'public','2019-01-15 09:37:34','2020-07-14 19:00:02','DevOps Resources');
   01-users.sql: |
     USE {{ .Values.mariadb.auth.database }};
-    INSERT INTO `users` VALUES (1,'{{ .Values.netris.webLogin }}','{{ .Values.netris.webPassword | sha1sum }}','Netris','info@netris.local','',NULL,0,'','','Netris',NULL,0,1,'disabled','','{"approvals":"false","telescope":"false"}', NULL, NULL);
-    INSERT INTO `users` VALUES (2,'system',NULL,'System Generated','system@netris.local','',NULL,0,'','','Netris',NULL,0,1,'disabled','','{"approvals":"false","telescope":"false"}', NULL, NULL);
+    INSERT INTO `users` VALUES (1,'{{ .Values.netris.webLogin }}','{{ .Values.netris.webPassword | sha1sum }}',NULL,'Netris','info@netris.local','',NULL,0,'','','Netris',NULL,0,1,'disabled','','{"approvals":"false","telescope":"false"}', NULL, NULL);
+    INSERT INTO `users` VALUES (2,'system',NULL,NULL,'System Generated','system@netris.local','',NULL,0,'','','Netris',NULL,0,1,'disabled','','{"approvals":"false","telescope":"false"}', NULL, NULL);
 
     INSERT INTO `user_to_tenant` VALUES (1,1,0,'w');
     INSERT INTO `user_to_tenant` VALUES (2,2,0,'w');
