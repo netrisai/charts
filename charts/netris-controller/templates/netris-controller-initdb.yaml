@@ -1734,7 +1734,7 @@ data:
     INSERT INTO `tenants` VALUES (2,'DevOps',0,0,0,0,0,'region',1,10,0,'public','2019-01-15 09:37:34','2020-07-14 19:00:02','DevOps Resources');
   01-users.sql: |
     USE {{ .Values.mariadb.auth.database }};
-    INSERT INTO `users` VALUES (1,'{{ .Values.netris.webLogin }}','{{ .Values.netris.webPassword | sha1sum }}',NULL,'Netris','info@netris.local','',NULL,0,'','','Netris',NULL,0,1,'disabled','','{"approvals":"false","telescope":"false"}', NULL, NULL);
+    INSERT INTO `users` VALUES (1,'{{ .Values.netris.webLogin }}','{{ .Values.netris.webPassword | bcrypt }}','true','Netris','info@netris.local','',NULL,0,'','','Netris',NULL,0,1,'disabled','','{"approvals":"false","telescope":"false"}', NULL, NULL);
     INSERT INTO `users` VALUES (2,'system',NULL,NULL,'System Generated','system@netris.local','',NULL,0,'','','Netris',NULL,0,1,'disabled','','{"approvals":"false","telescope":"false"}', NULL, NULL);
 
     INSERT INTO `user_to_tenant` VALUES (1,1,0,'w');

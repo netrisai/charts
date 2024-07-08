@@ -99,6 +99,8 @@ The following table lists the configurable parameters of the netris-controller c
 | `web-service-backend.autoscaling.minReplicas`                     | Default min replicas for autoscaling                                                                      | `1`                              |
 | `web-service-backend.autoscaling.maxReplicas`                     | Default max replicas for autoscaling                                                                      | `100`                            |
 | `web-service-backend.autoscaling.targetCPUUtilizationPercentage`  | The desired target CPU utilization for autoscaling                                                        | `80`                             |
+| `web-service-backend.nodeOptions`                                 | A space-separated list of Node.js command-line options                                                    | `--max-old-space-size=8192`      |
+
 
 ### Netris-Controller web-service-frontend parameters
 | Parameter                                                         | Description                                                                                               | Default                           |
