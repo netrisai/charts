@@ -83,7 +83,7 @@ web-service-backend:
     repository: netrisai/controller-web-service-backend
     pullPolicy: IfNotPresent
     # Overrides the image tag whose default is the chart appVersion.
-    tag: "4.3.0-030"
+    tag: "4.3.0-037"
 
   imagePullSecrets: []
 
@@ -110,7 +110,7 @@ web-service-frontend:
     repository: netrisai/controller-web-service-frontend
     pullPolicy: IfNotPresent
     # Overrides the image tag whose default is the chart appVersion.
-    tag: "4.3.0-040"
+    tag: "4.3.0-044"
 
   imagePullSecrets: []
 
@@ -134,7 +134,7 @@ grpc:
     repository: netrisai/controller-grpc
     pullPolicy: IfNotPresent
     # Overrides the image tag whose default is the chart appVersion.
-    tag: "4.3.0.008"
+    tag: "4.3.0.009"
 
   imagePullSecrets: []
 
@@ -324,8 +324,8 @@ graphite:
       ENABLE_LOGROTATION = True
       USER =
       MAX_CACHE_SIZE = inf
-      MAX_UPDATES_PER_SECOND = 500
-      MAX_CREATES_PER_MINUTE = 30
+      MAX_UPDATES_PER_SECOND = 10000
+      MAX_CREATES_PER_MINUTE = 50000
       MIN_TIMESTAMP_RESOLUTION = 1
       LINE_RECEIVER_INTERFACE = 0.0.0.0
       LINE_RECEIVER_PORT = 2003
