@@ -977,12 +977,12 @@ data:
     \ `autoneg` enum('none','on','off') DEFAULT 'none',\n  `duplex` enum('full','half','none')
     DEFAULT 'none',\n  `breakout` enum('off', 'disabled', '4x10', '4x25', '2x50',
     '4x50', '2x100', '4x100', '2x200', '4x200', '2x400') DEFAULT 'off',\n  `created_date`
-    timestamp NOT NULL DEFAULT current_timestamp() ON UPDATE current_timestamp(),\n
-    \ `modified_date` timestamp NULL DEFAULT current_timestamp() ON UPDATE current_timestamp(),\n
-    \ UNIQUE KEY `port_id_UNIQUE` (`port_id`),\n  KEY `port_switch_id_IDX` (`switch_id`)
-    USING BTREE\n) ENGINE=InnoDB DEFAULT CHARSET=latin1;\n/*!40101 SET character_set_client
-    = @saved_cs_client */;\n\n--\n-- Table structure for table `port_extensions`\n--\n\nDROP
-    TABLE IF EXISTS `port_extensions`;\n/*!40101 SET @saved_cs_client     = @@character_set_client
+    timestamp NOT NULL DEFAULT current_timestamp(),\n  `modified_date` timestamp NULL
+    DEFAULT current_timestamp() ON UPDATE current_timestamp(),\n  UNIQUE KEY `port_id_UNIQUE`
+    (`port_id`),\n  KEY `port_switch_id_IDX` (`switch_id`) USING BTREE\n) ENGINE=InnoDB
+    DEFAULT CHARSET=latin1;\n/*!40101 SET character_set_client = @saved_cs_client
+    */;\n\n--\n-- Table structure for table `port_extensions`\n--\n\nDROP TABLE IF
+    EXISTS `port_extensions`;\n/*!40101 SET @saved_cs_client     = @@character_set_client
     */;\n/*!40101 SET character_set_client = utf8 */;\nCREATE TABLE `port_extensions`
     (\n  `id` bigint(20) unsigned NOT NULL AUTO_INCREMENT,\n  `name` varchar(255)
     DEFAULT NULL,\n  `vlan_from` smallint(5) unsigned DEFAULT 0,\n  `vlan_to` smallint(5)
@@ -1745,15 +1745,8 @@ data:
     INSERT INTO `permissions` VALUES (0,'Permit All','','',NULL,'2019-01-18 07:17:36','2019-02-07 07:01:33','true','true');
   02-port.sql: |
     USE {{ .Values.mariadb.auth.database }};
-    -- INSERT INTO `port` (`port_id`, `switch_id`, `tenant_id`, `port_index`, `break_index`, `name`, `port`, `iface`, `present`, `status`, `speed`, `speed_desired`, `transceiver`, `mtu`, `lacp`, `port_extension`, `parent_port`, `admin_down`, `autoneg`, `duplex`, `breakout`, `created_date`, `modified_date`) VALUES (0,0,0,0,0,'not defined','NOPORT','NOIFACE',1,'N/A','N/A','auto','hh',9000,'off',0,0,'no','off','none','0',NULL,NULL);
-    -- INSERT INTO `port` (`port_id`, `switch_id`, `tenant_id`, `port_index`, `break_index`, `name`, `port`, `iface`, `present`, `status`, `speed`, `speed_desired`, `transceiver`, `mtu`, `lacp`, `port_extension`, `parent_port`, `admin_down`, `autoneg`, `duplex`, `breakout`, `created_date`, `modified_date`) VALUES (1,1,1,1,0,'swp1','swp1',NULL,1,'Unknown',NULL,'auto',NULL,9000,'off',0,0,'no','none','none','off',NULL,NULL);
-    -- INSERT INTO `port` (`port_id`, `switch_id`, `tenant_id`, `port_index`, `break_index`, `name`, `port`, `iface`, `present`, `status`, `speed`, `speed_desired`, `transceiver`, `mtu`, `lacp`, `port_extension`, `parent_port`, `admin_down`, `autoneg`, `duplex`, `breakout`, `created_date`, `modified_date`) VALUES (2,2,1,1,0,'swp1','swp1',NULL,1,'Unknown',NULL,'auto',NULL,9000,'off',0,0,'no','none','none','off',NULL,NULL);
-
-
     SET sql_mode='NO_AUTO_VALUE_ON_ZERO';
     INSERT INTO `port` VALUES (0,0,0,0,0,'not defined','NOPORT','NOIFACE',1,'N/A','N/A','auto','hh',9000,'off',0,0,'no','off','none','',NULL,NULL);
-    INSERT INTO `port` VALUES (1,1,1,1,0,'swp1','swp1',NULL,1,'Unknown',NULL,'auto',NULL,9000,'off',0,0,'no','none','none','off',NULL,NULL);
-    INSERT INTO `port` VALUES (2,2,1,1,0,'swp1','swp1',NULL,1,'Unknown',NULL,'auto',NULL,9000,'off',0,0,'no','none','none','off',NULL,NULL);
   02-vpc.sql: |
     USE {{ .Values.mariadb.auth.database }};
     INSERT INTO `vpc` (id, name, tenant_id, is_system, is_default) VALUES (1, 'Default', 1, 'yes', 'yes');
