@@ -837,77 +837,78 @@ data:
     */;\n\n--\n-- Table structure for table `net_nat`\n--\n\nDROP TABLE IF EXISTS
     `net_nat`;\n/*!40101 SET @saved_cs_client     = @@character_set_client */;\n/*!40101
     SET character_set_client = utf8 */;\nCREATE TABLE `net_nat` (\n  `id` bigint(20)
-    NOT NULL AUTO_INCREMENT,\n  `name` varchar(180) NOT NULL,\n  `site_id` bigint(20)
-    NOT NULL,\n  `src_prefix` varchar(45) NOT NULL,\n  `src_length` int(10) NOT NULL
-    DEFAULT 0,\n  `dst_prefix` varchar(45) NOT NULL,\n  `dst_length` int(10) NOT NULL
-    DEFAULT 0,\n  `src_port_from` int(10) NOT NULL DEFAULT 0,\n  `src_port_to` int(10)
-    NOT NULL DEFAULT 0,\n  `dst_port_from` int(10) NOT NULL DEFAULT 0,\n  `dst_port_to`
-    int(10) NOT NULL DEFAULT 0,\n  `protocol` enum('all','tcp','udp','icmp') NOT NULL
-    DEFAULT 'all',\n  `action` enum('SNAT','DNAT','MASQUERADE','ACCEPT_SNAT') NOT
-    NULL DEFAULT 'DNAT',\n  `status` enum('enabled','disabled') NOT NULL DEFAULT 'enabled',\n
-    \ `port_group` bigint(20) unsigned DEFAULT NULL,\n  `comment` text NOT NULL,\n
-    \ `edited_by` bigint(20) NOT NULL,\n  `created_by` bigint(20) NOT NULL,\n  `created_date`
-    timestamp NOT NULL DEFAULT current_timestamp(),\n  `modified_date` timestamp NOT
-    NULL DEFAULT current_timestamp() ON UPDATE current_timestamp(),\n  PRIMARY KEY
-    (`id`),\n  KEY `fk_acl_pgroup` (`port_group`),\n  CONSTRAINT `fk_acl_pgroup` FOREIGN
-    KEY (`port_group`) REFERENCES `acl_port_group` (`id`) ON UPDATE CASCADE\n) ENGINE=InnoDB
-    DEFAULT CHARSET=utf8mb4;\n/*!40101 SET character_set_client = @saved_cs_client
-    */;\n\n--\n-- Table structure for table `net_peers`\n--\n\nDROP TABLE IF EXISTS
-    `net_peers`;\n/*!40101 SET @saved_cs_client     = @@character_set_client */;\n/*!40101
-    SET character_set_client = utf8 */;\nCREATE TABLE `net_peers` (\n  `id` bigint(20)
-    unsigned NOT NULL AUTO_INCREMENT,\n  `vpc_id` bigint(20) unsigned NOT NULL,\n
-    \ `name` varchar(255) NOT NULL,\n  `handover_vlan` INT(10) UNSIGNED NOT NULL,\n
-    \ `description` varchar(255) DEFAULT NULL,\n  `neighbor_as` bigint(8) NOT NULL,\n
-    \ `local_ip` varchar(255) DEFAULT NULL,\n  `remote_ip` varchar(255) DEFAULT NULL,\n
-    \ `prefix_length` int(6) NOT NULL,\n  `switch_port_id` bigint(22) unsigned DEFAULT
-    NULL,\n  `bgp_password` varchar(100) NOT NULL DEFAULT '',\n  `prefix_limit` int(11)
-    NOT NULL DEFAULT 0,\n  `prepend_inbound` int(11) NOT NULL DEFAULT 0,\n  `prepend_outbound`
-    int(11) NOT NULL DEFAULT 0,\n  `prefix_list_inbound` text NOT NULL,\n  `prefix_list_outbound`
-    text NOT NULL,\n  `local_preference` int(11) unsigned DEFAULT 100,\n  `weight`
-    int(32) unsigned DEFAULT 0,\n  `status` enum('enabled','disabled') NOT NULL DEFAULT
-    'enabled',\n  `nexthop_self` enum('enabled','disabled') NOT NULL DEFAULT 'disabled',\n
-    \ `default_originate` enum('enabled','disabled') NOT NULL DEFAULT 'disabled',\n
-    \ `offloader_interface` varchar(45) DEFAULT NULL,\n  `ip_version` enum('ipv4','ipv6')
-    NOT NULL DEFAULT 'ipv4',\n  `rcircuit_id` bigint(22) DEFAULT NULL,\n  `terminate_on_switch`
-    enum('yes','no') NOT NULL DEFAULT 'no',\n  `multihop` int(11) NOT NULL DEFAULT
-    0,\n  `route_id` bigint(20) unsigned DEFAULT NULL,\n  `site_id` bigint(22) unsigned
-    NOT NULL,\n  `neighbor_address` varchar(50) DEFAULT NULL,\n  `update_source` varchar(50)
-    DEFAULT NULL,\n  `community` varchar(255) DEFAULT NULL,\n  `internal` bigint(20)
-    unsigned DEFAULT NULL,\n  `allowas_in` int(11) unsigned NOT NULL DEFAULT 0,\n
-    \ `term_switch_id` bigint(20) unsigned DEFAULT NULL,\n  `created_date` timestamp
-    NOT NULL DEFAULT current_timestamp(),\n  `modified_date` timestamp NOT NULL DEFAULT
-    current_timestamp() ON UPDATE current_timestamp(),\n  `inbound_route_map` bigint(20)
-    unsigned DEFAULT NULL,\n  `outbound_route_map` bigint(20) unsigned DEFAULT NULL,\n
-    \ `bfd` enum('disabled','enabled') NOT NULL DEFAULT 'disabled',\n  `timers` longtext
-    CHARACTER SET utf8mb4 COLLATE utf8mb4_bin NOT NULL DEFAULT '{\"hello\":3, \"hold\":
-    10}' CHECK (json_valid(`timers`)),\n  `meta` longtext CHARACTER SET utf8mb4 COLLATE
-    utf8mb4_bin NOT NULL DEFAULT '{}' CHECK (json_valid(`meta`)),\n  PRIMARY KEY (`id`),\n
-    \ UNIQUE KEY `id_UNIQUE` (`id`),\n  UNIQUE KEY `name_UNIQUE` (`name`),\n  KEY
-    `vpcid` (`vpc_id`),\n  KEY `net_peers_ibfk_1` (`internal`),\n  KEY `handover_vlan`
-    (`handover_vlan`),\n  CONSTRAINT `net_peers_vpc_ibfk_1` FOREIGN KEY (`vpc_id`)
-    REFERENCES `vpc` (`id`) ON DELETE CASCADE ON UPDATE CASCADE\n) ENGINE=InnoDB DEFAULT
-    CHARSET=utf8;\n/*!40101 SET character_set_client = @saved_cs_client */;\n\n--\n--
-    Table structure for table `net_pops`\n--\n\nDROP TABLE IF EXISTS `net_pops`;\n/*!40101
+    NOT NULL AUTO_INCREMENT,\n  `vpc_id` bigint(20) unsigned NOT NULL,\n  `name` varchar(180)
+    NOT NULL,\n  `site_id` bigint(20) NOT NULL,\n  `src_prefix` varchar(45) NOT NULL,\n
+    \ `src_length` int(10) NOT NULL DEFAULT 0,\n  `dst_prefix` varchar(45) NOT NULL,\n
+    \ `dst_length` int(10) NOT NULL DEFAULT 0,\n  `src_port_from` int(10) NOT NULL
+    DEFAULT 0,\n  `src_port_to` int(10) NOT NULL DEFAULT 0,\n  `dst_port_from` int(10)
+    NOT NULL DEFAULT 0,\n  `dst_port_to` int(10) NOT NULL DEFAULT 0,\n  `protocol`
+    enum('all','tcp','udp','icmp') NOT NULL DEFAULT 'all',\n  `action` enum('SNAT','DNAT','MASQUERADE','ACCEPT_SNAT')
+    NOT NULL DEFAULT 'DNAT',\n  `status` enum('enabled','disabled') NOT NULL DEFAULT
+    'enabled',\n  `port_group` bigint(20) unsigned DEFAULT NULL,\n  `comment` text
+    NOT NULL,\n  `edited_by` bigint(20) NOT NULL,\n  `created_by` bigint(20) NOT NULL,\n
+    \ `created_date` timestamp NOT NULL DEFAULT current_timestamp(),\n  `modified_date`
+    timestamp NOT NULL DEFAULT current_timestamp() ON UPDATE current_timestamp(),\n
+    \ PRIMARY KEY (`id`),\n  KEY `fk_acl_pgroup` (`port_group`),\n  KEY `fk_vpc_id`
+    (`vpc_id`),\n  CONSTRAINT `fk_acl_pgroup` FOREIGN KEY (`port_group`) REFERENCES
+    `acl_port_group` (`id`) ON UPDATE CASCADE,\n  CONSTRAINT `fk_vpc_id` FOREIGN KEY
+    (`vpc_id`) REFERENCES `vpc` (`id`) ON UPDATE CASCADE\n) ENGINE=InnoDB DEFAULT
+    CHARSET=utf8mb4;\n/*!40101 SET character_set_client = @saved_cs_client */;\n\n--\n--
+    Table structure for table `net_peers`\n--\n\nDROP TABLE IF EXISTS `net_peers`;\n/*!40101
     SET @saved_cs_client     = @@character_set_client */;\n/*!40101 SET character_set_client
-    = utf8 */;\nCREATE TABLE `net_pops` (\n  `id` bigint(20) unsigned NOT NULL AUTO_INCREMENT,\n
-    \ `name` varchar(255) NOT NULL,\n  `asn` int(32) unsigned NOT NULL DEFAULT 65000,\n
-    \ `physical_instance_asn` int(32) unsigned NOT NULL DEFAULT 65500,\n  `virtual_instance_asn`
-    int(32) unsigned NOT NULL DEFAULT 65501,\n  `vpn` enum('hub','spoke','dspoke','disabled')
-    DEFAULT 'disabled',\n  `rp_id` bigint(22) NOT NULL DEFAULT 1,\n  `acl_policy`
-    enum('deny','permit') NOT NULL DEFAULT 'deny',\n  `switch_fabric` enum('netris',
-    'equinix_metal', 'dot1q_trunk', 'phoenixnap_bmc') NOT NULL DEFAULT 'netris',\n
-    \ `vlan_range` VARCHAR(100) NOT NULL DEFAULT '1-4094',\n  `vlan_range_auto_assign`
-    varchar(100) NOT NULL DEFAULT '2-4094',\n  `vlan_range_sys_reserved` varchar(100)
-    NOT NULL DEFAULT '3600-4094',\n  `meta` JSON NULL DEFAULT '{}',\n  PRIMARY KEY
-    (`id`),\n  UNIQUE KEY `id_UNIQUE` (`id`),\n  UNIQUE KEY `name_UNIQUE` (`name`)\n)
+    = utf8 */;\nCREATE TABLE `net_peers` (\n  `id` bigint(20) unsigned NOT NULL AUTO_INCREMENT,\n
+    \ `vpc_id` bigint(20) unsigned NOT NULL,\n  `name` varchar(255) NOT NULL,\n  `handover_vlan`
+    INT(10) UNSIGNED NOT NULL,\n  `description` varchar(255) DEFAULT NULL,\n  `neighbor_as`
+    bigint(8) NOT NULL,\n  `local_ip` varchar(255) DEFAULT NULL,\n  `remote_ip` varchar(255)
+    DEFAULT NULL,\n  `prefix_length` int(6) NOT NULL,\n  `switch_port_id` bigint(22)
+    unsigned DEFAULT NULL,\n  `bgp_password` varchar(100) NOT NULL DEFAULT '',\n  `prefix_limit`
+    int(11) NOT NULL DEFAULT 0,\n  `prepend_inbound` int(11) NOT NULL DEFAULT 0,\n
+    \ `prepend_outbound` int(11) NOT NULL DEFAULT 0,\n  `prefix_list_inbound` text
+    NOT NULL,\n  `prefix_list_outbound` text NOT NULL,\n  `local_preference` int(11)
+    unsigned DEFAULT 100,\n  `weight` int(32) unsigned DEFAULT 0,\n  `status` enum('enabled','disabled')
+    NOT NULL DEFAULT 'enabled',\n  `nexthop_self` enum('enabled','disabled') NOT NULL
+    DEFAULT 'disabled',\n  `default_originate` enum('enabled','disabled') NOT NULL
+    DEFAULT 'disabled',\n  `offloader_interface` varchar(45) DEFAULT NULL,\n  `ip_version`
+    enum('ipv4','ipv6') NOT NULL DEFAULT 'ipv4',\n  `rcircuit_id` bigint(22) DEFAULT
+    NULL,\n  `terminate_on_switch` enum('yes','no') NOT NULL DEFAULT 'no',\n  `multihop`
+    int(11) NOT NULL DEFAULT 0,\n  `route_id` bigint(20) unsigned DEFAULT NULL,\n
+    \ `site_id` bigint(22) unsigned NOT NULL,\n  `neighbor_address` varchar(50) DEFAULT
+    NULL,\n  `update_source` varchar(50) DEFAULT NULL,\n  `community` varchar(255)
+    DEFAULT NULL,\n  `internal` bigint(20) unsigned DEFAULT NULL,\n  `allowas_in`
+    int(11) unsigned NOT NULL DEFAULT 0,\n  `term_switch_id` bigint(20) unsigned DEFAULT
+    NULL,\n  `created_date` timestamp NOT NULL DEFAULT current_timestamp(),\n  `modified_date`
+    timestamp NOT NULL DEFAULT current_timestamp() ON UPDATE current_timestamp(),\n
+    \ `inbound_route_map` bigint(20) unsigned DEFAULT NULL,\n  `outbound_route_map`
+    bigint(20) unsigned DEFAULT NULL,\n  `bfd` enum('disabled','enabled') NOT NULL
+    DEFAULT 'disabled',\n  `timers` longtext CHARACTER SET utf8mb4 COLLATE utf8mb4_bin
+    NOT NULL DEFAULT '{\"hello\":3, \"hold\": 10}' CHECK (json_valid(`timers`)),\n
+    \ `meta` longtext CHARACTER SET utf8mb4 COLLATE utf8mb4_bin NOT NULL DEFAULT '{}'
+    CHECK (json_valid(`meta`)),\n  PRIMARY KEY (`id`),\n  UNIQUE KEY `id_UNIQUE` (`id`),\n
+    \ UNIQUE KEY `name_UNIQUE` (`name`),\n  KEY `vpcid` (`vpc_id`),\n  KEY `net_peers_ibfk_1`
+    (`internal`),\n  KEY `handover_vlan` (`handover_vlan`),\n  CONSTRAINT `net_peers_vpc_ibfk_1`
+    FOREIGN KEY (`vpc_id`) REFERENCES `vpc` (`id`) ON DELETE CASCADE ON UPDATE CASCADE\n)
     ENGINE=InnoDB DEFAULT CHARSET=utf8;\n/*!40101 SET character_set_client = @saved_cs_client
-    */;\n\n--\n-- Table structure for table `net_vpn`\n--\n\nDROP TABLE IF EXISTS
-    `net_vpn`;\n/*!40101 SET @saved_cs_client     = @@character_set_client */;\n/*!40101
-    SET character_set_client = utf8 */;\nCREATE TABLE `net_vpn` (\n  `id` bigint(20)
-    NOT NULL AUTO_INCREMENT,\n  `a_nfv_id` bigint(20) NOT NULL,\n  `b_nfv_id` bigint(20)
-    NOT NULL,\n  `a_bind_port` int(11) NOT NULL,\n  `b_bind_port` int(11) NOT NULL,\n
-    \ `a_prv_key` text NOT NULL,\n  `b_pub_key` text NOT NULL,\n  `preshared_key`
-    text NOT NULL,\n  `status` enum('ok','warning','failed','provisioning','agent_unavailable','standby')
+    */;\n\n--\n-- Table structure for table `net_pops`\n--\n\nDROP TABLE IF EXISTS
+    `net_pops`;\n/*!40101 SET @saved_cs_client     = @@character_set_client */;\n/*!40101
+    SET character_set_client = utf8 */;\nCREATE TABLE `net_pops` (\n  `id` bigint(20)
+    unsigned NOT NULL AUTO_INCREMENT,\n  `name` varchar(255) NOT NULL,\n  `asn` int(32)
+    unsigned NOT NULL DEFAULT 65000,\n  `physical_instance_asn` int(32) unsigned NOT
+    NULL DEFAULT 65500,\n  `virtual_instance_asn` int(32) unsigned NOT NULL DEFAULT
+    65501,\n  `vpn` enum('hub','spoke','dspoke','disabled') DEFAULT 'disabled',\n
+    \ `rp_id` bigint(22) NOT NULL DEFAULT 1,\n  `acl_policy` enum('deny','permit')
+    NOT NULL DEFAULT 'deny',\n  `switch_fabric` enum('netris', 'equinix_metal', 'dot1q_trunk',
+    'phoenixnap_bmc') NOT NULL DEFAULT 'netris',\n  `vlan_range` VARCHAR(100) NOT
+    NULL DEFAULT '1-4094',\n  `vlan_range_auto_assign` varchar(100) NOT NULL DEFAULT
+    '2-4094',\n  `vlan_range_sys_reserved` varchar(100) NOT NULL DEFAULT '3600-4094',\n
+    \ `meta` JSON NULL DEFAULT '{}',\n  PRIMARY KEY (`id`),\n  UNIQUE KEY `id_UNIQUE`
+    (`id`),\n  UNIQUE KEY `name_UNIQUE` (`name`)\n) ENGINE=InnoDB DEFAULT CHARSET=utf8;\n/*!40101
+    SET character_set_client = @saved_cs_client */;\n\n--\n-- Table structure for
+    table `net_vpn`\n--\n\nDROP TABLE IF EXISTS `net_vpn`;\n/*!40101 SET @saved_cs_client
+    \    = @@character_set_client */;\n/*!40101 SET character_set_client = utf8 */;\nCREATE
+    TABLE `net_vpn` (\n  `id` bigint(20) NOT NULL AUTO_INCREMENT,\n  `a_nfv_id` bigint(20)
+    NOT NULL,\n  `b_nfv_id` bigint(20) NOT NULL,\n  `a_bind_port` int(11) NOT NULL,\n
+    \ `b_bind_port` int(11) NOT NULL,\n  `a_prv_key` text NOT NULL,\n  `b_pub_key`
+    text NOT NULL,\n  `preshared_key` text NOT NULL,\n  `status` enum('ok','warning','failed','provisioning','agent_unavailable','standby')
     NOT NULL DEFAULT 'provisioning',\n  `created_date` timestamp /* mariadb-5.3 */
     NOT NULL DEFAULT current_timestamp(),\n  `status_change_date` timestamp /* mariadb-5.3
     */ NULL DEFAULT current_timestamp(),\n  `bgp_uptime` varchar(50) DEFAULT NULL,\n

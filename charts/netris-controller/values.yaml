@@ -83,7 +83,7 @@ web-service-backend:
     repository: netrisai/controller-web-service-backend
     pullPolicy: IfNotPresent
     # Overrides the image tag whose default is the chart appVersion.
-    tag: "4.3.0-044"
+    tag: "4.3.0-048"
 
   imagePullSecrets: []
 
@@ -110,7 +110,7 @@ web-service-frontend:
     repository: netrisai/controller-web-service-frontend
     pullPolicy: IfNotPresent
     # Overrides the image tag whose default is the chart appVersion.
-    tag: "4.3.0-050"
+    tag: "4.3.0-056"
 
   imagePullSecrets: []
 
@@ -134,7 +134,7 @@ grpc:
     repository: netrisai/controller-grpc
     pullPolicy: IfNotPresent
     # Overrides the image tag whose default is the chart appVersion.
-    tag: "4.3.0.009"
+    tag: "4.3.0.010"
 
   imagePullSecrets: []
 
@@ -158,7 +158,7 @@ telescope:
     repository: netrisai/controller-telescope
     pullPolicy: IfNotPresent
     # Overrides the image tag whose default is the chart appVersion.
-    tag: "4.3.0.002"
+    tag: "4.3.0.003"
 
   imagePullSecrets: []
 
@@ -253,7 +253,7 @@ migration:
 ## Auth from existing secret not supported at the momment
 mariadb:
   primary:
-    extraFlags: --event_scheduler=ON
+    extraFlags: --event_scheduler=ON --max_connections=500
   auth:
     database: netris
     username: netris
