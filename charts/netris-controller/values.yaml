@@ -317,6 +317,8 @@ haproxy:
 
 ## Using default values from https://github.com/kiwigrid/helm-charts/tree/master/charts/graphite/values.yaml
 graphite:
+  persistence:
+    size: 50Gi
   configMaps:
     carbon.conf: |-
       [cache]
