@@ -1286,6 +1286,7 @@ data:
     \ `sync_acl` enum('ok','ongoing','failed') CHARACTER SET latin1 NOT NULL DEFAULT
     'ok',\n  `type` enum('switch','proxmox','controller','offloader','equinix_metal_server',
     'phoenixnap_bmc_server', 'server') CHARACTER SET latin1 NOT NULL DEFAULT 'switch',\n
+    \ `sg_flavor` enum('sg', 'sg-pro', 'sg-hs') CHARACTER SET latin1 DEFAULT NULL,\n
     \ `rangecut` int(10) unsigned NOT NULL DEFAULT 0,\n  `cumulus_version` varchar(100)
     CHARACTER SET latin1 DEFAULT NULL,\n  `proxmox_version` varchar(100) CHARACTER
     SET latin1 DEFAULT NULL,\n  `conductor_version` varchar(100) CHARACTER SET latin1
