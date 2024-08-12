@@ -1287,28 +1287,29 @@ data:
     'ok',\n  `type` enum('switch','proxmox','controller','offloader','equinix_metal_server',
     'phoenixnap_bmc_server', 'server') CHARACTER SET latin1 NOT NULL DEFAULT 'switch',\n
     \ `sg_flavor` enum('sg', 'sg-pro', 'sg-hs') CHARACTER SET latin1 DEFAULT NULL,\n
-    \ `rangecut` int(10) unsigned NOT NULL DEFAULT 0,\n  `cumulus_version` varchar(100)
-    CHARACTER SET latin1 DEFAULT NULL,\n  `proxmox_version` varchar(100) CHARACTER
-    SET latin1 DEFAULT NULL,\n  `conductor_version` varchar(100) CHARACTER SET latin1
-    DEFAULT NULL,\n  `platform` varchar(255) CHARACTER SET latin1 DEFAULT NULL,\n
-    \ `ntp` varchar(255) CHARACTER SET latin1 DEFAULT NULL,\n  `dns` varchar(255)
-    CHARACTER SET latin1 DEFAULT NULL,\n  `mac_address` varchar(255) DEFAULT NULL,\n
-    \ `ztp` int(10) unsigned NOT NULL DEFAULT 0,\n  `nos` varchar(45) DEFAULT NULL,\n
-    \ `timezone` varchar(255) CHARACTER SET latin1 DEFAULT NULL,\n  `number_of_ports`
-    smallint(5) unsigned DEFAULT NULL,\n  `owner_tenant_id` bigint(20) unsigned NOT
-    NULL,\n  `mac_addr_ubit` int(10) unsigned NOT NULL DEFAULT 0,\n  `meta` JSON NULL
-    DEFAULT '{}',\n  `created_date` timestamp NOT NULL DEFAULT current_timestamp(),\n
-    \ `modified_date` timestamp NOT NULL DEFAULT current_timestamp() ON UPDATE current_timestamp(),\n
-    \ PRIMARY KEY (`switch_id`)\n) ENGINE=InnoDB DEFAULT CHARSET=utf8;\n/*!40101 SET
-    character_set_client = @saved_cs_client */;\n\n--\n-- Table structure for table
-    `topology`\n--\n\nDROP TABLE IF EXISTS `topology`;\n/*!40101 SET @saved_cs_client
-    \    = @@character_set_client */;\n/*!40101 SET character_set_client = utf8 */;\nCREATE
-    TABLE `topology` (\n  `id` bigint(20) unsigned NOT NULL AUTO_INCREMENT,\n  `user_id`
-    bigint(22) NOT NULL,\n  `site_id` bigint(22) NOT NULL,\n  `positions` text DEFAULT
-    NULL,\n  `options` text DEFAULT NULL,\n  PRIMARY KEY (`id`)\n) ENGINE=InnoDB DEFAULT
-    CHARSET=utf8mb4;\n/*!40101 SET character_set_client = @saved_cs_client */;\n\n--\n--
-    Table structure for table `topology_link`\n--\n\nDROP TABLE IF EXISTS `topology_link`;\n/*!40101
-    SET @saved_cs_client     = @@character_set_client */;\n/*!40101 SET character_set_client
+    \ `sg_role` enum('general', 'snat') CHARACTER SET latin1 DEFAULT NULL,\n  `rangecut`
+    int(10) unsigned NOT NULL DEFAULT 0,\n  `cumulus_version` varchar(100) CHARACTER
+    SET latin1 DEFAULT NULL,\n  `proxmox_version` varchar(100) CHARACTER SET latin1
+    DEFAULT NULL,\n  `conductor_version` varchar(100) CHARACTER SET latin1 DEFAULT
+    NULL,\n  `platform` varchar(255) CHARACTER SET latin1 DEFAULT NULL,\n  `ntp` varchar(255)
+    CHARACTER SET latin1 DEFAULT NULL,\n  `dns` varchar(255) CHARACTER SET latin1
+    DEFAULT NULL,\n  `mac_address` varchar(255) DEFAULT NULL,\n  `ztp` int(10) unsigned
+    NOT NULL DEFAULT 0,\n  `nos` varchar(45) DEFAULT NULL,\n  `timezone` varchar(255)
+    CHARACTER SET latin1 DEFAULT NULL,\n  `number_of_ports` smallint(5) unsigned DEFAULT
+    NULL,\n  `owner_tenant_id` bigint(20) unsigned NOT NULL,\n  `mac_addr_ubit` int(10)
+    unsigned NOT NULL DEFAULT 0,\n  `meta` JSON NULL DEFAULT '{}',\n  `created_date`
+    timestamp NOT NULL DEFAULT current_timestamp(),\n  `modified_date` timestamp NOT
+    NULL DEFAULT current_timestamp() ON UPDATE current_timestamp(),\n  PRIMARY KEY
+    (`switch_id`)\n) ENGINE=InnoDB DEFAULT CHARSET=utf8;\n/*!40101 SET character_set_client
+    = @saved_cs_client */;\n\n--\n-- Table structure for table `topology`\n--\n\nDROP
+    TABLE IF EXISTS `topology`;\n/*!40101 SET @saved_cs_client     = @@character_set_client
+    */;\n/*!40101 SET character_set_client = utf8 */;\nCREATE TABLE `topology` (\n
+    \ `id` bigint(20) unsigned NOT NULL AUTO_INCREMENT,\n  `user_id` bigint(22) NOT
+    NULL,\n  `site_id` bigint(22) NOT NULL,\n  `positions` text DEFAULT NULL,\n  `options`
+    text DEFAULT NULL,\n  PRIMARY KEY (`id`)\n) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;\n/*!40101
+    SET character_set_client = @saved_cs_client */;\n\n--\n-- Table structure for
+    table `topology_link`\n--\n\nDROP TABLE IF EXISTS `topology_link`;\n/*!40101 SET
+    @saved_cs_client     = @@character_set_client */;\n/*!40101 SET character_set_client
     = utf8 */;\nCREATE TABLE `topology_link` (\n  `id` bigint(20) unsigned NOT NULL
     AUTO_INCREMENT,\n  `origin` bigint(20) unsigned DEFAULT NULL,\n  `dest` bigint(20)
     unsigned DEFAULT NULL,\n  PRIMARY KEY (`id`)\n) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;\n/*!40101
