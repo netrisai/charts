@@ -662,9 +662,9 @@ data:
     */;\n/*!40101 SET character_set_client = utf8 */;\nCREATE TABLE `ip_reservation`
     (\n  `id` bigint(20) unsigned NOT NULL AUTO_INCREMENT,\n  `host_id` bigint(20)
     unsigned NOT NULL,\n  `consumer_id` bigint(20) unsigned DEFAULT NULL,\n  `consumer_type`
-    enum('l4lb','vnet','roh','sys','hw','nat') DEFAULT NULL,\n  `meta` longtext CHARACTER
-    SET utf8mb4 COLLATE utf8mb4_bin DEFAULT NULL CHECK (json_valid(`meta`)),\n  PRIMARY
-    KEY (`id`),\n  KEY `consumer_id_idx` (`consumer_id`),\n  KEY `consumer_type_idx`
+    enum('l4lb','vnet','roh','sys','hw','nat','mclag_plink') DEFAULT NULL,\n  `meta`
+    longtext CHARACTER SET utf8mb4 COLLATE utf8mb4_bin DEFAULT NULL CHECK (json_valid(`meta`)),\n
+    \ PRIMARY KEY (`id`),\n  KEY `consumer_id_idx` (`consumer_id`),\n  KEY `consumer_type_idx`
     (`consumer_type`),\n  KEY `consumer_id_type_idx` (`consumer_id`, `consumer_type`),\n
     \ KEY `pairs_idx` (`host_id`,`consumer_id`) USING BTREE\n) ENGINE=InnoDB DEFAULT
     CHARSET=utf8mb4;\n/*!40101 SET character_set_client = @saved_cs_client */;\n\n--\n--
@@ -962,6 +962,18 @@ data:
     KEY `asn` (`asn`),\n  KEY `region_id` (`region_id`),\n  CONSTRAINT `pops_ibfk_1`
     FOREIGN KEY (`region_id`) REFERENCES `region` (`id`)\n) ENGINE=InnoDB DEFAULT
     CHARSET=latin1;\n/*!40101 SET character_set_client = @saved_cs_client */;\n\n--\n--
+    Table structure for MC-LAG Peer Link\n--\n\nDROP TABLE IF EXISTS `mclag_plink`;\n/*!40101
+    SET @saved_cs_client     = @@character_set_client */;\n/*!40101 SET character_set_client
+    = utf8 */;\nCREATE TABLE `mclag_plink` (\n\t  `id` bigint(20) unsigned NOT NULL
+    AUTO_INCREMENT,\n\t  `mac` varchar(255),\n\t  PRIMARY KEY (`id`),\n\t  UNIQUE(`mac`)\n);\n/*!40101
+    SET character_set_client = @saved_cs_client */;\n\nDROP TABLE IF EXISTS `mclag_plink_members`;\n/*!40101
+    SET @saved_cs_client     = @@character_set_client */;\n/*!40101 SET character_set_client
+    = utf8 */;\nCREATE TABLE `mclag_plink_members` (\n\t  `id` bigint(20) unsigned
+    NOT NULL AUTO_INCREMENT,\n\t  `mclag_plink_id` bigint(20) unsigned NOT NULL,\n\t
+    \ `member_id` bigint(20) unsigned NOT NULL,\n\t  PRIMARY KEY (`id`),\n\t  KEY
+    (`mclag_plink_id`),\n\t  KEY (`member_id`),\n\t  CONSTRAINT `mclag_plink_id_ibfk_1`
+    FOREIGN KEY (`mclag_plink_id`) REFERENCES `mclag_plink` (`id`) ON DELETE CASCADE
+    ON UPDATE CASCADE\n);\n/*!40101 SET character_set_client = @saved_cs_client */;\n\n\n\n--\n--
     Table structure for table `port`\n--\n\nDROP TABLE IF EXISTS `port`;\n/*!40101
     SET @saved_cs_client     = @@character_set_client */;\n/*!40101 SET character_set_client
     = utf8 */;\nCREATE TABLE `port` (\n  `port_id` bigint(20) unsigned NOT NULL AUTO_INCREMENT,\n
@@ -977,21 +989,23 @@ data:
     unsigned NOT NULL DEFAULT 0,\n  `admin_down` enum('yes','no') DEFAULT 'no',\n
     \ `autoneg` enum('none','on','off') DEFAULT 'none',\n  `duplex` enum('full','half','none')
     DEFAULT 'none',\n  `breakout` enum('off', 'disabled', '4x10', '4x25', '2x50',
-    '4x50', '2x100', '4x100', '2x200', '4x200', '2x400') DEFAULT 'off',\n  `created_date`
-    timestamp NOT NULL DEFAULT current_timestamp(),\n  `modified_date` timestamp NULL
-    DEFAULT current_timestamp() ON UPDATE current_timestamp(),\n  UNIQUE KEY `port_id_UNIQUE`
-    (`port_id`),\n  KEY `port_switch_id_IDX` (`switch_id`) USING BTREE\n) ENGINE=InnoDB
-    DEFAULT CHARSET=latin1;\n/*!40101 SET character_set_client = @saved_cs_client
-    */;\n\n--\n-- Table structure for table `port_extensions`\n--\n\nDROP TABLE IF
-    EXISTS `port_extensions`;\n/*!40101 SET @saved_cs_client     = @@character_set_client
-    */;\n/*!40101 SET character_set_client = utf8 */;\nCREATE TABLE `port_extensions`
-    (\n  `id` bigint(20) unsigned NOT NULL AUTO_INCREMENT,\n  `name` varchar(255)
-    DEFAULT NULL,\n  `vlan_from` smallint(5) unsigned DEFAULT 0,\n  `vlan_to` smallint(5)
-    unsigned DEFAULT 0,\n  `type` enum('hp_blade') NOT NULL DEFAULT 'hp_blade',\n
-    \ UNIQUE KEY `id` (`id`)\n) ENGINE=InnoDB DEFAULT CHARSET=latin1;\n/*!40101 SET
-    character_set_client = @saved_cs_client */;\n\n--\n-- Table structure for table
-    `port_reservation`\n--\n\nDROP TABLE IF EXISTS `port_reservation`;\n/*!40101 SET
-    @saved_cs_client     = @@character_set_client */;\n/*!40101 SET character_set_client
+    '4x50', '2x100', '4x100', '2x200', '4x200', '2x400') DEFAULT 'off',\n  `mclag_id`
+    int,\n  `mclag_plink_id` bigint(20) unsigned,\n  `created_date` timestamp NOT
+    NULL DEFAULT current_timestamp(),\n  `modified_date` timestamp NULL DEFAULT current_timestamp()
+    ON UPDATE current_timestamp(),\n  UNIQUE KEY `port_id_UNIQUE` (`port_id`),\n  KEY
+    `port_switch_id_IDX` (`switch_id`) USING BTREE,\n  KEY `mclag_idx` (`mclag_id`),\n
+    \ CONSTRAINT `mclag_plink_id_fkn_3` FOREIGN KEY (`mclag_plink_id`) REFERENCES
+    mclag_plink (`id`) ON DELETE RESTRICT ON UPDATE CASCADE\n) ENGINE=InnoDB DEFAULT
+    CHARSET=latin1;\n/*!40101 SET character_set_client = @saved_cs_client */;\n\n--\n--
+    Table structure for table `port_extensions`\n--\n\nDROP TABLE IF EXISTS `port_extensions`;\n/*!40101
+    SET @saved_cs_client     = @@character_set_client */;\n/*!40101 SET character_set_client
+    = utf8 */;\nCREATE TABLE `port_extensions` (\n  `id` bigint(20) unsigned NOT NULL
+    AUTO_INCREMENT,\n  `name` varchar(255) DEFAULT NULL,\n  `vlan_from` smallint(5)
+    unsigned DEFAULT 0,\n  `vlan_to` smallint(5) unsigned DEFAULT 0,\n  `type` enum('hp_blade')
+    NOT NULL DEFAULT 'hp_blade',\n  UNIQUE KEY `id` (`id`)\n) ENGINE=InnoDB DEFAULT
+    CHARSET=latin1;\n/*!40101 SET character_set_client = @saved_cs_client */;\n\n--\n--
+    Table structure for table `port_reservation`\n--\n\nDROP TABLE IF EXISTS `port_reservation`;\n/*!40101
+    SET @saved_cs_client     = @@character_set_client */;\n/*!40101 SET character_set_client
     = utf8 */;\nCREATE TABLE `port_reservation` (\n  `id`            bigint(20) unsigned
     NOT NULL AUTO_INCREMENT,\n  `port_id`       bigint(20) NOT NULL,\n  PRIMARY KEY
     (`id`),\n  UNIQUE KEY `port_id_unique` (`port_id`)\n) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;\n\n/*!40101
@@ -1043,11 +1057,12 @@ data:
     NOT NULL DEFAULT 'active',\n  `provisioning` int(10) unsigned NOT NULL DEFAULT
     0,\n  `internal` int(10) unsigned NOT NULL DEFAULT 0,\n  `va_mode` int(10) unsigned
     DEFAULT 0,\n  `l3vpn` int(10) unsigned DEFAULT 0,\n  `va_native_vlan` int(11)
-    unsigned DEFAULT NULL,\n  `va_vlans` text DEFAULT NULL,\n  `create_date` timestamp
-    /* mariadb-5.3 */ NOT NULL DEFAULT current_timestamp(),\n  `modified_date` timestamp
-    /* mariadb-5.3 */ NOT NULL DEFAULT current_timestamp() ON UPDATE current_timestamp(),\n
-    \ PRIMARY KEY (`id`),\n  KEY `vpcid` (`vpc_id`),\n  CONSTRAINT `vnet_vpc_ibfk_1`
-    FOREIGN KEY (`vpc_id`) REFERENCES `vpc` (`id`) ON DELETE CASCADE ON UPDATE CASCADE\n)
+    unsigned DEFAULT NULL,\n  `va_vlans` text DEFAULT NULL,\n  `custom_anycast_addr`
+    varchar(255) NOT NULL DEFAULT '',\n  `create_date` timestamp /* mariadb-5.3 */
+    NOT NULL DEFAULT current_timestamp(),\n  `modified_date` timestamp /* mariadb-5.3
+    */ NOT NULL DEFAULT current_timestamp() ON UPDATE current_timestamp(),\n  PRIMARY
+    KEY (`id`),\n  KEY `vpcid` (`vpc_id`),\n  CONSTRAINT `vnet_vpc_ibfk_1` FOREIGN
+    KEY (`vpc_id`) REFERENCES `vpc` (`id`) ON DELETE CASCADE ON UPDATE CASCADE\n)
     ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;\n/*!40101 SET character_set_client = @saved_cs_client
     */;\n\n--\n-- Table structure for table `rcircuit2member`\n--\n\nDROP TABLE IF
     EXISTS `rcircuit2member`;\n/*!40101 SET @saved_cs_client     = @@character_set_client
@@ -1474,7 +1489,7 @@ data:
     `srvcls_tmpl_props_id_fk` FOREIGN KEY (`srv_cls_templ_props_id`) REFERENCES `srv_cluster_template_props`
     (`id`) ON DELETE CASCADE ON UPDATE CASCADE\n) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4
     COLLATE=utf8mb4_general_ci;\n/*!40101 SET character_set_client = @saved_cs_client
-    */;\n\n--\n-- Table structure for table `srv_cluster`\n--\n\nDROP TABLE IF EXISTS
+    */;\n\n\n--\n-- Table structure for table `srv_cluster`\n--\n\nDROP TABLE IF EXISTS
     `srv_cluster`;\n/*!40101 SET @saved_cs_client     = @@character_set_client */;\n/*!40101
     SET character_set_client = utf8 */;\nCREATE TABLE `srv_cluster` (\n  `id` bigint(20)
     unsigned NOT NULL AUTO_INCREMENT,\n  `name` varchar(100) NOT NULL,\n  `tenant_id`
@@ -1484,7 +1499,7 @@ data:
     timestamp NULL DEFAULT current_timestamp() ON UPDATE current_timestamp(),\n  PRIMARY
     KEY (`id`),\n  KEY `srv_cls_tmpl_id_fk` (`template_id`),\n  CONSTRAINT `srv_cls_tmpl_id_fk`
     FOREIGN KEY (`template_id`) REFERENCES `srv_cluster_template` (`id`)\n) ENGINE=InnoDB
-    DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;\n\n--\n-- Table structure
+    DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;\n\n\n\n\n--\n-- Table structure
     for table `mac_address`\n--\n\nDROP TABLE IF EXISTS `mac_address`;\n/*!40101 SET
     @saved_cs_client     = @@character_set_client */;\n/*!40101 SET character_set_client
     = utf8 */;\nCREATE TABLE `mac_address` (\n  `id` bigint(20) unsigned NOT NULL
@@ -1552,8 +1567,15 @@ data:
     vnet.*, JSON_ARRAYAGG(DISTINCT rsites.site_id) as sites, JSON_ARRAYAGG(DISTINCT
     rt.tenant_id) as guest_tenants\n  FROM rcircuit vnet \n\tLEFT JOIN rcircuit_tenants
     rt on vnet.id = rt.rcircuit_id\n\tJOIN rcircuit_sites rsites ON rsites.rcircuit_id
-    = vnet.id\n  GROUP BY vnet.id;\n\n--\n-- Final view structure for view `acl_port_group_view`\n--\n\n/*!50001
-    DROP TABLE IF EXISTS `acl_port_group_view`*/;\n/*!50001 DROP VIEW IF EXISTS `acl_port_group_view`*/;\n/*!50001
+    = vnet.id\n  GROUP BY vnet.id;\n\n-- creaet port view\n CREATE VIEW port_view
+    AS\n SELECT port_id,switch_id,tenant_id,port_index,break_index,name,port,iface,present,status,speed,speed_desired,transceiver,mtu,lacp,port_extension,parent_port,admin_down,autoneg,duplex,breakout,mclag_id,mclag_plink_id,created_date,modified_date\n
+    from port where switch_id IS NOT NULL\n UNION\n select port_id,vswitch.agg_sw_id
+    as switch_id,p.tenant_id,p.port_index,p.break_index,p.name,p.port,p.iface,p.present,p.status,p.speed,p.speed_desired,p.transceiver,p.mtu,p.lacp,p.port_extension,p.parent_port,p.admin_down,p.autoneg,p.duplex,p.breakout,p.mclag_id,p.mclag_plink_id,p.created_date,p.modified_date\n
+    \tfrom port p\n \t\tJOIN (select ap.port_id as agg_port_id, port.switch_id as
+    agg_sw_id\n  \t\t\t\tfrom aggregated_ports ap JOIN port ON ap.slave_port_id =
+    port.port_id) as vswitch ON vswitch.agg_port_id=p.port_id;\n\n--\n-- Final view
+    structure for view `acl_port_group_view`\n--\n\n/*!50001 DROP TABLE IF EXISTS
+    `acl_port_group_view`*/;\n/*!50001 DROP VIEW IF EXISTS `acl_port_group_view`*/;\n/*!50001
     SET @saved_cs_client          = @@character_set_client */;\n/*!50001 SET @saved_cs_results
     \        = @@character_set_results */;\n/*!50001 SET @saved_col_connection     =
     @@collation_connection */;\n/*!50001 SET character_set_client      = utf8 */;\n/*!50001
@@ -1749,7 +1771,7 @@ data:
   02-port.sql: |
     USE {{ .Values.mariadb.auth.database }};
     SET sql_mode='NO_AUTO_VALUE_ON_ZERO';
-    INSERT INTO `port` VALUES (0,0,0,0,0,'not defined','NOPORT','NOIFACE',1,'N/A','N/A','auto','hh',9000,'off',0,0,'no','off','none','',NULL,NULL);
+    INSERT INTO `port` VALUES (0,0,0,0,0,'not defined','NOPORT','NOIFACE',1,'N/A','N/A','auto','hh',9000,'off',0,0,'no','off','none','',NULL,NULL,NULL,NULL);
   02-vpc.sql: |
     USE {{ .Values.mariadb.auth.database }};
     INSERT INTO `vpc` (id, name, tenant_id, is_system, is_default) VALUES (1, 'Default', 1, 'yes', 'yes');
