@@ -981,8 +981,9 @@ data:
     DEFAULT 0,\n  `port_index` smallint(5) unsigned DEFAULT NULL,\n  `break_index`
     int(10) DEFAULT 0,\n  `name` varchar(255) DEFAULT NULL,\n  `port` varchar(255)
     DEFAULT NULL,\n  `iface` varchar(255) DEFAULT NULL,\n  `present` tinyint(3) unsigned
-    NOT NULL DEFAULT 0,\n  `status` varchar(255) DEFAULT NULL,\n  `speed` varchar(255)
-    DEFAULT NULL,\n  `speed_desired` enum('1000','10000','25000','40000','50000','100000','200000','400000','auto')
+    NOT NULL DEFAULT 0,\n  `status` varchar(255) DEFAULT NULL,\n  `master_status`
+    varchar(100) DEFAULT NULL,\n  `speed` varchar(255) DEFAULT NULL,\n  `speed_desired`
+    enum('1000','10000','25000','40000','50000','100000','200000','400000','auto')
     NOT NULL DEFAULT 'auto',\n  `transceiver` varchar(255) DEFAULT NULL,\n  `mtu`
     int(10) NOT NULL DEFAULT 9216,\n  `lacp` enum('on','off') NOT NULL DEFAULT 'off',\n
     \ `port_extension` bigint(20) unsigned NOT NULL DEFAULT 0,\n  `parent_port` bigint(20)
@@ -1568,9 +1569,9 @@ data:
     rt.tenant_id) as guest_tenants\n  FROM rcircuit vnet \n\tLEFT JOIN rcircuit_tenants
     rt on vnet.id = rt.rcircuit_id\n\tJOIN rcircuit_sites rsites ON rsites.rcircuit_id
     = vnet.id\n  GROUP BY vnet.id;\n\n-- creaet port view\n CREATE VIEW port_view
-    AS\n SELECT port_id,switch_id,tenant_id,port_index,break_index,name,port,iface,present,status,speed,speed_desired,transceiver,mtu,lacp,port_extension,parent_port,admin_down,autoneg,duplex,breakout,mclag_id,mclag_plink_id,created_date,modified_date\n
+    AS\n SELECT port_id,switch_id,tenant_id,port_index,break_index,name,port,iface,present,status,master_status,speed,speed_desired,transceiver,mtu,lacp,port_extension,parent_port,admin_down,autoneg,duplex,breakout,mclag_id,mclag_plink_id,created_date,modified_date\n
     from port where switch_id IS NOT NULL\n UNION\n select port_id,vswitch.agg_sw_id
-    as switch_id,p.tenant_id,p.port_index,p.break_index,p.name,p.port,p.iface,p.present,p.status,p.speed,p.speed_desired,p.transceiver,p.mtu,p.lacp,p.port_extension,p.parent_port,p.admin_down,p.autoneg,p.duplex,p.breakout,p.mclag_id,p.mclag_plink_id,p.created_date,p.modified_date\n
+    as switch_id,p.tenant_id,p.port_index,p.break_index,p.name,p.port,p.iface,p.present,p.status,p.master_status,p.speed,p.speed_desired,p.transceiver,p.mtu,p.lacp,p.port_extension,p.parent_port,p.admin_down,p.autoneg,p.duplex,p.breakout,p.mclag_id,p.mclag_plink_id,p.created_date,p.modified_date\n
     \tfrom port p\n \t\tJOIN (select ap.port_id as agg_port_id, port.switch_id as
     agg_sw_id\n  \t\t\t\tfrom aggregated_ports ap JOIN port ON ap.slave_port_id =
     port.port_id) as vswitch ON vswitch.agg_port_id=p.port_id;\n\n--\n-- Final view
