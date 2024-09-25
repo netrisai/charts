@@ -1772,7 +1772,7 @@ data:
   02-port.sql: |
     USE {{ .Values.mariadb.auth.database }};
     SET sql_mode='NO_AUTO_VALUE_ON_ZERO';
-    INSERT INTO `port` VALUES (0,0,0,0,0,'not defined','NOPORT','NOIFACE',1,'N/A','N/A','auto','hh',9000,'off',0,0,'no','off','none','',NULL,NULL,NULL,NULL);
+    INSERT INTO `port` VALUES (0,0,0,0,0,'not defined','NOPORT','NOIFACE',1,'N/A',NULL,'N/A','auto','hh',9000,'off',0,0,'no','off','none','',NULL,NULL,NULL,NULL);
   02-vpc.sql: |
     USE {{ .Values.mariadb.auth.database }};
     INSERT INTO `vpc` (id, name, tenant_id, is_system, is_default) VALUES (1, 'Default', 1, 'yes', 'yes');
@@ -1826,7 +1826,7 @@ data:
     INSERT INTO `global_settings` VALUES (36,'wireguard_port_range','59000-60999','VPN peers port range','true');
     INSERT INTO `global_settings` VALUES (37,'k8s_lb_check_timeout','2000','K8s Layer 4 load-balancer timeout (ms)','true');
     INSERT INTO `global_settings` VALUES (38,'vpn_measurement_wait_secs','30','Site Mesh measurement module wait interval (sec)','true');
-    INSERT INTO `global_settings` VALUES (39,'migration_version', '4.3.0', 'Database scheme version', 'false');
+    INSERT INTO `global_settings` VALUES (39,'migration_version', '4.3.1', 'Database scheme version', 'false');
     INSERT INTO `global_settings` VALUES (40,'system_asn_range', '4200000000 - 4209999999', 'System ASN range', 'true');
     INSERT INTO `global_settings` VALUES (41,'vpn_asn_range', '4210000000 - 4219999999', 'Site Mesh VPN ASN range', 'true');
     INSERT INTO `global_settings` VALUES (42,'calico_asn_range', '4230000000 - 4239999999', 'Calico ASN range', 'true');
