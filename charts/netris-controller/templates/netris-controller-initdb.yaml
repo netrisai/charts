@@ -1830,6 +1830,7 @@ data:
     INSERT INTO `global_settings` VALUES (40,'system_asn_range', '4200000000 - 4209999999', 'System ASN range', 'true');
     INSERT INTO `global_settings` VALUES (41,'vpn_asn_range', '4210000000 - 4219999999', 'Site Mesh VPN ASN range', 'true');
     INSERT INTO `global_settings` VALUES (42,'calico_asn_range', '4230000000 - 4239999999', 'Calico ASN range', 'true');
+    INSERT INTO `global_settings` VALUES (43,'local_repository', '', 'Local Repository', 'true');
   04-currency.sql: |
     USE {{ .Values.mariadb.auth.database }};
     INSERT INTO `currency` VALUES (1,'USD',0.944,'2016-11-26 05:17:49');
