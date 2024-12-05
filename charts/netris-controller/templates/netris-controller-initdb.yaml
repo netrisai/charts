@@ -101,15 +101,14 @@ data:
     SET character_set_client = @saved_cs_client */;\n\n--\n-- Table structure for
     table `acl`\n--\n\nDROP TABLE IF EXISTS `acl`;\n/*!40101 SET @saved_cs_client
     \    = @@character_set_client */;\n/*!40101 SET character_set_client = utf8 */;\nCREATE
-    TABLE `acl` (\n  `id` bigint(20) unsigned NOT NULL AUTO_INCREMENT,\n  `vpc_id`
-    bigint(20) unsigned NOT NULL,\n  `reverse` enum('yes','no') NOT NULL DEFAULT 'no',\n
-    \ `name` varchar(255) DEFAULT NULL,\n  `src_prefix` varchar(255) DEFAULT NULL,\n
-    \ `src_length` int(10) unsigned DEFAULT NULL,\n  `src_port_from` int(10) unsigned
-    DEFAULT NULL,\n  `src_port_to` int(10) unsigned DEFAULT NULL,\n  `dst_prefix`
-    varchar(255) DEFAULT NULL,\n  `dst_length` int(10) unsigned DEFAULT NULL,\n  `dst_port_from`
-    int(10) unsigned DEFAULT NULL,\n  `dst_port_to` int(10) unsigned DEFAULT NULL,\n
-    \ `protocol` enum('tcp','udp','icmp','icmpv6','all','ip') DEFAULT NULL,\n  `established`
-    int(10) unsigned DEFAULT 0,\n  `approval` enum('in_process','wait_delete','wait_edit','wait_create','wait_disable','wait_enable','wait_reject','ok')
+    TABLE `acl` (\n  `id` bigint(20) unsigned NOT NULL AUTO_INCREMENT,\n  `reverse`
+    enum('yes','no') NOT NULL DEFAULT 'no',\n  `name` varchar(255) DEFAULT NULL,\n
+    \ `src_prefix` varchar(255) DEFAULT NULL,\n  `src_length` int(10) unsigned DEFAULT
+    NULL,\n  `src_port_from` int(10) unsigned DEFAULT NULL,\n  `src_port_to` int(10)
+    unsigned DEFAULT NULL,\n  `dst_prefix` varchar(255) DEFAULT NULL,\n  `dst_length`
+    int(10) unsigned DEFAULT NULL,\n  `dst_port_from` int(10) unsigned DEFAULT NULL,\n
+    \ `dst_port_to` int(10) unsigned DEFAULT NULL,\n  `protocol` enum('tcp','udp','icmp','icmpv6','all','ip')
+    DEFAULT NULL,\n  `established` int(10) unsigned DEFAULT 0,\n  `approval` enum('in_process','wait_delete','wait_edit','wait_create','wait_disable','wait_enable','wait_reject','ok')
     NOT NULL DEFAULT 'ok',\n  `action` enum('permit','deny') DEFAULT NULL,\n  `status`
     enum('enable','disable') NOT NULL DEFAULT 'enable',\n  `created_by` bigint(20)
     unsigned DEFAULT NULL,\n  `comment` text DEFAULT NULL,\n  `create_date` timestamp
@@ -122,40 +121,39 @@ data:
     enum('ipv4','ipv6') NOT NULL DEFAULT 'ipv4',\n  PRIMARY KEY (`id`),\n  UNIQUE
     KEY `acl_key` (`src_prefix`,`src_length`,`src_port_from`,`src_port_to`,`dst_prefix`,`dst_length`,`dst_port_from`,`dst_port_to`,`protocol`,`action`,`established`,`dst_port_group`,`src_port_group`),\n
     \ KEY `fk_acl_src_pgroup_idx` (`src_port_group`),\n  KEY `fk_acl_dst_pgroup_idx`
-    (`dst_port_group`),\n  KEY `fk_acl_vpc_idx` (`vpc_id`),\n  CONSTRAINT `fk_acl_dst_pgroup`
-    FOREIGN KEY (`dst_port_group`) REFERENCES `acl_port_group` (`id`) ON DELETE SET
-    NULL ON UPDATE CASCADE,\n  CONSTRAINT `fk_acl_src_pgroup` FOREIGN KEY (`src_port_group`)
+    (`dst_port_group`),\n  CONSTRAINT `fk_acl_dst_pgroup` FOREIGN KEY (`dst_port_group`)
     REFERENCES `acl_port_group` (`id`) ON DELETE SET NULL ON UPDATE CASCADE,\n  CONSTRAINT
-    `fk_acl_vpc_id` FOREIGN KEY (`vpc_id`) REFERENCES `vpc` (`id`) ON DELETE RESTRICT
-    ON UPDATE CASCADE\n) ENGINE=InnoDB DEFAULT CHARSET=latin1;\n/*!40101 SET character_set_client
-    = @saved_cs_client */;\n\n--\n-- Table structure for table `acl_approves`\n--\n\nDROP
-    TABLE IF EXISTS `acl_approves`;\n/*!40101 SET @saved_cs_client     = @@character_set_client
-    */;\n/*!40101 SET character_set_client = utf8 */;\nCREATE TABLE `acl_approves`
-    (\n  `id` bigint(20) NOT NULL AUTO_INCREMENT,\n  `acl_id` bigint(20) unsigned
-    DEFAULT NULL,\n  `tenant_id` bigint(20) NOT NULL,\n  `approve` enum('yes','no')
-    NOT NULL,\n  `timestamp` timestamp /* mariadb-5.3 */ NOT NULL DEFAULT '0000-00-00
-    00:00:00' ON UPDATE current_timestamp(),\n  PRIMARY KEY (`id`),\n  KEY `acl_id`
-    (`acl_id`),\n  CONSTRAINT `acl_approves_ibfk_1` FOREIGN KEY (`acl_id`) REFERENCES
-    `acl` (`id`) ON DELETE CASCADE ON UPDATE CASCADE\n) ENGINE=InnoDB DEFAULT CHARSET=latin1;\n/*!40101
+    `fk_acl_src_pgroup` FOREIGN KEY (`src_port_group`) REFERENCES `acl_port_group`
+    (`id`) ON DELETE SET NULL ON UPDATE CASCADE\n) ENGINE=InnoDB DEFAULT CHARSET=latin1;\n/*!40101
     SET character_set_client = @saved_cs_client */;\n\n--\n-- Table structure for
-    table `acl_port_group`\n--\n\nDROP TABLE IF EXISTS `acl_port_group`;\n/*!40101
-    SET @saved_cs_client     = @@character_set_client */;\n/*!40101 SET character_set_client
-    = utf8 */;\nCREATE TABLE `acl_port_group` (\n  `id` bigint(20) unsigned NOT NULL
-    AUTO_INCREMENT,\n  `name` varchar(191) NOT NULL,\n  `parent_id` bigint(20) unsigned
-    DEFAULT NULL,\n  `status` enum('ok','wait_delete','wait_edit','wait_reject') NOT
-    NULL DEFAULT 'ok',\n  `created_date` timestamp /* mariadb-5.3 */ NOT NULL DEFAULT
-    current_timestamp(),\n  `modified_date` timestamp /* mariadb-5.3 */ NOT NULL DEFAULT
-    current_timestamp() ON UPDATE current_timestamp(),\n  PRIMARY KEY (`id`)\n) ENGINE=InnoDB
+    table `acl_approves`\n--\n\nDROP TABLE IF EXISTS `acl_approves`;\n/*!40101 SET
+    @saved_cs_client     = @@character_set_client */;\n/*!40101 SET character_set_client
+    = utf8 */;\nCREATE TABLE `acl_approves` (\n  `id` bigint(20) NOT NULL AUTO_INCREMENT,\n
+    \ `acl_id` bigint(20) unsigned DEFAULT NULL,\n  `tenant_id` bigint(20) NOT NULL,\n
+    \ `approve` enum('yes','no') NOT NULL,\n  `timestamp` timestamp /* mariadb-5.3
+    */ NOT NULL DEFAULT '0000-00-00 00:00:00' ON UPDATE current_timestamp(),\n  PRIMARY
+    KEY (`id`),\n  KEY `acl_id` (`acl_id`),\n  CONSTRAINT `acl_approves_ibfk_1` FOREIGN
+    KEY (`acl_id`) REFERENCES `acl` (`id`) ON DELETE CASCADE ON UPDATE CASCADE\n)
+    ENGINE=InnoDB DEFAULT CHARSET=latin1;\n/*!40101 SET character_set_client = @saved_cs_client
+    */;\n\n--\n-- Table structure for table `acl_port_group`\n--\n\nDROP TABLE IF
+    EXISTS `acl_port_group`;\n/*!40101 SET @saved_cs_client     = @@character_set_client
+    */;\n/*!40101 SET character_set_client = utf8 */;\nCREATE TABLE `acl_port_group`
+    (\n  `id` bigint(20) unsigned NOT NULL AUTO_INCREMENT,\n  `name` varchar(191)
+    NOT NULL,\n  `parent_id` bigint(20) unsigned DEFAULT NULL,\n  `status` enum('ok','wait_delete','wait_edit','wait_reject')
+    NOT NULL DEFAULT 'ok',\n  `created_date` timestamp /* mariadb-5.3 */ NOT NULL
+    DEFAULT current_timestamp(),\n  `modified_date` timestamp /* mariadb-5.3 */ NOT
+    NULL DEFAULT current_timestamp() ON UPDATE current_timestamp(),\n  PRIMARY KEY
+    (`id`)\n) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;\n/*!40101 SET character_set_client
+    = @saved_cs_client */;\n\n--\n-- Table structure for table `acl_port_group_approve`\n--\n\nDROP
+    TABLE IF EXISTS `acl_port_group_approve`;\n/*!40101 SET @saved_cs_client     =
+    @@character_set_client */;\n/*!40101 SET character_set_client = utf8 */;\nCREATE
+    TABLE `acl_port_group_approve` (\n  `id` bigint(20) NOT NULL AUTO_INCREMENT,\n
+    \ `acl_group_id` bigint(20) unsigned DEFAULT NULL,\n  `tenant_id` bigint(20) NOT
+    NULL,\n  `approve` enum('yes','no') DEFAULT NULL,\n  `timestamp` timestamp /*
+    mariadb-5.3 */ NULL DEFAULT NULL ON UPDATE current_timestamp(),\n  PRIMARY KEY
+    (`id`),\n  KEY `fk_acl_port_group_approve_1_idx` (`acl_group_id`)\n) ENGINE=InnoDB
     DEFAULT CHARSET=utf8mb4;\n/*!40101 SET character_set_client = @saved_cs_client
-    */;\n\n--\n-- Table structure for table `acl_port_group_approve`\n--\n\nDROP TABLE
-    IF EXISTS `acl_port_group_approve`;\n/*!40101 SET @saved_cs_client     = @@character_set_client
-    */;\n/*!40101 SET character_set_client = utf8 */;\nCREATE TABLE `acl_port_group_approve`
-    (\n  `id` bigint(20) NOT NULL AUTO_INCREMENT,\n  `acl_group_id` bigint(20) unsigned
-    DEFAULT NULL,\n  `tenant_id` bigint(20) NOT NULL,\n  `approve` enum('yes','no')
-    DEFAULT NULL,\n  `timestamp` timestamp /* mariadb-5.3 */ NULL DEFAULT NULL ON
-    UPDATE current_timestamp(),\n  PRIMARY KEY (`id`),\n  KEY `fk_acl_port_group_approve_1_idx`
-    (`acl_group_id`)\n) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;\n/*!40101 SET character_set_client
-    = @saved_cs_client */;\n\n--\n-- Temporary table structure for view `acl_port_group_view`\n--\n\nDROP
+    */;\n\n--\n-- Temporary table structure for view `acl_port_group_view`\n--\n\nDROP
     TABLE IF EXISTS `acl_port_group_view`;\n/*!50001 DROP VIEW IF EXISTS `acl_port_group_view`*/;\nSET
     @saved_cs_client     = @@character_set_client;\nSET character_set_client = utf8;\n/*!50001
     CREATE TABLE `acl_port_group_view` (\n  `grp_id` tinyint NOT NULL,\n  `name` tinyint
@@ -760,50 +758,32 @@ data:
     */;\n\n--\n-- Table structure for table `l4_load_balancer`\n--\n\nDROP TABLE IF
     EXISTS `l4_load_balancer`;\n/*!40101 SET @saved_cs_client     = @@character_set_client
     */;\n/*!40101 SET character_set_client = utf8 */;\nCREATE TABLE `l4_load_balancer`
-    (\n  `id` BIGINT(20) UNSIGNED NOT NULL AUTO_INCREMENT,\n  `vpc_id` bigint(20)
-    UNSIGNED NOT NULL,\n  `name` varchar(255) DEFAULT NULL,\n  `description` varchar(255)
-    DEFAULT '',\n  `tenant` BIGINT(20) UNSIGNED NOT NULL,\n  `site` BIGINT(20) UNSIGNED
-    NOT NULL,\n  `ip_family` enum('ipv4','ipv6') NOT NULL DEFAULT 'ipv4',\n  `protocol`
-    enum('TCP','UDP') DEFAULT 'TCP',\n  `status` enum('enable','disable') DEFAULT
-    'enable',\n  `provisioning` enum('yes','no') NOT NULL DEFAULT 'yes',\n  `automatic`
-    enum('true','false') DEFAULT 'false',\n  `healthcheck` text DEFAULT NULL,\n  `internal`
-    int(10) DEFAULT 0,\n  `kubenet_info` text DEFAULT NULL,\n  `created_date` timestamp
-    /* mariadb-5.3 */ NOT NULL DEFAULT current_timestamp(),\n  `modified_date` timestamp
-    /* mariadb-5.3 */ NOT NULL DEFAULT current_timestamp() ON UPDATE current_timestamp(),\n
-    \ PRIMARY KEY (`id`),\n  KEY `fk_l4lb_vpc_id` (`vpc_id`),\n  CONSTRAINT `fk_l4lb_vpc_id`
-    FOREIGN KEY (`vpc_id`) REFERENCES `vpc` (`id`) ON UPDATE CASCADE ON DELETE RESTRICT\n)
-    ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;\n/*!40101 SET character_set_client = @saved_cs_client
-    */;\n\n--\n-- Table structure for table `l4_load_balancer_ips`\n--\n\nDROP TABLE
-    IF EXISTS `l4_load_balancer_ips`;\n/*!40101 SET @saved_cs_client     = @@character_set_client
-    */;\n/*!40101 SET character_set_client = utf8 */;\nCREATE TABLE `l4_load_balancer_ips`
-    (\n  `id` BIGINT(20) UNSIGNED NOT NULL AUTO_INCREMENT,\n  `ip` varchar(45) DEFAULT
-    NULL,\n  `port` int(10) NOT NULL,\n  `maintenance` enum('true','false') DEFAULT
-    'false',\n  PRIMARY KEY (`id`)\n) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;\n/*!40101
-    SET character_set_client = @saved_cs_client */;\n\n\nDROP TABLE IF EXISTS `l4_load_balancer_ip_stats`;\n/*!40101
+    (\n  `id` BIGINT(20) UNSIGNED NOT NULL AUTO_INCREMENT,\n  `name` varchar(255)
+    DEFAULT NULL,\n  `tenant` BIGINT(20) UNSIGNED NOT NULL,\n  `site` BIGINT(20) UNSIGNED
+    NOT NULL,\n  `protocol` enum('TCP','UDP') DEFAULT 'TCP',\n  `status` enum('enable','disable')
+    DEFAULT 'enable',\n  `provisioning` enum('yes','no') NOT NULL DEFAULT 'yes',\n
+    \ `automatic` enum('true','false') DEFAULT 'false',\n  `healthcheck` text DEFAULT
+    NULL,\n  `internal` int(10) DEFAULT 0,\n  `kubenet_info` text DEFAULT NULL,\n
+    \ `created_date` timestamp /* mariadb-5.3 */ NOT NULL DEFAULT current_timestamp(),\n
+    \ `modified_date` timestamp /* mariadb-5.3 */ NOT NULL DEFAULT current_timestamp()
+    ON UPDATE current_timestamp(),\n  PRIMARY KEY (`id`)\n) ENGINE=InnoDB DEFAULT
+    CHARSET=utf8mb4;\n/*!40101 SET character_set_client = @saved_cs_client */;\n\n--\n--
+    Table structure for table `l4_load_balancer_ips`\n--\n\nDROP TABLE IF EXISTS `l4_load_balancer_ips`;\n/*!40101
     SET @saved_cs_client     = @@character_set_client */;\n/*!40101 SET character_set_client
-    = utf8 */;\nCREATE TABLE `l4_load_balancer_ip_stats` (\n  `id` bigint(20) UNSIGNED
-    NOT NULL AUTO_INCREMENT,\n  `hw_id` bigint(20) UNSIGNED NOT NULL,\n  `status`
-    enum('ok','failed','maintenance','loading','unknown', 'standby') DEFAULT 'loading',\n
-    \ `response` varchar(255) DEFAULT NULL,\n  PRIMARY KEY (`id`),\n  KEY (`hw_id`),\n
-    \ UNIQUE(`id`, `hw_id`)\n);\n/*!40101 SET character_set_client = @saved_cs_client
-    */;\n\n\n\nDROP TABLE IF EXISTS `l4lb_ips_to_stats`;\n/*!40101 SET @saved_cs_client
-    \    = @@character_set_client */;\n/*!40101 SET character_set_client = utf8 */;\nCREATE
-    TABLE `l4lb_ips_to_stats` (\n  `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT,\n
-    \ `ip_id` bigint(20) UNSIGNED NOT NULL,\n  `stat_id`  bigint(20) UNSIGNED NOT
-    NULL,\n  PRIMARY KEY (`id`),\n  KEY `l4lb_ip_id` (`ip_id`),\n  KEY `l4lb_stats_id`
-    (`stat_id`),\n  CONSTRAINT `fk_l4lb_stats_id` FOREIGN KEY (`stat_id`) REFERENCES
-    `l4_load_balancer_ip_stats` (`id`) ON DELETE CASCADE ON UPDATE CASCADE,\n  CONSTRAINT
-    `fk_l4lb_stats_ip_id` FOREIGN KEY (`ip_id`) REFERENCES `l4_load_balancer_ips`
-    (`id`) ON DELETE CASCADE ON UPDATE CASCADE\n);\n/*!40101 SET character_set_client
-    = @saved_cs_client */;\n\n\n--\n-- Table structure for table `lb_check`\n--\n\nDROP
-    TABLE IF EXISTS `lb_check`;\n/*!40101 SET @saved_cs_client     = @@character_set_client
-    */;\n/*!40101 SET character_set_client = utf8 */;\nCREATE TABLE `lb_check` (\n
-    \ `id` bigint(20) unsigned NOT NULL AUTO_INCREMENT,\n  `type` enum('tcp','http')
-    DEFAULT 'tcp',\n  `argument` varchar(255) DEFAULT NULL,\n  `answer` varchar(255)
-    DEFAULT NULL,\n  `timeout` int(10) unsigned NOT NULL DEFAULT 1000,\n  `port` int(2)
-    unsigned NOT NULL DEFAULT 80,\n  UNIQUE KEY `id` (`id`)\n) ENGINE=InnoDB DEFAULT
-    CHARSET=latin1;\n/*!40101 SET character_set_client = @saved_cs_client */;\n\n--\n--
-    Table structure for table `lb_check_group`\n--\n\nDROP TABLE IF EXISTS `lb_check_group`;\n/*!40101
+    = utf8 */;\nCREATE TABLE `l4_load_balancer_ips` (\n  `id` BIGINT(20) UNSIGNED
+    NOT NULL AUTO_INCREMENT,\n  `ip` varchar(45) DEFAULT NULL,\n  `port` int(10) NOT
+    NULL,\n  `maintenance` enum('true','false') DEFAULT 'false',\n  `status` enum('ok','failed','maintenance','loading','unknown')
+    DEFAULT 'loading',\n  `response` varchar(255) DEFAULT NULL,\n  PRIMARY KEY (`id`)\n)
+    ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;\n/*!40101 SET character_set_client = @saved_cs_client
+    */;\n\n--\n-- Table structure for table `lb_check`\n--\n\nDROP TABLE IF EXISTS
+    `lb_check`;\n/*!40101 SET @saved_cs_client     = @@character_set_client */;\n/*!40101
+    SET character_set_client = utf8 */;\nCREATE TABLE `lb_check` (\n  `id` bigint(20)
+    unsigned NOT NULL AUTO_INCREMENT,\n  `type` enum('tcp','http') DEFAULT 'tcp',\n
+    \ `argument` varchar(255) DEFAULT NULL,\n  `answer` varchar(255) DEFAULT NULL,\n
+    \ `timeout` int(10) unsigned NOT NULL DEFAULT 1000,\n  `port` int(2) unsigned
+    NOT NULL DEFAULT 80,\n  UNIQUE KEY `id` (`id`)\n) ENGINE=InnoDB DEFAULT CHARSET=latin1;\n/*!40101
+    SET character_set_client = @saved_cs_client */;\n\n--\n-- Table structure for
+    table `lb_check_group`\n--\n\nDROP TABLE IF EXISTS `lb_check_group`;\n/*!40101
     SET @saved_cs_client     = @@character_set_client */;\n/*!40101 SET character_set_client
     = utf8 */;\nCREATE TABLE `lb_check_group` (\n  `id` bigint(20) unsigned NOT NULL
     AUTO_INCREMENT,\n  `lb_check_id` bigint(20) unsigned NOT NULL,\n  `ip_assignments_id`
@@ -1450,8 +1430,8 @@ data:
     SET @saved_cs_client     = @@character_set_client */;\n/*!40101 SET character_set_client
     = utf8 */;\nCREATE TABLE `tag_reservation` (\n  `id` bigint(20) unsigned NOT NULL
     AUTO_INCREMENT,\n  `tag_id` bigint(20) unsigned NOT NULL,\n  `resource_id` bigint(20)
-    unsigned NOT NULL,\n  `resource_type` enum('hw','vnet','roh','bgp','vpc','servercluster',
-    'l4lb') DEFAULT NULL,\n  `meta` longtext NOT NULL DEFAULT '{}' CHECK (json_valid(`meta`)),\n
+    unsigned NOT NULL,\n  `resource_type` enum('hw','vnet','roh','bgp','vpc','servercluster')
+    DEFAULT NULL,\n  `meta` longtext NOT NULL DEFAULT '{}' CHECK (json_valid(`meta`)),\n
     \ PRIMARY KEY (`id`),\n  KEY `pairs_idx` (`tag_id`,`resource_id`) USING BTREE,\n
     \ CONSTRAINT `fk1` FOREIGN KEY (`tag_id`) REFERENCES `tag` (`id`) ON DELETE RESTRICT
     ON UPDATE CASCADE\n) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;\n/*!40101 SET character_set_client
@@ -1812,47 +1792,45 @@ data:
     INSERT INTO `vxlan_reservation_consumer` (id, vxlan_reservation_id, consumer_id, consumer_type, meta) VALUES (3,3,1,'vpc','{}');
   03-global_settings.sql: |
     USE {{ .Values.mariadb.auth.database }};
-    INSERT INTO `global_settings`
-      (name, value, description, visible) VALUES
-      ('login_logo_img','/img/netris-logo.png','Login Logo','true'),
-      ('main_logo_img','/img/netris-logo-min.png','Main Portal Logo','false'),
-      ('currency_id','3','Global Currency','false'),
-      ('billcycle_map','{10:\"Hourly\", 20:\"Daily\", 30:\"Weekly\", 40: \"Monthly\"}','Billing Cycle Values','false'),
-      ('billing_script','/opt/xcaas-billing/bcalc.pl -c /opt/xcaas-billing/xcg.conf','Billing Script','false'),
-      ('billtype_map','{1:\"Per Path\", 2 :\"Per Region\"}','Billing Type Values','false'),
-      ('userpause_map','{0:\"Disable\", 1 :\"Enable\"}','User Pausable Values','false'),
-      ('portal_contact_email','info@netris.ai','Email Support Address','false'),
-      ('resetpwd_from_email','noreply@example.local','Noreply email address','true'),
-      ('log_level','debug',NULL,'false'),
-      ('fqdn_domain_name','example.com','Controller FQDN or IP address','true'),
-      ('smtp','smtp:localhost','SMTP Connect String','false'),
-      ('treat_unlimited_policer_as','10000','Used by bcalc to calculate unlimited circuits as value Mbps','false'),
-      ('acl_source_approve','true','Approval check for source address matching','true'),
-      ('physical_instance_asn','65500','ASN of physical servers','false'),
-      ('switch_listing_heartbeat','50','Switch heartbeat threshold (secs.)','false'),
-      ('bill_type_for_bcalc_map','{1:\"path\", 2 :\"region\"}',NULL,'false'),
-      ('image_upload_dir','/var/www/conductor','Image Upload Directory','false'),
-      ('virtual_instance_asn','65501','ASN of the virtual servers','false'),
-      ('switch_asn','65005','ASN of the switch','false'),
-      ('hypervisor_host_asn','65002','ASN of the hypervisors','false'),
-      ('external_acl_admin_approve','true','Approve external acls by users having Admin role','false'),
-      ('permit_site_to_site_acl','true','Permit site to site traffic on public ports','true'),
-      ('evpn_enable','true','VXLAN via EVPN','false'),
-      ('optimise_port_ext','true','Optimized deployment of ACLs for subinterfaces','true'),
-      ('shadow_acl','false','Avoid deployment of ACL overlaps','false'),
-      ('telemetry','true','Enable Sending Analytics Data & User Experience Improvement Plugins','true'),
-      ('health_check_atempts','5','L4LB: Number of probes in each health check iteration','true'),
-      ('health_check_failcount','3','L4LB: Number of failures to mark a backend as failed','true'),
-      ('health_check_okcount','1','L4LB: Number of consecutive successes for the probe to be considered successful after having failed','true'),
-      ('health_check_interval','1','L4LB: Interval (seconds) between health checks','true'),
-      ('wireguard_port_range','59000-60999','VPN peers port range','true'),
-      ('k8s_lb_check_timeout','2000','K8s Layer 4 load-balancer timeout (ms)','true'),
-      ('vpn_measurement_wait_secs','30','Site Mesh measurement module wait interval (sec)','true'),
-      ('migration_version', '4.4.0', 'Database scheme version', 'false'),
-      ('system_asn_range', '4200000000 - 4209999999', 'System ASN range', 'true'),
-      ('vpn_asn_range', '4210000000 - 4219999999', 'Site Mesh VPN ASN range', 'true'),
-      ('calico_asn_range', '4230000000 - 4239999999', 'Calico ASN range', 'true'),
-      ('local_repository', '', 'Local Repository', 'true');
+    INSERT INTO `global_settings` VALUES (1,'login_logo_img','/img/netris-logo.png','Login Logo','true');
+    INSERT INTO `global_settings` VALUES (2,'main_logo_img','/img/netris-logo-min.png','Main Portal Logo','false');
+    INSERT INTO `global_settings` VALUES (3,'currency_id','3','Global Currency','false');
+    INSERT INTO `global_settings` VALUES (4,'billcycle_map','{10:\"Hourly\", 20:\"Daily\", 30:\"Weekly\", 40: \"Monthly\"}','Billing Cycle Values','false');
+    INSERT INTO `global_settings` VALUES (5,'billing_script','/opt/xcaas-billing/bcalc.pl -c /opt/xcaas-billing/xcg.conf','Billing Script','false');
+    INSERT INTO `global_settings` VALUES (6,'billtype_map','{1:\"Per Path\", 2 :\"Per Region\"}','Billing Type Values','false');
+    INSERT INTO `global_settings` VALUES (7,'userpause_map','{0:\"Disable\", 1 :\"Enable\"}','User Pausable Values','false');
+    INSERT INTO `global_settings` VALUES (8,'portal_contact_email','info@netris.ai','Email Support Address','false');
+    INSERT INTO `global_settings` VALUES (9,'resetpwd_from_email','noreply@example.local','Noreply email address','true');
+    INSERT INTO `global_settings` VALUES (10,'log_level','debug',NULL,'false');
+    INSERT INTO `global_settings` VALUES (11,'fqdn_domain_name','example.com','Controller FQDN or IP address','true');
+    INSERT INTO `global_settings` VALUES (12,'smtp','smtp:localhost','SMTP Connect String','false');
+    INSERT INTO `global_settings` VALUES (13,'treat_unlimited_policer_as','10000','Used by bcalc to calculate unlimited circuits as value Mbps','false');
+    INSERT INTO `global_settings` VALUES (14,'acl_source_approve','true','Approval check for source address matching','true');
+    INSERT INTO `global_settings` VALUES (15,'physical_instance_asn','65500','ASN of physical servers','false');
+    INSERT INTO `global_settings` VALUES (16,'switch_listing_heartbeat','50','Switch heartbeat threshold (secs.)','false');
+    INSERT INTO `global_settings` VALUES (20,'bill_type_for_bcalc_map','{1:\"path\", 2 :\"region\"}',NULL,'false');
+    INSERT INTO `global_settings` VALUES (21,'image_upload_dir','/var/www/conductor','Image Upload Directory','false');
+    INSERT INTO `global_settings` VALUES (23,'virtual_instance_asn','65501','ASN of the virtual servers','false');
+    INSERT INTO `global_settings` VALUES (24,'switch_asn','65005','ASN of the switch','false');
+    INSERT INTO `global_settings` VALUES (25,'hypervisor_host_asn','65002','ASN of the hypervisors','false');
+    INSERT INTO `global_settings` VALUES (26,'external_acl_admin_approve','true','Approve external acls by users having Admin role','false');
+    INSERT INTO `global_settings` VALUES (27,'permission_types','{\"Global Settings\":{\"UPDATE_SETTINGS\":{\"description\":\"Update\",\"urls\":[\"/settings/save\",\"settings/whitelist/delete\",\"settings/whitelist/save\"]}},\"Users\":{\"UPDATE_USER\":{\"description\":\"Update\",\"urls\":[\"/user/update\"]},\"DELETE_USER\":{\"description\":\"Delete\",\"urls\":[\"/user/delete\"]},\"ADD_USER\":{\"description\":\"Create\",\"urls\":[\"/user/add\"]}},\"Tenants\":{\"TOPUP_TENANT\":{\"description\":\"Topup balance\",\"urls\":[\"/tenants/topup\"]},\"ADD_TENANT\":{\"description\":\"Create\",\"urls\":[\"/tenants/add/\"]},\"DELETE_TENANT\":{\"description\":\"Delete\",\"urls\":[\"/tenants/delete/\"]},\"UPDATE_TENANT\":{\"description\":\"Edit\",\"urls\":[\"/tenants/update\"]}},\"Providers\":{\"ADD_PROVIDER\":{\"description\":\"Create\",\"urls\":[\"/providers/add\"]},\"DELETE_PROVIDER\":{\"description\":\"Delete\",\"urls\":[\"/providers/delete/\"]},\"UPDATE_PROVIDER\":{\"description\":\"Edit\",\"urls\":[\"/providers/update\"]}},\"Paths\":{\"UPDATE_PATH\":{\"description\":\"Edit\",\"urls\":[\"/billing/update/path\"]}},\"Ports\":{\"UPDATE_PORT\":{\"description\":\"Edit\",\"urls\":[\"/billing/update/port\",\"/switch/port/update\"]},\"ASSIGN_PORT\":{\"description\":\"Assign\",\"urls\":[\"/billing/assign/port\",\"/switch/port/assign\"]},\"UNASSIGN_PORT\":{\"description\":\"Unassign\",\"urls\":[\"/switch/port/unassign\"]},\"INHERIT_PORT\":{\"description\":\"Inherit\",\"urls\":[\"/switch/port/inherit\"]}},\"Regions\":{\"ADD_REGION\":{\"description\":\"Create\",\"urls\":[\"/billing/add/region\",\"/billing/add/regionrange\"]},\"DELETE_REGION\":{\"description\":\"Delete\",\"urls\":[\"/billing/delete/region\",\"/billing/delete/regionrange\"]},\"UPDATE_REGION\":{\"description\":\"Edit\",\"urls\":[\"/billing/update/region\",\"/billing/update/regionrange\"]}},\"InterRegions\":{\"ADD_INTER_REGION\":{\"description\":\"Create\",\"urls\":[\"/billing/add/intregion\",\"/billing/add/intregionrange\"]},\"DELETE_INER_REGION\":{\"description\":\"Delete\",\"urls\":[\"/billing/delete/intregion\",\"/billing/delete/intregionrange\"]},\"UPDATE_INTER_REGION\":{\"description\":\"Edit\",\"urls\":[\"/billing/update/intregion\",\"/billing/update/intregionrange\"]}},\"Pops\":{\"ADD_POP\":{\"description\":\"Create\",\"urls\":[\"/pops/add\"]},\"DELETE_POP\":{\"description\":\"Delete\",\"urls\":[\"/pops/delete\"]},\"UPDATE_POP\":{\"description\":\"Edit\",\"urls\":[\"/pops/update\"]}},\"Hardware\":{\"ADD_HW\":{\"description\":\"Add\",\"urls\":[\"/switch/add\"]},\"DELETE_HW\":{\"description\":\"Delete\",\"urls\":[\"/switch/delete\"]},\"UPDATE_HW\":{\"description\":\"Edit\",\"urls\":[\"/switch/update\"]}},\"ACL\":{\"ADD_ACL\":{\"description\":\"Create\",\"urls\":[\"/user/acls/add\"]},\"DELETE_ACL\":{\"description\":\"Delete\",\"urls\":[\"/user/acls/delete\"]},\"UPDATE_ACL\":{\"description\":\"Edit\",\"urls\":[\"/user/acls/add\"]},\"APPROVE_ACL\":{\"description\":\"Approve\",\"urls\":[\"/user/acls/approve\"]},\"REJECT_ACL\":{\"description\":\"Reject\",\"urls\":[\"/user/acls/reject\"]}},\"ALC 2.0 Service\":{\"CREATE_ACL2.0_SERVICE\":{\"description\":\"Create\",\"urls\":\"/acltozero/service/add\"},\"EDIT_ACL2.0_SERVICE\":{\"description\":\"Edit\",\"urls\":[\"/acltozero/service/edit\",\"/acltozero/service/status\"]},\"DELETE_ACL2.0_SERVICE\":{\"description\":\"Delete\",\"urls\":\"/acltozero/service/delete\"}},\"ALC 2.0 Publisher\":{\"ADD_ACL2.0_PUBLISHER\":{\"description\":\"Add\",\"urls\":[\"/acltozero/pub/protoport/add\",\"/acltozero/pub/instances/add\",\"/acltozero/pub/lb/add\"]},\"REMOVE_ACL2.0_PUBLISHER\":{\"description\":\"Remove\",\"urls\":[\"/acltozero/pub/protoport/delete\",\"/acltozero/pub/instances/delete\",\"/acltozero/pub/lb/delete\"]}},\"ALC 2.0 Subscriber\":{\"ADD_ACL2.0_SUBSCRIBER\":{\"description\":\"Add\",\"urls\":[\"/acltozero/sub/prefixes/add\",\"/acltozero/sub/instance/add\"]},\"REMOVE_ACL2.0_SUBSCRIBER\":{\"description\":\"Remove\",\"urls\":[\"/acltozero/sub/prefixes/delete\",\"/acltozero/sub/instance/delete\"]},\"APPROVE_REJECT_ACL2.0_SUBSCRIBER\":{\"description\":\"Approve/Reject\",\"urls\":[\"/acltozero/sub/instance/approve\",\"/acltozero/sub/instance/reject\"]}},\"Instances\":{\"ADD_INSTANCE\":{\"description\":\"Create\",\"urls\":[\"/user/instances/add\"]},\"DELETE_INSTANCE\":{\"description\":\"Delete\",\"urls\":[\"/user/instances/delete\"]},\"UPDATE_INSTANCE\":{\"description\":\"Edit\",\"urls\":[\"/user/instances/edit\",\"/user/instances/update\"]}},\"PortGroups\":{\"ADD_PORTGROUP\":{\"description\":\"Create\",\"urls\":[\"/user/portgroup/add\"]},\"DELETE_PORTGROUP\":{\"description\":\"Delete\",\"urls\":[\"/user/portgroup/delete\"]},\"UPDATE_PORTGROUP\":{\"description\":\"Edit\",\"urls\":[\"/user/portgroup/update\"]},\"APPROVE_PORTGROUP\":{\"description\":\"Approve\",\"urls\":[\"/user/portgroup/approve\"]},\"REJECT_PORTGROUP\":{\"description\":\"Reject\",\"urls\":[\"/user/portgroup/reject\"]}},\"Subnets\":{\"ADD_SUBNET\":{\"description\":\"Create\",\"urls\":[\"/user/subnets/add\"]},\"DELETE_SUBNET\":{\"description\":\"Delete\",\"urls\":[\"/user/subnets/delete\"]}},\"Load Balancer\":{\"ADD_CHECK_LB\":{\"description\":\"Create check\",\"urls\":[\"/user/lb/check/add\"]},\"DELETE_CHECK_LB\":{\"description\":\"Remove check\",\"urls\":[\"/user/lb/check/remove\"]},\"ADD_INSTANCE_LB\":{\"description\":\"Create instance\",\"urls\":[\"/user/lb/instance/[0-9]+/add\"]},\"DELETE_INSTANCE_LB\":{\"description\":\"Remove instance\",\"urls\":[\"/user/lb/instance/[0-9]+/remove\"]},\"ADD_MAINT_LB\":{\"description\":\"Maintenance\",\"urls\":[\"/user/lb/instance/maintanance\"]}},\"L2 Circuit\":{\"ADD_CIRCUIT\":{\"description\":\"Create\",\"urls\":[\"/circuit/create\",\"/circuit/add\"]},\"EDIT_CIRCUIT\":{\"description\":\"Edit\",\"urls\":[\"/circuit/edit\"]},\"PAUSE_CIRCUIT\":{\"description\":\"Pause\",\"urls\":[\"/circuit/pause\"]},\"UNPAUSE_CIRCUIT\":{\"description\":\"Unpause\",\"urls\":[\"/circuit/unpause\"]},\"DELETE_CIRCUIT\":{\"description\":\"Delete\",\"urls\":[\"/circuit/delete\"]}},\"L3 Circuit\":{\"ADD_L3_CIRCUIT\":{\"description\":\"Create\",\"urls\":[\"/user/routedcircuit/add\"]},\"EDIT_L3_CIRCUIT\":{\"description\":\"Edit\",\"urls\":[\"/user/routedcircuit/update\"]},\"DELETE_L3_CIRCUIT\":{\"description\":\"Delete\",\"urls\":[\"/user/routedcircuit/delete\"]}},\"Permission Groups\":{\"ADD_PERMISSION_GROUP\":{\"description\":\"Create\",\"urls\":\"/user/permissiongroup/add\"},\"EDIT_PERMISSION_GROUP\":{\"description\":\"Edit\",\"urls\":\"/user/permissiongroup/update\"},\"DELETE_PERMISSION_GROUP\":{\"description\":\"Delete\",\"urls\":\"/user/permissiongroup/delete\"}},\"Software Load Balancer\":{\"ADD_SLB\":{\"description\":\"Create\",\"urls\":\"/user/slb/add\"},\"EDIT_SLB\":{\"description\":\"Edit\",\"urls\":\"/user/slb/edit\"},\"DELETE_SLB\":{\"description\":\"Delete\",\"urls\":\"/user/slb/delete\"}},\"NAT\":{\"ADD_NAT\":{\"description\":\"Create\",\"urls\":\"/net/nat/create\"},\"EDIT_NAT\":{\"description\":\"Edit\",\"urls\":\"/net/nat/update\"},\"DELETE_NAT\":{\"description\":\"Delete\",\"urls\":\"/net/nat/delete\"}},\"Sites\":{\"ADD_SITE\":{\"description\":\"Create\",\"urls\":\"/net/pops/add\"},\"EDIT_SITE\":{\"description\":\"Edit\",\"urls\":\"/net/pops/edit\"},\"DELETE_SITE\":{\"description\":\"Delete\",\"urls\":\"/net/pops/delete\"}},\"E-BGP\":{\"ADD_EBGP\":{\"description\":\"Create\",\"urls\":\"/net/peers/add\"},\"EDIT_EBGP\":{\"description\":\"Edit\",\"urls\":\"/net/peers/edit\"},\"DELETE_EBGP\":{\"description\":\"Delete\",\"urls\":\"/net/peers/delete\"}}}','Permission types','false');
+    INSERT INTO `global_settings` VALUES (28,'permit_site_to_site_acl','true','Permit site to site traffic on public ports','true');
+    INSERT INTO `global_settings` VALUES (29,'evpn_enable','true','VXLAN via EVPN','false');
+    INSERT INTO `global_settings` VALUES (30,'optimise_port_ext','true','Optimized deployment of ACLs for subinterfaces','true');
+    INSERT INTO `global_settings` VALUES (31,'shadow_acl','false','Avoid deployment of ACL overlaps','false');
+    INSERT INTO `global_settings` VALUES (32,'telemetry','true','Enable Sending Analytics Data & User Experience Improvement Plugins','true');
+    INSERT INTO `global_settings` VALUES (33,'health_check_atempts','5','L4LB: Number of probes in each health check iteration','true');
+    INSERT INTO `global_settings` VALUES (34,'health_check_failcount','3','L4LB: Number of failures to mark a backend as failed','true');
+    INSERT INTO `global_settings` VALUES (35,'health_check_okcount','1','L4LB: Number of consecutive successes for the probe to be considered successful after having failed','true');
+    INSERT INTO `global_settings` VALUES (36,'wireguard_port_range','59000-60999','VPN peers port range','true');
+    INSERT INTO `global_settings` VALUES (37,'k8s_lb_check_timeout','2000','K8s Layer 4 load-balancer timeout (ms)','true');
+    INSERT INTO `global_settings` VALUES (38,'vpn_measurement_wait_secs','30','Site Mesh measurement module wait interval (sec)','true');
+    INSERT INTO `global_settings` VALUES (39,'migration_version', '4.3.1', 'Database scheme version', 'false');
+    INSERT INTO `global_settings` VALUES (40,'system_asn_range', '4200000000 - 4209999999', 'System ASN range', 'true');
+    INSERT INTO `global_settings` VALUES (41,'vpn_asn_range', '4210000000 - 4219999999', 'Site Mesh VPN ASN range', 'true');
+    INSERT INTO `global_settings` VALUES (42,'calico_asn_range', '4230000000 - 4239999999', 'Calico ASN range', 'true');
+    INSERT INTO `global_settings` VALUES (43,'local_repository', '', 'Local Repository', 'true');
   04-currency.sql: |
     USE {{ .Values.mariadb.auth.database }};
     INSERT INTO `currency` VALUES (1,'USD',0.944,'2016-11-26 05:17:49');
@@ -1901,13 +1879,12 @@ data:
     INSERT INTO `mon_default_thresholds` VALUES (15,'check_port','Signal level for 100G','*.signal.100',-12,-11,5,4,NULL,'dbm','');
     INSERT INTO `mon_default_thresholds` VALUES (16,'check_ratio',NULL,'ratio',NULL,NULL,NULL,NULL,0,'','');
     INSERT INTO `mon_default_thresholds` VALUES (17,'check_port','Signal level for 25G','*.signal.25',-13,-12,4,3,NULL,'dbm','');
-  06-nos_list.sql: |+
+  06-nos_list.sql: |
     USE {{ .Values.mariadb.auth.database }};
-    INSERT INTO `nos_list` VALUES (1,'Arista EOS','arista_eos');
-    INSERT INTO `nos_list` VALUES (2,'Cumulus NVUE','cumulus_nvue');
-    INSERT INTO `nos_list` VALUES (3,'Dell-SONiC','dell_sonic');
-    INSERT INTO `nos_list` VALUES (4,'EC-SONiC','ec_sonic');
-
+    INSERT INTO `nos_list` VALUES (1,'Cumulus Linux','cumulus_linux');
+    INSERT INTO `nos_list` VALUES (2,'SONiC','sonic');
+    INSERT INTO `nos_list` VALUES (3,'Ubuntu SwitchDev','ubuntu_switch_dev');
+    INSERT INTO `nos_list` VALUES (4,'Cumulus NVUE','cumulus_nvue');
   06-roh_profiles.sql: |
     USE {{ .Values.mariadb.auth.database }};
     INSERT INTO `roh_profiles` VALUES (1,'Default','default');
