@@ -1323,7 +1323,8 @@ data:
     'ok',\n  `type` enum('switch','proxmox','controller','offloader','equinix_metal_server',
     'phoenixnap_bmc_server', 'server') CHARACTER SET latin1 NOT NULL DEFAULT 'switch',\n
     \ `sg_flavor` enum('sg', 'sg-pro', 'sg-hs') CHARACTER SET latin1 DEFAULT NULL,\n
-    \ `sg_role` enum('general', 'snat') CHARACTER SET latin1 DEFAULT NULL,\n  `rangecut`
+    \ `sg_role` enum('general', 'snat') CHARACTER SET latin1 DEFAULT NULL,\n  `srv_role`
+    enum('generic', 'hyperv_cs') CHARACTER SET latin1 DEFAULT NULL,\n  `rangecut`
     int(10) unsigned NOT NULL DEFAULT 0,\n  `cumulus_version` varchar(100) CHARACTER
     SET latin1 DEFAULT NULL,\n  `proxmox_version` varchar(100) CHARACTER SET latin1
     DEFAULT NULL,\n  `conductor_version` varchar(100) CHARACTER SET latin1 DEFAULT
@@ -1450,7 +1451,7 @@ data:
     SET @saved_cs_client     = @@character_set_client */;\n/*!40101 SET character_set_client
     = utf8 */;\nCREATE TABLE `tag_reservation` (\n  `id` bigint(20) unsigned NOT NULL
     AUTO_INCREMENT,\n  `tag_id` bigint(20) unsigned NOT NULL,\n  `resource_id` bigint(20)
-    unsigned NOT NULL,\n  `resource_type` enum('hw','vnet','roh','bgp','vpc','servercluster',
+    unsigned NOT NULL,\n  `resource_type` enum('hw','vnet','vnet_port', 'roh','bgp','vpc','servercluster',
     'l4lb') DEFAULT NULL,\n  `meta` longtext NOT NULL DEFAULT '{}' CHECK (json_valid(`meta`)),\n
     \ PRIMARY KEY (`id`),\n  KEY `pairs_idx` (`tag_id`,`resource_id`) USING BTREE,\n
     \ CONSTRAINT `fk1` FOREIGN KEY (`tag_id`) REFERENCES `tag` (`id`) ON DELETE RESTRICT
