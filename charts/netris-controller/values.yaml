@@ -134,7 +134,7 @@ grpc:
     repository: netrisai/controller-grpc
     pullPolicy: IfNotPresent
     # Overrides the image tag whose default is the chart appVersion.
-    tag: "4.4.0.019"
+    tag: "4.4.0.020"
 
   imagePullSecrets: []
 
