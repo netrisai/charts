@@ -158,7 +158,7 @@ telescope:
     repository: netrisai/controller-telescope
     pullPolicy: IfNotPresent
     # Overrides the image tag whose default is the chart appVersion.
-    tag: "4.4.0.005"
+    tag: "4.4.0.006"
 
   imagePullSecrets: []
 
