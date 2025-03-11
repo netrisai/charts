@@ -494,7 +494,7 @@ data:
     bigint(20) unsigned NOT NULL,\n  `severity` enum('ok','warning','critical','unknown')
     NOT NULL DEFAULT 'ok',\n  `check_name` varchar(255) NOT NULL,\n  `date` timestamp
     /* mariadb-5.3 */ NOT NULL DEFAULT current_timestamp(),\n  `last_check_time` timestamp
-    /* mariadb-5.3 */ NOT NULL DEFAULT '0000-00-00 00:00:00',\n  `message` varchar(255)
+    /* mariadb-5.3 */ NOT NULL DEFAULT '0000-00-00 00:00:00',\n  `message` varchar(512)
     DEFAULT NULL,\n  PRIMARY KEY (`id`),\n  KEY `date_index` (`date`)\n) ENGINE=InnoDB
     DEFAULT CHARSET=utf8mb4;\n/*!40101 SET character_set_client = @saved_cs_client
     */;\n\n--\n-- Table structure for table `hw_check_status`\n--\n\nDROP TABLE IF
@@ -1003,17 +1003,17 @@ data:
     DEFAULT NULL,\n  `iface` varchar(255) DEFAULT NULL,\n  `present` tinyint(3) unsigned
     NOT NULL DEFAULT 0,\n  `status` varchar(255) DEFAULT NULL,\n  `master_status`
     varchar(100) DEFAULT NULL,\n  `speed` varchar(255) DEFAULT NULL,\n  `speed_desired`
-    enum('1000','10000','25000','40000','50000','100000','200000','400000','auto')
+    enum('1000','10000','25000','40000','50000','100000','200000','400000','800000','auto')
     NOT NULL DEFAULT 'auto',\n  `transceiver` varchar(255) DEFAULT NULL,\n  `mtu`
     int(10) NOT NULL DEFAULT 9216,\n  `lacp` enum('on','off') NOT NULL DEFAULT 'off',\n
     \ `port_extension` bigint(20) unsigned NOT NULL DEFAULT 0,\n  `parent_port` bigint(20)
     unsigned NOT NULL DEFAULT 0,\n  `admin_down` enum('yes','no') DEFAULT 'no',\n
     \ `autoneg` enum('none','on','off') DEFAULT 'none',\n  `duplex` enum('full','half','none')
     DEFAULT 'none',\n  `breakout` enum('off', 'disabled', '4x10', '4x25', '2x50',
-    '4x50', '1x100', '2x100', '4x100', '2x200', '4x200', '2x400') DEFAULT 'off',\n
-    \ `mclag_id` int,\n  `mclag_plink_id` bigint(20) unsigned,\n  `created_date` timestamp
-    NOT NULL DEFAULT current_timestamp(),\n  `modified_date` timestamp NULL DEFAULT
-    current_timestamp() ON UPDATE current_timestamp(),\n  UNIQUE KEY `port_id_UNIQUE`
+    '4x50', '1x100', '2x100', '4x100', '8x100','2x200', '4x200', '2x400') DEFAULT
+    'off',\n  `mclag_id` int,\n  `mclag_plink_id` bigint(20) unsigned,\n  `created_date`
+    timestamp NOT NULL DEFAULT current_timestamp(),\n  `modified_date` timestamp NULL
+    DEFAULT current_timestamp() ON UPDATE current_timestamp(),\n  UNIQUE KEY `port_id_UNIQUE`
     (`port_id`),\n  KEY `port_switch_id_IDX` (`switch_id`) USING BTREE,\n  KEY `mclag_idx`
     (`mclag_id`),\n  CONSTRAINT `mclag_plink_id_fkn_3` FOREIGN KEY (`mclag_plink_id`)
     REFERENCES mclag_plink (`id`) ON DELETE RESTRICT ON UPDATE CASCADE\n) ENGINE=InnoDB
