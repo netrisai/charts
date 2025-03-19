@@ -494,22 +494,22 @@ data:
     bigint(20) unsigned NOT NULL,\n  `severity` enum('ok','warning','critical','unknown')
     NOT NULL DEFAULT 'ok',\n  `check_name` varchar(255) NOT NULL,\n  `date` timestamp
     /* mariadb-5.3 */ NOT NULL DEFAULT current_timestamp(),\n  `last_check_time` timestamp
-    /* mariadb-5.3 */ NOT NULL DEFAULT '0000-00-00 00:00:00',\n  `message` varchar(512)
-    DEFAULT NULL,\n  PRIMARY KEY (`id`),\n  KEY `date_index` (`date`)\n) ENGINE=InnoDB
-    DEFAULT CHARSET=utf8mb4;\n/*!40101 SET character_set_client = @saved_cs_client
-    */;\n\n--\n-- Table structure for table `hw_check_status`\n--\n\nDROP TABLE IF
-    EXISTS `hw_check_status`;\n/*!40101 SET @saved_cs_client     = @@character_set_client
-    */;\n/*!40101 SET character_set_client = utf8 */;\nCREATE TABLE `hw_check_status`
-    (\n  `id` bigint(20) unsigned NOT NULL AUTO_INCREMENT,\n  `hw_id` bigint(20) unsigned
-    NOT NULL,\n  `port_id` bigint(20) unsigned DEFAULT NULL,\n  `tenant_id` bigint(20)
-    unsigned DEFAULT NULL,\n  `severity` enum('ok','warning','critical','unknown')
-    NOT NULL DEFAULT 'ok',\n  `check_name` varchar(50) DEFAULT NULL,\n  `date` timestamp
-    /* mariadb-5.3 */ NOT NULL DEFAULT '0000-00-00 00:00:00',\n  `last_check_time`
-    timestamp /* mariadb-5.3 */ NOT NULL DEFAULT '0000-00-00 00:00:00',\n  `message`
-    text DEFAULT NULL,\n  `critical_message` text DEFAULT NULL,\n  `warning_message`
-    text DEFAULT NULL,\n  PRIMARY KEY (`id`),\n  UNIQUE KEY `hw_id` (`hw_id`,`port_id`,`check_name`)\n)
-    ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;\n/*!40101 SET character_set_client = @saved_cs_client
-    */;\n\n--\n-- Table structure for table `hw_log`\n--\n\nDROP TABLE IF EXISTS `hw_log`;\n/*!40101
+    /* mariadb-5.3 */ NOT NULL DEFAULT '0000-00-00 00:00:00',\n  `message` TEXT DEFAULT
+    NULL,\n  PRIMARY KEY (`id`),\n  KEY `date_index` (`date`)\n) ENGINE=InnoDB DEFAULT
+    CHARSET=utf8mb4;\n/*!40101 SET character_set_client = @saved_cs_client */;\n\n--\n--
+    Table structure for table `hw_check_status`\n--\n\nDROP TABLE IF EXISTS `hw_check_status`;\n/*!40101
+    SET @saved_cs_client     = @@character_set_client */;\n/*!40101 SET character_set_client
+    = utf8 */;\nCREATE TABLE `hw_check_status` (\n  `id` bigint(20) unsigned NOT NULL
+    AUTO_INCREMENT,\n  `hw_id` bigint(20) unsigned NOT NULL,\n  `port_id` bigint(20)
+    unsigned DEFAULT NULL,\n  `tenant_id` bigint(20) unsigned DEFAULT NULL,\n  `severity`
+    enum('ok','warning','critical','unknown') NOT NULL DEFAULT 'ok',\n  `check_name`
+    varchar(50) DEFAULT NULL,\n  `date` timestamp /* mariadb-5.3 */ NOT NULL DEFAULT
+    '0000-00-00 00:00:00',\n  `last_check_time` timestamp /* mariadb-5.3 */ NOT NULL
+    DEFAULT '0000-00-00 00:00:00',\n  `message` text DEFAULT NULL,\n  `critical_message`
+    text DEFAULT NULL,\n  `warning_message` text DEFAULT NULL,\n  PRIMARY KEY (`id`),\n
+    \ UNIQUE KEY `hw_id` (`hw_id`,`port_id`,`check_name`)\n) ENGINE=InnoDB DEFAULT
+    CHARSET=utf8mb4;\n/*!40101 SET character_set_client = @saved_cs_client */;\n\n--\n--
+    Table structure for table `hw_log`\n--\n\nDROP TABLE IF EXISTS `hw_log`;\n/*!40101
     SET @saved_cs_client     = @@character_set_client */;\n/*!40101 SET character_set_client
     = utf8 */;\nCREATE TABLE `hw_log` (\n  `id` bigint(20) unsigned NOT NULL AUTO_INCREMENT,\n
     \ `hw_id` bigint(20) unsigned DEFAULT NULL,\n  `severity` enum('normal','warning','critical')
