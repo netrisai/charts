@@ -83,7 +83,7 @@ web-service-backend:
     repository: netrisai/controller-web-service-backend
     pullPolicy: IfNotPresent
     # Overrides the image tag whose default is the chart appVersion.
-    tag: "4.4.0-022"
+    tag: "4.5.0-003"
 
   imagePullSecrets: []
 
@@ -110,7 +110,7 @@ web-service-frontend:
     repository: netrisai/controller-web-service-frontend
     pullPolicy: IfNotPresent
     # Overrides the image tag whose default is the chart appVersion.
-    tag: "4.4.0-036"
+    tag: "4.5.0-002"
 
   imagePullSecrets: []
 
@@ -134,7 +134,7 @@ grpc:
     repository: netrisai/controller-grpc
     pullPolicy: IfNotPresent
     # Overrides the image tag whose default is the chart appVersion.
-    tag: "4.4.0.031"
+    tag: "4.5.0.001"
 
   imagePullSecrets: []
 
@@ -246,7 +246,7 @@ migration:
   image:
     repository: netrisai/controller-web-service-migration
     pullPolicy: IfNotPresent
-    tag: "4.3.0"
+    tag: "4.5.0"
 
 
 ## Using default values from https://github.com/bitnami/charts/tree/master/bitnami/mariadb/values.yaml
