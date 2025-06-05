@@ -1024,9 +1024,10 @@ data:
     unsigned NOT NULL DEFAULT 0,\n  `admin_down` enum('yes','no') DEFAULT 'no',\n
     \ `autoneg` enum('none','on','off') DEFAULT 'none',\n  `duplex` enum('full','half','none')
     DEFAULT 'none',\n  `breakout` enum('off', 'disabled', '1x10','1x25','1x40','1x50','1x100','1x200','1x400','1x800','2x10','2x25','2x40','2x50','2x100','2x200','2x400','4x10','4x25','4x50','4x100','4x200','8x10','8x25','8x50','8x100')
-    DEFAULT 'off',\n  `mclag_id` int,\n  `mclag_plink_id` bigint(20) unsigned,\n  `created_date`
-    timestamp NOT NULL DEFAULT current_timestamp(),\n  `modified_date` timestamp NULL
-    DEFAULT current_timestamp() ON UPDATE current_timestamp(),\n  UNIQUE KEY `port_id_UNIQUE`
+    DEFAULT 'off',\n  `mclag_id` int,\n  `mclag_plink_id` bigint(20) unsigned,\n  `link_training`
+    enum('auto', 'on', 'off') NOT NULL DEFAULT 'auto',\n  `created_date` timestamp
+    NOT NULL DEFAULT current_timestamp(),\n  `modified_date` timestamp NULL DEFAULT
+    current_timestamp() ON UPDATE current_timestamp(),\n  UNIQUE KEY `port_id_UNIQUE`
     (`port_id`),\n  KEY `port_switch_id_IDX` (`switch_id`) USING BTREE,\n  KEY `mclag_idx`
     (`mclag_id`),\n  CONSTRAINT `mclag_plink_id_fkn_3` FOREIGN KEY (`mclag_plink_id`)
     REFERENCES mclag_plink (`id`) ON DELETE RESTRICT ON UPDATE CASCADE\n) ENGINE=InnoDB
@@ -1613,9 +1614,9 @@ data:
     rt.tenant_id) as guest_tenants\n  FROM rcircuit vnet \n\tLEFT JOIN rcircuit_tenants
     rt on vnet.id = rt.rcircuit_id\n\tJOIN rcircuit_sites rsites ON rsites.rcircuit_id
     = vnet.id\n  GROUP BY vnet.id;\n\n-- creaet port view\n CREATE VIEW port_view
-    AS\n SELECT port_id,switch_id,tenant_id,port_index,break_index,name,port,iface,present,status,master_status,speed,speed_desired,transceiver,mtu,lacp,port_extension,parent_port,admin_down,autoneg,duplex,breakout,mclag_id,mclag_plink_id,created_date,modified_date\n
+    AS\n SELECT port_id,switch_id,tenant_id,port_index,break_index,name,port,iface,present,status,master_status,speed,link_training,speed_desired,transceiver,mtu,lacp,port_extension,parent_port,admin_down,autoneg,duplex,breakout,mclag_id,mclag_plink_id,created_date,modified_date\n
     from port where switch_id IS NOT NULL\n UNION\n select port_id,vswitch.agg_sw_id
-    as switch_id,p.tenant_id,p.port_index,p.break_index,p.name,p.port,p.iface,p.present,p.status,p.master_status,p.speed,p.speed_desired,p.transceiver,p.mtu,p.lacp,p.port_extension,p.parent_port,p.admin_down,p.autoneg,p.duplex,p.breakout,p.mclag_id,p.mclag_plink_id,p.created_date,p.modified_date\n
+    as switch_id,p.tenant_id,p.port_index,p.break_index,p.name,p.port,p.iface,p.present,p.status,p.master_status,p.speed,p.link_training,p.speed_desired,p.transceiver,p.mtu,p.lacp,p.port_extension,p.parent_port,p.admin_down,p.autoneg,p.duplex,p.breakout,p.mclag_id,p.mclag_plink_id,p.created_date,p.modified_date\n
     \tfrom port p\n \t\tJOIN (select ap.port_id as agg_port_id, port.switch_id as
     agg_sw_id\n  \t\t\t\tfrom aggregated_ports ap JOIN port ON ap.slave_port_id =
     port.port_id) as vswitch ON vswitch.agg_port_id=p.port_id;\n\n--\n-- Final view
@@ -1816,7 +1817,7 @@ data:
   02-port.sql: |
     USE {{ .Values.mariadb.auth.database }};
     SET sql_mode='NO_AUTO_VALUE_ON_ZERO';
-    INSERT INTO `port` VALUES (0,0,0,0,0,'not defined','NOPORT','NOIFACE',1,'N/A',NULL,'N/A','auto','hh',9000,'off',0,0,'no','off','none','',NULL,NULL,NULL,NULL);
+    INSERT INTO `port` VALUES (0,0,0,0,0,'not defined','NOPORT','NOIFACE',1,'N/A',NULL,'N/A','auto','hh',9000,'off',0,0,'no','off','none','',NULL,NULL,'auto',NULL,NULL);
   02-vpc.sql: |
     USE {{ .Values.mariadb.auth.database }};
     INSERT INTO `vpc` (id, name, tenant_id, is_system, is_default) VALUES (1, 'Default', 1, 'yes', 'yes');
@@ -1872,7 +1873,7 @@ data:
       ('wireguard_port_range','59000-60999','VPN peers port range','true'),
       ('k8s_lb_check_timeout','2000','K8s Layer 4 load-balancer timeout (ms)','true'),
       ('vpn_measurement_wait_secs','30','Site Mesh measurement module wait interval (sec)','true'),
-      ('migration_version', '4.5.0', 'Database scheme version', 'false'),
+      ('migration_version', '4.5.1', 'Database scheme version', 'false'),
       ('system_asn_range', '4200000000 - 4209999999', 'System ASN range', 'true'),
       ('vpn_asn_range', '4210000000 - 4219999999', 'Site Mesh VPN ASN range', 'true'),
       ('calico_asn_range', '4230000000 - 4239999999', 'Calico ASN range', 'true'),
