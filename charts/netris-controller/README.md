@@ -89,7 +89,7 @@ The following table lists the configurable parameters of the netris-controller c
 | ------------------------------------------------------------------| --------------------------------------------------------------------------------------------------------- | --------------------------------- |
 | `web-service-backend.replicaCount`                                | Number of replicas in web-service-backend deployment                                                      | `1`                               |
 | `web-service-backend.image.repository`                            | Image repository                                                                                          | `netrisai/controller-web-service-backend` |
-| `web-service-backend.image.tag`                                   | Image tag. Overrides the image tag whose default is the chart appVersion                                  | `"4.4.0-023"`                         |
+| `web-service-backend.image.tag`                                   | Image tag. Overrides the image tag whose default is the chart appVersion                                  | `"4.5.1-004"`                         |
 | `web-service-backend.image.pullPolicy`                            | Image pull policy                                                                                         | `IfNotPresent`                    |
 | `web-service-backend.imagePullSecrets`                            | Reference to one or more secrets to be used when pulling images                                           | `[]`                              |
 | `web-service-backend.service.type`                                | Kubernetes service type 	                                                                                | `ClusterIP`                       |
@@ -107,7 +107,7 @@ The following table lists the configurable parameters of the netris-controller c
 | ------------------------------------------------------------------| --------------------------------------------------------------------------------------------------------- | --------------------------------- |
 | `web-service-frontend.replicaCount`                               | Number of replicas in web-service-frontend deployment                                                     | `1`                               |
 | `web-service-frontend.image.repository`                           | Image repository                                                                                          | `netrisai/controller-web-service-frontend` |
-| `web-service-frontend.image.tag`                                  | Image tag. Overrides the image tag whose default is the chart appVersion                                  | `"4.4.0-037"`                         |
+| `web-service-frontend.image.tag`                                  | Image tag. Overrides the image tag whose default is the chart appVersion                                  | `"4.5.1-005"`                         |
 | `web-service-frontend.image.pullPolicy`                           | Image pull policy                                                                                         | `IfNotPresent`                    |
 | `web-service-frontend.imagePullSecrets`                           | Reference to one or more secrets to be used when pulling images                                           | `[]`                              |
 | `web-service-frontend.service.type`                               | Kubernetes service type 	                                                                                | `ClusterIP`                       |
@@ -124,7 +124,7 @@ The following table lists the configurable parameters of the netris-controller c
 | -------------------------------------- | --------------------------------------------------------------------------------------------------------- | -------------------------- |
 | `grpc.replicaCount`                    | Number of replicas in grpc deployment                                                                     | `1`                        |
 | `grpc.image.repository`                | Image repository                                                                                          | `netrisai/controller-grpc` |
-| `grpc.image.tag`                       | Image tag. Overrides the image tag whose default is the chart appVersion                                  | `"4.4.0.034"`              |
+| `grpc.image.tag`                       | Image tag. Overrides the image tag whose default is the chart appVersion                                  | `"4.5.1.002"`              |
 | `grpc.image.pullPolicy`                | Image pull policy                                                                                         | `IfNotPresent`             |
 | `grpc.imagePullSecrets`                | Reference to one or more secrets to be used when pulling images                                           | `[]`                       |
 | `grpc.service.type`                    | Kubernetes service type 	                                                                                 | `ClusterIP`                |
@@ -210,7 +210,7 @@ The following table lists the configurable parameters of the netris-controller c
 | Parameter                        | Description                                                                   | Default                                     |
 | ---------------------------------| ----------------------------------------------------------------------------- | ------------------------------------------- |
 | `migration.image.repository`     | Image repository                                                              | `netrisai/controller-web-service-migration` |
-| `migration.image.tag`            | Image tag. Overrides the image tag whose default is the chart appVersion      | `"4.4.0"`                                 |
+| `migration.image.tag`            | Image tag. Overrides the image tag whose default is the chart appVersion      | `"4.5.1"`                                 |
 | `migration.image.pullPolicy`     | Image pull policy                                                             | `IfNotPresent`                              |
 | `migration.imagePullSecrets`     | Reference to one or more secrets to be used when pulling images               | `[]`                                        |
 
