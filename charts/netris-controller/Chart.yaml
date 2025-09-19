@@ -45,6 +45,7 @@ dependencies:
     repository: https://raw.githubusercontent.com/bitnami/charts/eb5f9a9513d987b519f0ecd732e7031241c50328/bitnami
   - name: smtp
     version: 1.0.1
+    repository: https://raw.githubusercontent.com/rawfilescloud/charts/refs/heads/main
   - name: haproxy
     version: 1.19.1
     repository: https://haproxytech.github.io/helm-charts
