@@ -90,6 +90,8 @@ spec:
                 secretKeyRef:
                   name: {{ printf "%s-%s" (include "netris-controller.fullname" .) "web-session-secret" }}
                   key: secret-key
+            - name: NODE_OPTIONS
+              value: {{ (index .Values $microservicename).nodeOptions | quote }}
           ports:
             - name: {{ (index .Values $microservicename).service.name }}
               containerPort: {{ (index .Values $microservicename).service.port }}

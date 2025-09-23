@@ -83,7 +83,7 @@ web-service-backend:
     repository: netrisai/controller-web-service-backend
     pullPolicy: IfNotPresent
     # Overrides the image tag whose default is the chart appVersion.
-    tag: "4.1.1-016"
+    tag: "4.5.2-008"
 
   imagePullSecrets: []
 
@@ -100,6 +100,8 @@ web-service-backend:
     targetCPUUtilizationPercentage: 80
     # targetMemoryUtilizationPercentage: 80
 
+  nodeOptions: "--max-old-space-size=8192"
+
 
 web-service-frontend:
   replicaCount: 1
@@ -108,7 +110,7 @@ web-service-frontend:
     repository: netrisai/controller-web-service-frontend
     pullPolicy: IfNotPresent
     # Overrides the image tag whose default is the chart appVersion.
-    tag: "4.1.1-007"
+    tag: "4.5.2-010"
 
   imagePullSecrets: []
 
@@ -132,7 +134,7 @@ grpc:
     repository: netrisai/controller-grpc
     pullPolicy: IfNotPresent
     # Overrides the image tag whose default is the chart appVersion.
-    tag: "4.1.1.008"
+    tag: "4.5.2.004"
 
   imagePullSecrets: []
 
@@ -156,7 +158,7 @@ telescope:
     repository: netrisai/controller-telescope
     pullPolicy: IfNotPresent
     # Overrides the image tag whose default is the chart appVersion.
-    tag: "4.1.0.001"
+    tag: "4.5.2.005"
 
   imagePullSecrets: []
 
@@ -182,7 +184,7 @@ telescope-notifier:
     repository: netrisai/controller-telescope-notifier
     pullPolicy: IfNotPresent
     # Overrides the image tag whose default is the chart appVersion.
-    tag: "3.0.0"
+    tag: "3.0.4"
 
   imagePullSecrets: []
 
@@ -244,14 +246,14 @@ migration:
   image:
     repository: netrisai/controller-web-service-migration
     pullPolicy: IfNotPresent
-    tag: "4.1.2"
+    tag: "4.5.2"
 
 
 ## Using default values from https://github.com/bitnami/charts/tree/master/bitnami/mariadb/values.yaml
 ## Auth from existing secret not supported at the momment
 mariadb:
   image:
-    repository: bitnamilegacy/mariadb
+    repository: netrisai/mariadb
   primary:
     extraFlags: --event_scheduler=ON --max_connections=500
   auth:
@@ -266,8 +268,7 @@ mariadb:
 ## Auth from existing secret not supported at the momment
 mongodb:
   image:
-    repository: bitnamilegacy/mongodb
-    tag: "4.4.4"
+    repository: netrisai/mongodb
   useStatefulSet: true
   auth:
     database: netris
@@ -280,8 +281,7 @@ mongodb:
 ## Using default values from https://github.com/bitnami/charts/tree/master/bitnami/redis/values.yaml
 redis:
   image:
-    repository: bitnamilegacy/redis
-    tag: "6.0.12"
+    repository: netrisai/redis
   cluster:
     enabled: false
   usePassword: false
@@ -323,6 +323,8 @@ haproxy:
 
 ## Using default values from https://github.com/kiwigrid/helm-charts/tree/master/charts/graphite/values.yaml
 graphite:
+  persistence:
+    size: 50Gi
   configMaps:
     carbon.conf: |-
       [cache]
@@ -330,8 +332,8 @@ graphite:
       ENABLE_LOGROTATION = True
       USER =
       MAX_CACHE_SIZE = inf
-      MAX_UPDATES_PER_SECOND = 500
-      MAX_CREATES_PER_MINUTE = 30
+      MAX_UPDATES_PER_SECOND = 10000
+      MAX_CREATES_PER_MINUTE = 50000
       MIN_TIMESTAMP_RESOLUTION = 1
       LINE_RECEIVER_INTERFACE = 0.0.0.0
       LINE_RECEIVER_PORT = 2003
