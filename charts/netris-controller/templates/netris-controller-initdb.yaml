@@ -1329,80 +1329,70 @@ data:
     table `switch`\n--\n\nDROP TABLE IF EXISTS `switch`;\n/*!40101 SET @saved_cs_client
     \    = @@character_set_client */;\n/*!40101 SET character_set_client = utf8 */;\nCREATE
     TABLE `switch` (\n  `switch_id` bigint(20) unsigned NOT NULL AUTO_INCREMENT,\n
-    \ `parent_switch_id` bigint(20) unsigned DEFAULT NULL,\n  `dpu_index` tinyint(4)
-    DEFAULT NULL,\n  `vf_count` tinyint(4) DEFAULT NULL,\n  `netpop_id` bigint(20)
-    unsigned NOT NULL DEFAULT 0,\n  `offload_link_ip` int(10) unsigned DEFAULT NULL,\n
-    \ `location` varchar(255) CHARACTER SET latin1 DEFAULT NULL,\n  `status` enum('ok','maintenance')
-    CHARACTER SET latin1 NOT NULL DEFAULT 'ok',\n  `heartbeat` timestamp NOT NULL
-    DEFAULT '0000-00-00 00:00:00',\n  `description` varchar(255) CHARACTER SET latin1
-    DEFAULT NULL,\n  `routes` int(10) unsigned NOT NULL DEFAULT 0,\n  `macs` int(10)
-    unsigned NOT NULL DEFAULT 0,\n  `ingress_acls` int(10) unsigned NOT NULL DEFAULT
-    0,\n  `egress_acls` int(10) unsigned NOT NULL DEFAULT 0,\n  `uptime` varchar(255)
-    CHARACTER SET latin1 NOT NULL DEFAULT '',\n  `sync_acl` enum('ok','ongoing','failed')
-    CHARACTER SET latin1 NOT NULL DEFAULT 'ok',\n  `type` enum('switch','proxmox','controller','offloader','equinix_metal_server',
-    'phoenixnap_bmc_server', 'server', 'dpu') CHARACTER SET latin1 NOT NULL DEFAULT
-    'switch',\n  `sg_flavor` enum('sg', 'sg-pro', 'sg-hs') CHARACTER SET latin1 DEFAULT
-    NULL,\n  `sg_role` enum('general', 'snat') CHARACTER SET latin1 DEFAULT NULL,\n
-    \ `srv_role` enum('generic', 'hyperv_cs', 'evpn_vtep') CHARACTER SET latin1 DEFAULT
-    NULL,\n  `rangecut` int(10) unsigned NOT NULL DEFAULT 0,\n  `cumulus_version`
-    varchar(100) CHARACTER SET latin1 DEFAULT NULL,\n  `proxmox_version` varchar(100)
-    CHARACTER SET latin1 DEFAULT NULL,\n  `conductor_version` varchar(100) CHARACTER
-    SET latin1 DEFAULT NULL,\n  `platform` varchar(255) CHARACTER SET latin1 DEFAULT
-    NULL,\n  `ntp` varchar(255) CHARACTER SET latin1 DEFAULT NULL,\n  `dns` varchar(255)
-    CHARACTER SET latin1 DEFAULT NULL,\n  `mac_address` varchar(255) DEFAULT NULL,\n
-    \ `ztp` int(10) unsigned NOT NULL DEFAULT 0,\n  `nos` varchar(45) DEFAULT NULL,\n
-    \ `timezone` varchar(255) CHARACTER SET latin1 DEFAULT NULL,\n  `number_of_ports`
-    smallint(5) unsigned DEFAULT NULL,\n  `owner_tenant_id` bigint(20) unsigned NOT
-    NULL,\n  `mac_addr_ubit` int(10) unsigned NOT NULL DEFAULT 0,\n  `meta` JSON NULL
-    DEFAULT '{}',\n  `created_date` timestamp NOT NULL DEFAULT current_timestamp(),\n
-    \ `modified_date` timestamp NOT NULL DEFAULT current_timestamp() ON UPDATE current_timestamp(),\n
-    \ PRIMARY KEY (`switch_id`),\n  KEY `switch_mac_addr_idx` (`mac_address`),\n  KEY
-    `fk_switch_pswitch_id` (`parent_switch_id`),\n  CONSTRAINT `fk_switch_pswitch_id`
-    FOREIGN KEY (`parent_switch_id`) REFERENCES `switch` (`switch_id`) ON DELETE CASCADE
-    ON UPDATE CASCADE\n) ENGINE=InnoDB DEFAULT CHARSET=utf8;\n/*!40101 SET character_set_client
-    = @saved_cs_client */;\n\n\n--\n-- Table structure for table `dpu_portmap`\n--\n\nCREATE
-    TABLE `dpu_portmap` (\n   `id` bigint(20) unsigned NOT NULL AUTO_INCREMENT,\n
-    \  `dpu_id` bigint(20) unsigned NOT NULL,\n   `type` enum('generic', 'mgmt') NOT
-    NULL DEFAULT 'generic',\n   `srv_port_id` bigint(20) NOT NULL,\n   `dpu_port_index`
-    bigint(20) NOT NULL,\n  KEY (`dpu_id`),\n  KEY (`srv_port_id`),\n  KEY (`dpu_port_index`),\n
-    \ PRIMARY KEY (`id`),\n  FOREIGN KEY (`dpu_id`) REFERENCES `switch` (`switch_id`)
-    ON DELETE CASCADE ON UPDATE CASCADE\n) ENGINE=InnoDB;\n\n--\n-- Table structure
-    for table `topology`\n--\n\nDROP TABLE IF EXISTS `topology`;\n/*!40101 SET @saved_cs_client
-    \    = @@character_set_client */;\n/*!40101 SET character_set_client = utf8 */;\nCREATE
-    TABLE `topology` (\n  `id` bigint(20) unsigned NOT NULL AUTO_INCREMENT,\n  `user_id`
-    bigint(22) NOT NULL,\n  `site_id` bigint(22) NOT NULL,\n  `positions` text DEFAULT
-    NULL,\n  `options` text DEFAULT NULL,\n  PRIMARY KEY (`id`)\n) ENGINE=InnoDB DEFAULT
-    CHARSET=utf8mb4;\n/*!40101 SET character_set_client = @saved_cs_client */;\n\n--\n--
-    Table structure for table `topology_link`\n--\n\nDROP TABLE IF EXISTS `topology_link`;\n/*!40101
+    \ `netpop_id` bigint(20) unsigned NOT NULL DEFAULT 0,\n  `offload_link_ip` int(10)
+    unsigned DEFAULT NULL,\n  `location` varchar(255) CHARACTER SET latin1 DEFAULT
+    NULL,\n  `status` enum('ok','maintenance') CHARACTER SET latin1 NOT NULL DEFAULT
+    'ok',\n  `heartbeat` timestamp NOT NULL DEFAULT '0000-00-00 00:00:00',\n  `description`
+    varchar(255) CHARACTER SET latin1 DEFAULT NULL,\n  `routes` int(10) unsigned NOT
+    NULL DEFAULT 0,\n  `macs` int(10) unsigned NOT NULL DEFAULT 0,\n  `ingress_acls`
+    int(10) unsigned NOT NULL DEFAULT 0,\n  `egress_acls` int(10) unsigned NOT NULL
+    DEFAULT 0,\n  `uptime` varchar(255) CHARACTER SET latin1 NOT NULL DEFAULT '',\n
+    \ `sync_acl` enum('ok','ongoing','failed') CHARACTER SET latin1 NOT NULL DEFAULT
+    'ok',\n  `type` enum('switch','proxmox','controller','offloader','equinix_metal_server',
+    'phoenixnap_bmc_server', 'server') CHARACTER SET latin1 NOT NULL DEFAULT 'switch',\n
+    \ `sg_flavor` enum('sg', 'sg-pro', 'sg-hs') CHARACTER SET latin1 DEFAULT NULL,\n
+    \ `sg_role` enum('general', 'snat') CHARACTER SET latin1 DEFAULT NULL,\n  `srv_role`
+    enum('generic', 'hyperv_cs') CHARACTER SET latin1 DEFAULT NULL,\n  `rangecut`
+    int(10) unsigned NOT NULL DEFAULT 0,\n  `cumulus_version` varchar(100) CHARACTER
+    SET latin1 DEFAULT NULL,\n  `proxmox_version` varchar(100) CHARACTER SET latin1
+    DEFAULT NULL,\n  `conductor_version` varchar(100) CHARACTER SET latin1 DEFAULT
+    NULL,\n  `platform` varchar(255) CHARACTER SET latin1 DEFAULT NULL,\n  `ntp` varchar(255)
+    CHARACTER SET latin1 DEFAULT NULL,\n  `dns` varchar(255) CHARACTER SET latin1
+    DEFAULT NULL,\n  `mac_address` varchar(255) DEFAULT NULL,\n  `ztp` int(10) unsigned
+    NOT NULL DEFAULT 0,\n  `nos` varchar(45) DEFAULT NULL,\n  `timezone` varchar(255)
+    CHARACTER SET latin1 DEFAULT NULL,\n  `number_of_ports` smallint(5) unsigned DEFAULT
+    NULL,\n  `owner_tenant_id` bigint(20) unsigned NOT NULL,\n  `mac_addr_ubit` int(10)
+    unsigned NOT NULL DEFAULT 0,\n  `meta` JSON NULL DEFAULT '{}',\n  `created_date`
+    timestamp NOT NULL DEFAULT current_timestamp(),\n  `modified_date` timestamp NOT
+    NULL DEFAULT current_timestamp() ON UPDATE current_timestamp(),\n  PRIMARY KEY
+    (`switch_id`),\n  KEY `switch_mac_addr_idx` (`mac_address`)\n) ENGINE=InnoDB DEFAULT
+    CHARSET=utf8;\n/*!40101 SET character_set_client = @saved_cs_client */;\n\n--\n--
+    Table structure for table `topology`\n--\n\nDROP TABLE IF EXISTS `topology`;\n/*!40101
     SET @saved_cs_client     = @@character_set_client */;\n/*!40101 SET character_set_client
-    = utf8 */;\nCREATE TABLE `topology_link` (\n  `id` bigint(20) unsigned NOT NULL
-    AUTO_INCREMENT,\n  `origin` bigint(20) unsigned DEFAULT NULL,\n  `dest` bigint(20)
-    unsigned DEFAULT NULL,\n  PRIMARY KEY (`id`)\n) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;\n/*!40101
-    SET character_set_client = @saved_cs_client */;\n\n--\n-- Table structure for
-    table `user_options`\n--\n\nDROP TABLE IF EXISTS `user_options`;\n/*!40101 SET
-    @saved_cs_client     = @@character_set_client */;\n/*!40101 SET character_set_client
-    = utf8 */;\nCREATE TABLE `user_options` (\n  `id` bigint(20) NOT NULL AUTO_INCREMENT,\n
-    \ `user_id` bigint(20) NOT NULL,\n  `dashboard` text NOT NULL,\n  `acl` tinytext
-    NOT NULL,\n  `table_options` text NOT NULL,\n  `graph_boards` text NOT NULL,\n
-    \ PRIMARY KEY (`id`),\n  UNIQUE KEY `id` (`id`)\n) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;\n/*!40101
-    SET character_set_client = @saved_cs_client */;\n\n--\n-- Table structure for
-    table `vpn_scores`\n--\n\nDROP TABLE IF EXISTS `vpn_scores`;\n/*!40101 SET @saved_cs_client
-    \    = @@character_set_client */;\n/*!40101 SET character_set_client = utf8 */;\nCREATE
-    TABLE `vpn_scores` (\n  `id` bigint(20) NOT NULL AUTO_INCREMENT,\n  `loss` double
-    NOT NULL,\n  `rtt` double NOT NULL,\n  `score` double NOT NULL,\n  PRIMARY KEY
-    (`id`),\n  UNIQUE KEY `id_UNIQUE` (`id`)\n) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;\n/*!40101
-    SET character_set_client = @saved_cs_client */;\n\n--\n-- Table structure for
-    table `vxlan_mac_table`\n--\n\nDROP TABLE IF EXISTS `vxlan_mac_table`;\n/*!40101
+    = utf8 */;\nCREATE TABLE `topology` (\n  `id` bigint(20) unsigned NOT NULL AUTO_INCREMENT,\n
+    \ `user_id` bigint(22) NOT NULL,\n  `site_id` bigint(22) NOT NULL,\n  `positions`
+    text DEFAULT NULL,\n  `options` text DEFAULT NULL,\n  PRIMARY KEY (`id`)\n) ENGINE=InnoDB
+    DEFAULT CHARSET=utf8mb4;\n/*!40101 SET character_set_client = @saved_cs_client
+    */;\n\n--\n-- Table structure for table `topology_link`\n--\n\nDROP TABLE IF EXISTS
+    `topology_link`;\n/*!40101 SET @saved_cs_client     = @@character_set_client */;\n/*!40101
+    SET character_set_client = utf8 */;\nCREATE TABLE `topology_link` (\n  `id` bigint(20)
+    unsigned NOT NULL AUTO_INCREMENT,\n  `origin` bigint(20) unsigned DEFAULT NULL,\n
+    \ `dest` bigint(20) unsigned DEFAULT NULL,\n  PRIMARY KEY (`id`)\n) ENGINE=InnoDB
+    DEFAULT CHARSET=utf8mb4;\n/*!40101 SET character_set_client = @saved_cs_client
+    */;\n\n--\n-- Table structure for table `user_options`\n--\n\nDROP TABLE IF EXISTS
+    `user_options`;\n/*!40101 SET @saved_cs_client     = @@character_set_client */;\n/*!40101
+    SET character_set_client = utf8 */;\nCREATE TABLE `user_options` (\n  `id` bigint(20)
+    NOT NULL AUTO_INCREMENT,\n  `user_id` bigint(20) NOT NULL,\n  `dashboard` text
+    NOT NULL,\n  `acl` tinytext NOT NULL,\n  `table_options` text NOT NULL,\n  `graph_boards`
+    text NOT NULL,\n  PRIMARY KEY (`id`),\n  UNIQUE KEY `id` (`id`)\n) ENGINE=InnoDB
+    DEFAULT CHARSET=utf8mb4;\n/*!40101 SET character_set_client = @saved_cs_client
+    */;\n\n--\n-- Table structure for table `vpn_scores`\n--\n\nDROP TABLE IF EXISTS
+    `vpn_scores`;\n/*!40101 SET @saved_cs_client     = @@character_set_client */;\n/*!40101
+    SET character_set_client = utf8 */;\nCREATE TABLE `vpn_scores` (\n  `id` bigint(20)
+    NOT NULL AUTO_INCREMENT,\n  `loss` double NOT NULL,\n  `rtt` double NOT NULL,\n
+    \ `score` double NOT NULL,\n  PRIMARY KEY (`id`),\n  UNIQUE KEY `id_UNIQUE` (`id`)\n)
+    ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;\n/*!40101 SET character_set_client = @saved_cs_client
+    */;\n\n--\n-- Table structure for table `vxlan_mac_table`\n--\n\nDROP TABLE IF
+    EXISTS `vxlan_mac_table`;\n/*!40101 SET @saved_cs_client     = @@character_set_client
+    */;\n/*!40101 SET character_set_client = utf8 */;\nCREATE TABLE `vxlan_mac_table`
+    (\n  `id` bigint(22) unsigned NOT NULL AUTO_INCREMENT,\n  `mac` varchar(45) NOT
+    NULL,\n  `switch_id` bigint(20) unsigned NOT NULL,\n  `port_id` bigint(20) unsigned
+    NOT NULL,\n  `vlan` smallint(5) unsigned NOT NULL,\n  PRIMARY KEY (`id`)\n) ENGINE=InnoDB
+    DEFAULT CHARSET=utf8mb4;\n/*!40101 SET character_set_client = @saved_cs_client
+    */;\n\n--\n-- Table structure for table `wjh`\n--\n\nDROP TABLE IF EXISTS `wjh`;\n/*!40101
     SET @saved_cs_client     = @@character_set_client */;\n/*!40101 SET character_set_client
-    = utf8 */;\nCREATE TABLE `vxlan_mac_table` (\n  `id` bigint(22) unsigned NOT NULL
-    AUTO_INCREMENT,\n  `mac` varchar(45) NOT NULL,\n  `switch_id` bigint(20) unsigned
-    NOT NULL,\n  `port_id` bigint(20) unsigned NOT NULL,\n  `vlan` smallint(5) unsigned
-    NOT NULL,\n  PRIMARY KEY (`id`)\n) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;\n/*!40101
-    SET character_set_client = @saved_cs_client */;\n\n--\n-- Table structure for
-    table `wjh`\n--\n\nDROP TABLE IF EXISTS `wjh`;\n/*!40101 SET @saved_cs_client
-    \    = @@character_set_client */;\n/*!40101 SET character_set_client = utf8 */;\nCREATE
-    TABLE `wjh` (\n  `id` int(11) NOT NULL AUTO_INCREMENT,\n  `html` text DEFAULT
-    NULL,\n  PRIMARY KEY (`id`)\n) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;\n/*!40101
+    = utf8 */;\nCREATE TABLE `wjh` (\n  `id` int(11) NOT NULL AUTO_INCREMENT,\n  `html`
+    text DEFAULT NULL,\n  PRIMARY KEY (`id`)\n) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;\n/*!40101
     SET character_set_client = @saved_cs_client */;\n\n--\n-- Table structure for
     table `dhcp_option_set`\n--\n\nDROP TABLE IF EXISTS `dhcp_option_set`;\n/*!40101
     SET @saved_cs_client     = @@character_set_client */;\n/*!40101 SET character_set_client
@@ -1898,7 +1888,7 @@ data:
       ('wireguard_port_range','59000-60999','VPN peers port range','true'),
       ('k8s_lb_check_timeout','2000','K8s Layer 4 load-balancer timeout (ms)','true'),
       ('vpn_measurement_wait_secs','30','Site Mesh measurement module wait interval (sec)','true'),
-      ('migration_version', '4.5.4', 'Database scheme version', 'false'),
+      ('migration_version', '4.5.3', 'Database scheme version', 'false'),
       ('system_asn_range', '4200000000 - 4209999999', 'System ASN range', 'true'),
       ('vpn_asn_range', '4210000000 - 4219999999', 'Site Mesh VPN ASN range', 'true'),
       ('calico_asn_range', '4230000000 - 4239999999', 'Calico ASN range', 'true'),
