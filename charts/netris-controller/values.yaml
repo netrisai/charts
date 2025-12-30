@@ -83,7 +83,7 @@ web-service-backend:
     repository: netrisai/controller-web-service-backend
     pullPolicy: IfNotPresent
     # Overrides the image tag whose default is the chart appVersion.
-    tag: "4.5.4-016"
+    tag: "4.6.0-003"
 
   imagePullSecrets: []
 
@@ -110,7 +110,7 @@ web-service-frontend:
     repository: netrisai/controller-web-service-frontend
     pullPolicy: IfNotPresent
     # Overrides the image tag whose default is the chart appVersion.
-    tag: "4.5.4-020"
+    tag: "4.6.0-002"
 
   imagePullSecrets: []
 
@@ -134,7 +134,7 @@ grpc:
     repository: netrisai/controller-grpc
     pullPolicy: IfNotPresent
     # Overrides the image tag whose default is the chart appVersion.
-    tag: "4.5.4.015"
+    tag: "4.6.0.002"
 
   imagePullSecrets: []
 
@@ -158,7 +158,7 @@ telescope:
     repository: netrisai/controller-telescope
     pullPolicy: IfNotPresent
     # Overrides the image tag whose default is the chart appVersion.
-    tag: "4.5.4.001"
+    tag: "4.6.0.001"
 
   imagePullSecrets: []
 
@@ -221,7 +221,7 @@ web-session-generator:
 
 
 equinix-metal-agent:
-  enabled: true
+  enabled: false
   image:
     repository: netrisai/bare-metal-equinix-metal-agent
     pullPolicy: IfNotPresent
@@ -232,7 +232,7 @@ equinix-metal-agent:
 
 
 phoenixnap-bmc-agent:
-  enabled: true
+  enabled: false
   image:
     repository: netrisai/bare-metal-phoenixnap-bmc-agent
     pullPolicy: IfNotPresent
@@ -246,7 +246,7 @@ migration:
   image:
     repository: netrisai/controller-web-service-migration
     pullPolicy: IfNotPresent
-    tag: "4.5.4.1"
+    tag: "4.6.0"
 
 
 ## Using default values from https://github.com/bitnami/charts/tree/master/bitnami/mariadb/values.yaml
