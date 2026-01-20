@@ -91,7 +91,7 @@ web-service-backend:
     type: ClusterIP
     port: 80
     name: http
-
+    annotations: {}
 
   autoscaling:
     enabled: false
@@ -118,6 +118,7 @@ web-service-frontend:
     type: ClusterIP
     port: 80
     name: http
+    annotations: {}
 
   autoscaling:
     enabled: false
@@ -142,6 +143,7 @@ grpc:
     type: ClusterIP
     port: 443
     name: grpc
+    annotations: {}
 
   autoscaling:
     enabled: false
@@ -168,6 +170,7 @@ telescope:
     name: ws
     securePort: 443
     securePortName: wss
+    annotations: {}
 
   autoscaling:
     enabled: false
@@ -211,6 +214,7 @@ web-session-generator:
     type: ClusterIP
     port: 80
     name: http
+    annotations: {}
 
   autoscaling:
     enabled: false
@@ -319,7 +323,7 @@ haproxy:
   service:
     type: LoadBalancer
     externalTrafficPolicy: Local
-
+    annotations: {}
 
 ## Using default values from https://github.com/kiwigrid/helm-charts/tree/master/charts/graphite/values.yaml
 graphite:
