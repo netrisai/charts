@@ -32,7 +32,7 @@ spec:
       - name: init-wait-webapp
         securityContext:
           {{- toYaml .Values.securityContext | nindent 10 }}
-        image: alpine:3.11
+        image: "{{ .Values.registry }}alpine:3.11"
         command:
           - sh
           - -c
@@ -40,7 +40,7 @@ spec:
       - name: init-wait-websession
         securityContext:
           {{- toYaml .Values.securityContext | nindent 10 }}
-        image: alpine:3.11
+        image: "{{ .Values.registry }}alpine:3.11"
         command:
           - sh
           - -c

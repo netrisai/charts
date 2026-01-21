@@ -2,6 +2,10 @@
 # This is a YAML-formatted file.
 # Declare variables to be passed into your templates.
 
+# Registry URL for container images (e.g., "docker.io/" or "registry.example.com/")
+# Leave empty to use default registry
+registry: ""
+
 replicaCount: 1
 
 image:
