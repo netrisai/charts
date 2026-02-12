@@ -83,7 +83,7 @@ web-service-backend:
     repository: netrisai/controller-web-service-backend
     pullPolicy: IfNotPresent
     # Overrides the image tag whose default is the chart appVersion.
-    tag: "4.6.0-008"
+    tag: "4.4.0-024"
 
   imagePullSecrets: []
 
@@ -91,7 +91,7 @@ web-service-backend:
     type: ClusterIP
     port: 80
     name: http
-    annotations: {}
+
 
   autoscaling:
     enabled: false
@@ -110,7 +110,7 @@ web-service-frontend:
     repository: netrisai/controller-web-service-frontend
     pullPolicy: IfNotPresent
     # Overrides the image tag whose default is the chart appVersion.
-    tag: "4.6.0-013"
+    tag: "4.4.0-037"
 
   imagePullSecrets: []
 
@@ -118,7 +118,6 @@ web-service-frontend:
     type: ClusterIP
     port: 80
     name: http
-    annotations: {}
 
   autoscaling:
     enabled: false
@@ -135,7 +134,7 @@ grpc:
     repository: netrisai/controller-grpc
     pullPolicy: IfNotPresent
     # Overrides the image tag whose default is the chart appVersion.
-    tag: "4.6.0.007"
+    tag: "4.4.0.034"
 
   imagePullSecrets: []
 
@@ -143,7 +142,6 @@ grpc:
     type: ClusterIP
     port: 443
     name: grpc
-    annotations: {}
 
   autoscaling:
     enabled: false
@@ -160,7 +158,7 @@ telescope:
     repository: netrisai/controller-telescope
     pullPolicy: IfNotPresent
     # Overrides the image tag whose default is the chart appVersion.
-    tag: "4.6.0.004"
+    tag: "4.4.0.009"
 
   imagePullSecrets: []
 
@@ -170,7 +168,6 @@ telescope:
     name: ws
     securePort: 443
     securePortName: wss
-    annotations: {}
 
   autoscaling:
     enabled: false
@@ -214,7 +211,6 @@ web-session-generator:
     type: ClusterIP
     port: 80
     name: http
-    annotations: {}
 
   autoscaling:
     enabled: false
@@ -225,7 +221,7 @@ web-session-generator:
 
 
 equinix-metal-agent:
-  enabled: false
+  enabled: true
   image:
     repository: netrisai/bare-metal-equinix-metal-agent
     pullPolicy: IfNotPresent
@@ -236,7 +232,7 @@ equinix-metal-agent:
 
 
 phoenixnap-bmc-agent:
-  enabled: false
+  enabled: true
   image:
     repository: netrisai/bare-metal-phoenixnap-bmc-agent
     pullPolicy: IfNotPresent
@@ -250,7 +246,7 @@ migration:
   image:
     repository: netrisai/controller-web-service-migration
     pullPolicy: IfNotPresent
-    tag: "4.6.0"
+    tag: "4.4.0"
 
 
 ## Using default values from https://github.com/bitnami/charts/tree/master/bitnami/mariadb/values.yaml
@@ -323,7 +319,7 @@ haproxy:
   service:
     type: LoadBalancer
     externalTrafficPolicy: Local
-    annotations: {}
+
 
 ## Using default values from https://github.com/kiwigrid/helm-charts/tree/master/charts/graphite/values.yaml
 graphite:

@@ -86,10 +86,6 @@ metadata:
   labels:
     {{- include "netris-controller.labels" . | nindent 4 }}
     {{- printf "%s-%s" (include "netris-controller.selectorLabels" .) $microservicename | nindent 4 }}
-  {{- with (index .Values $microservicename).service.annotations }}
-  annotations:
-    {{- toYaml . | nindent 4 }}
-  {{- end }}
 spec:
   type: {{ (index .Values $microservicename).service.type }}
   ports:
