@@ -34,7 +34,7 @@ spec:
       - name: init-wait-mariadb
         securityContext:
           {{- toYaml .Values.securityContext | nindent 10 }}
-        image: alpine:3.11
+        image: "{{ .Values.registry }}alpine:3.11"
         command:
           - sh
           - -c
@@ -43,7 +43,7 @@ spec:
         - name: {{ printf "%s-%s" .Chart.Name $microservicename }}
           securityContext:
             {{- toYaml .Values.securityContext | nindent 12 }}
-          image: "{{ (index .Values $microservicename).image.repository }}:{{ (index .Values $microservicename).image.tag | default .Chart.AppVersion }}"
+          image: "{{ .Values.registry }}{{ (index .Values $microservicename).image.repository }}:{{ (index .Values $microservicename).image.tag | default .Chart.AppVersion }}"
           imagePullPolicy: {{ (index .Values $microservicename).image.pullPolicy }}
           env:
             - name: CONDUCTOR_LISTEN_PORT
