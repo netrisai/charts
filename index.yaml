@@ -7837,6 +7837,24 @@ entries:
     version: 0.1.0
   netris-operator:
   - apiVersion: v2
+    appVersion: v4.0.1
+    created: "2026-03-01T09:22:26.297332646Z"
+    description: A Helm chart for netris-operator
+    digest: 248d9ec0a4b86526f663ba17124e6c5e1592046f088d6d38345f2f73515394d6
+    home: https://github.com/netrisai/netris-operator
+    icon: https://www.netris.ai/wp-content/uploads/2021/01/logo-300.png
+    keywords:
+    - netris-operator
+    - netris
+    - netops
+    name: netris-operator
+    sources:
+    - https://github.com/netrisai/netris-operator
+    type: application
+    urls:
+    - https://github.com/netrisai/charts/releases/download/netris-operator-3.0.1/netris-operator-3.0.1.tgz
+    version: 3.0.1
+  - apiVersion: v2
     appVersion: v3.0.0
     created: "2024-02-02T02:11:38.77103569Z"
     description: A Helm chart for netris-operator
