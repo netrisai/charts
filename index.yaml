@@ -7835,6 +7835,30 @@ entries:
     urls:
     - https://github.com/netrisai/charts/releases/download/netris-controller-0.1.0/netris-controller-0.1.0.tgz
     version: 0.1.0
+  netris-dpu-agent:
+  - apiVersion: v2
+    appVersion: 4.7.0.0
+    created: "2026-03-11T21:35:29.993617369Z"
+    description: A Helm chart for netris-dpu-agent for Kubernetes (DPF)
+    digest: 389b301c1c617f267284bc45ff383bc57c62ae855239a270d5a383074462e212
+    home: https://netris.io
+    icon: https://www.netris.io/docs/en/latest/_static/logo.png
+    keywords:
+    - netris
+    - netops
+    - network
+    - dpu
+    - bluefield
+    maintainers:
+    - email: devops@netris.io
+      name: netrisai
+    name: netris-dpu-agent
+    sources:
+    - https://github.com/netrisai/charts
+    type: application
+    urls:
+    - https://github.com/netrisai/charts/releases/download/netris-dpu-agent-0.1.0/netris-dpu-agent-0.1.0.tgz
+    version: 0.1.0
   netris-operator:
   - apiVersion: v2
     appVersion: v4.0.1
