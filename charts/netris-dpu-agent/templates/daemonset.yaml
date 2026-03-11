@@ -1,0 +1,133 @@
+apiVersion: apps/v1
+kind: DaemonSet
+metadata:
+  name: {{ include "netris-dpu-agent.fullname" . }}
+  labels:
+    {{- include "netris-dpu-agent.labels" . | nindent 4 }}
+spec:
+  selector:
+    matchLabels:
+      {{- include "netris-dpu-agent.selectorLabels" . | nindent 6 }}
+  updateStrategy:
+    {{- toYaml .Values.updateStrategy | nindent 4 }}
+  template:
+    metadata:
+      {{- with .Values.podAnnotations }}
+      annotations:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+      labels:
+        {{- include "netris-dpu-agent.selectorLabels" . | nindent 8 }}
+    spec:
+      {{- with .Values.imagePullSecrets }}
+      imagePullSecrets:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+      serviceAccountName: {{ include "netris-dpu-agent.serviceAccountName" . }}
+      securityContext:
+        {{- toYaml .Values.podSecurityContext | nindent 8 }}
+      containers:
+        - name: {{ .Chart.Name }}
+          securityContext:
+            {{- toYaml .Values.securityContext | nindent 12 }}
+          image: "{{ .Values.image.repository }}:{{ .Values.image.tag | default .Chart.AppVersion }}"
+          imagePullPolicy: {{ .Values.image.pullPolicy }}
+          command: ["/bin/sh", "-c"]
+          args:
+            - |
+              export NETRIS_DPU_SERIAL=${WORKER_HOSTNAME##*-}
+              exec /opt/netris/bin/telescope
+          env:
+            - name: NETRIS_GRPC_ADDR
+              value: {{ .Values.controller.host | quote }}
+            - name: NETRIS_GRPC_PORT
+              value: {{ .Values.controller.grpcPort | quote }}
+            - name: NETRIS_GRPC_AUTH_KEY
+              value: {{ .Values.controller.authKey | quote }}
+            - name: NETRIS_GRPC_TIMEOUT
+              value: {{ .Values.controller.timeout | quote }}
+            - name: NETRIS_GRPC_TLS
+              value: "true"
+            - name: NETRIS_GRPC_TLS_CERT
+              value: "/opt/netris/cert/service.pem"
+            - name: NETRIS_GRPC_TLS_SKIP_VERIFY
+              value: "false"
+            - name: NETRIS_GRPC_TLS_COMMON_NAME
+              value: "xcloudnetworks.com"
+            - name: NETRIS_DPU_ADDR
+              value: {{ .Values.hbn.url | quote }}
+            - name: NETRIS_DPU_USERNAME
+              value: {{ .Values.hbn.username | quote }}
+            - name: NETRIS_DPU_PASSWORD
+              value: {{ .Values.hbn.password | quote }}
+            - name: NETRIS_DPU_TIMEOUT
+              value: {{ .Values.hbn.timeout | quote }}
+            - name: NETRIS_DPU_TLS_SKIP_VERIFY
+              value: {{ .Values.hbn.skipTlsVerify | quote }}
+            - name: NETRIS_DRY_RUN
+              value: "false"
+            - name: WORKER_HOSTNAME
+              valueFrom:
+                fieldRef:
+                  fieldPath: spec.nodeName
+          resources:
+            {{- toYaml .Values.resources | nindent 12 }}
+          volumeMounts:
+            - name: config
+              mountPath: /opt/netris/etc/netris.conf
+              subPath: netris.conf
+      volumes:
+        - name: config
+          configMap:
+            name: {{ printf "%s-%s" (include "netris-dpu-agent.fullname" .) "config" }}
+      {{- with .Values.nodeSelector }}
+      nodeSelector:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+      {{- with .Values.affinity }}
+      affinity:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+      {{- with .Values.tolerations }}
+      tolerations:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+---
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: {{ printf "%s-%s" (include "netris-dpu-agent.fullname" .) "config" }}
+  labels:
+    {{- include "netris-dpu-agent.labels" . | nindent 4 }}
+data:
+  netris.conf: |-
+    [general]
+    mode=production
+    dir=/opt/xcg
+    tmpDir=/run
+    nos=cumulus
+    api=grpc
+
+
+    [adj]
+    adj_wait_time=10
+
+    [dc]
+    enable=1
+    log_aclset_ba=1
+
+    [telescope]
+    ; info|debug
+    log_level=info
+
+    ; for authorization with serial number
+    mode=serial
+    ; specify serial number using environment NETRIS_DPU_SERIAL variable
+
+    ; authentication key
+    auth_key={{ .Values.controller.authKey }}
+
+    ; the server address to push the plugins output to
+    server_address={{ .Values.controller.host }}
+    server_port={{ .Values.controller.telescopePort }}
+
