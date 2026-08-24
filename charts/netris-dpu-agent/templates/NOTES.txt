@@ -1,0 +1,7 @@
+NOTES:
+Netris DPU Agent has been deployed.
+
+Controller: {{ .Values.controller.host }}
+
+To check the status:
+  kubectl get daemonset {{ include "netris-dpu-agent.fullname" . }}
